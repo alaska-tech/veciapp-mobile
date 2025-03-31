@@ -11,35 +11,35 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'Inicio',
           tabBarIcon: ({ color }) => <Home size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="search"
         options={{
-          title: 'Search',
+          title: 'Buscar',
           tabBarIcon: ({ color }) => <Search size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="cart"
         options={{
-          title: 'Cart',
+          title: 'Carrito',
           tabBarIcon: ({ color }) => <ShoppingCart size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="messages"
         options={{
-          title: 'Messages',
+          title: 'Mensajes',
           tabBarIcon: ({ color }) => <MessageCircle size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: 'Perfil',
           tabBarIcon: ({ color }) => <User size={24} color={color} />,
         }}
       />
