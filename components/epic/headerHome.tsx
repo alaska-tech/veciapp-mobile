@@ -10,7 +10,7 @@ export default function HeaderHome() {
   const [searchText, setSearchText] = useState('');
 
   return (
-    <View className="p-4 mt-8">
+    <View>
       {/* Logo and Icons */}
       <View className="mb-2 flex-row items-center justify-between">
         <View className="w-24 h-24 flex items-center justify-center">

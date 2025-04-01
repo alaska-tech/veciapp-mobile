@@ -5,7 +5,7 @@ import { Text } from "~/components/ui/text";
 
 export default function MessagesScreen() {
   return (
-    <ScrollView className="h-full w-full p-4">
+    <ScrollView className="h-full w-full p-4 mt-8">
       <Input placeholder="Type a message..." className="mb-4" />
       <Button>
         <Text>Send</Text>

@@ -5,7 +5,7 @@ import { Text } from "~/components/ui/text";
 
 export default function CartScreen() {
   return (
-    <ScrollView className="h-full w-full p-4">
+    <ScrollView className="h-full w-full p-4 mt-8">
       <Card>
         <CardHeader>
           <CardTitle>Your Cart</CardTitle>

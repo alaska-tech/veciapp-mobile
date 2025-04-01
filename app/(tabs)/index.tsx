@@ -7,7 +7,7 @@ import { ScrollView } from "react-native"
 
 export default function HomeScreen() {
   return (
-    <ScrollView className="h-full w-full p-2">
+    <ScrollView className="h-full w-full p-4 mt-8">
       <HeaderHome />
     </ScrollView>
   );

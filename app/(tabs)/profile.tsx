@@ -25,7 +25,7 @@ export default function ProfileScreen() {
   const iconColor = isDarkColorScheme ? '#ffffff' : '#000000';
 
   return (
-    <ScrollView className="flex-1">
+    <ScrollView className="flex-1 mt-8">
 
       <View className="p-4">
         <View className="flex-row items-center mb-6">
