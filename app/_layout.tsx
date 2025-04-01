@@ -55,7 +55,8 @@ export default function RootLayout() {
         <Stack.Screen
           name='(tabs)'
           options={{
-            title: 'VeciApp',
+            headerShown: false,
+            headerTitle: '',
             headerRight: () => <ThemeToggle />,
           }}
         />
