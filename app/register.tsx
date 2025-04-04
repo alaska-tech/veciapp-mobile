@@ -23,13 +23,17 @@ export default function RegisterScreen() {
     <ScrollView className="flex-1 bg-background">
       <View className="flex-1 items-center justify-center p-4 min-h-screen">
         <Image
-          source={require('../assets/images/veciapplogo2.png')}
-          className="w-48 h-48 mb-2"
+          source={require('../assets/images/logoveciapp.png')}
+          className="w-48 h-48"
           resizeMode="contain"
         />
         
-        <Text className="text-2xl font-bold mb-8 text-center">
+        <Text className="text-2xl font-bold mb-2 text-center">
           Crear nueva cuenta
+        </Text>
+
+        <Text className="text-sm text-muted-foreground mb-6 text-center">
+          Ingresa tus datos para registrarte
         </Text>
 
         <View className="w-full gap-4">
@@ -37,7 +41,6 @@ export default function RegisterScreen() {
             placeholder="Nombre completo"
             value={formData.name}
             onChangeText={(text) => setFormData({ ...formData, name: text })}
-            className="bg-muted"
           />
 
           <Input
@@ -46,7 +49,6 @@ export default function RegisterScreen() {
             onChangeText={(text) => setFormData({ ...formData, email: text })}
             keyboardType="email-address"
             autoCapitalize="none"
-            className="bg-muted"
           />
 
           <Input
@@ -54,7 +56,6 @@ export default function RegisterScreen() {
             value={formData.password}
             onChangeText={(text) => setFormData({ ...formData, password: text })}
             secureTextEntry
-            className="bg-muted"
           />
 
           <Input
@@ -62,24 +63,29 @@ export default function RegisterScreen() {
             value={formData.confirmPassword}
             onChangeText={(text) => setFormData({ ...formData, confirmPassword: text })}
             secureTextEntry
-            className="bg-muted"
           />
 
           <Button
             onPress={handleRegister}
-            className="w-full mt-4"
+            className="w-full bg-yellow-400 rounded-full"
           >
-            <Text>Registrarse</Text>
+            <Text className="text-black font-bold">Registrarse</Text>
           </Button>
 
-          <Text className="text-center text-muted-foreground mt-4">
+          <Text className="text-center text-muted-foreground text-sm">
             ¿Ya tienes una cuenta?{' '}
             <Text 
-              className="text-primary"
+              className="text-primary underline font-medium"
               onPress={() => router.push('/')}
             >
               Iniciar sesión
             </Text>
+          </Text>
+
+          <Text className="text-xs text-center text-muted-foreground mt-4">
+            Al hacer clic en continuar, aceptas nuestros{' '}
+            <Text className="text-primary">Términos de Servicio</Text> y{' '}
+            <Text className="text-primary">Política de Privacidad</Text>
           </Text>
         </View>
       </View>

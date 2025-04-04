@@ -1,56 +1,66 @@
 import { View, Image } from 'react-native';
 import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
+import { Input } from '~/components/ui/input';
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
 
 export default function LoginScreen() {
   const router = useRouter();
+  const [email, setEmail] = useState('');
 
-  const handleGoogleSignIn = () => {
-    // TODO: Implement Google Sign In
-    router.replace('/(tabs)');
-  };
-
-  const handleEmailSignIn = () => {
-    // TODO: Implement Email Sign In
+  const handleSignIn = () => {
+    // TODO: Implement Sign In
     router.replace('/(tabs)');
   };
 
   return (
     <View className="flex-1 items-center justify-center p-4 bg-background">
       <Image
-        source={require('../assets/images/veciapplogo2.png')}
-        className="w-64 h-64 mb-8"
+        source={require('../assets/images/logoveciapp.png')}
+        className="w-48 h-48"
         resizeMode="contain"
       />
       
-      <Text className="text-2xl font-bold mb-8 text-center">
-        Bienvenido a VeciApp
+      <Text className="text-2xl font-bold mb-2 text-center">
+        ¡Bienvenido a VeciApp!
+      </Text>
+
+      <Text className="text-sm text-muted-foreground mb-6 text-center">
+        Ingresa tu correo electrónico
       </Text>
 
       <View className="w-full gap-4">
-        <Button
-          onPress={handleGoogleSignIn}
-          className="w-full flex-row items-center justify-center gap-2 bg-white"
-        >
-          <Text className="text-black">Continuar con Google</Text>
-        </Button>
+        <Input
+          placeholder="correo@dominio.com"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          className=""
+        />
 
         <Button
-          onPress={handleEmailSignIn}
-          className="w-full"
+          onPress={handleSignIn}
+          className="w-full bg-yellow-400 rounded-full"
         >
-          <Text>Continuar con Email</Text>
+          <Text className="text-black font-bold">Inicia Sesión</Text>
         </Button>
 
-        <Text className="text-center text-muted-foreground mt-4">
-          ¿No tienes una cuenta?{' '}
+        <Text className="text-center text-muted-foreground text-sm">
+          ¿No tienes cuenta? {' '}
           <Text 
-            className="text-primary"
+            className="text-primary underline font-medium"
             onPress={() => router.push('/register')}
           >
-            Regístrate
+            Regístrate aquí
           </Text>
+        </Text>
+
+        <Text className="text-xs text-center text-muted-foreground mt-4">
+          Al hacer clic en continuar, aceptas nuestros{' '}
+          <Text className="text-primary">Términos de Servicio</Text> y{' '}
+          <Text className="text-primary">Política de Privacidad</Text>
         </Text>
       </View>
     </View>
