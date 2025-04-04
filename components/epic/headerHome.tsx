@@ -10,12 +10,12 @@ export default function HeaderHome() {
   const [searchText, setSearchText] = useState('');
 
   return (
-    <View>
+    <View className='mb-6'>
       {/* Logo and Icons */}
       <View className="mb-2 flex-row items-center justify-between">
         <View className="w-24 h-24 flex items-center justify-center">
           <Image 
-            source={require('../../assets/images/veciapplogo2.png')}
+            source={require('../../assets/images/logoveciapp.png')}
             className="w-36 h-34 ml-10"
             resizeMode="contain"
           />
