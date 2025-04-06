@@ -1,4 +1,4 @@
-import { View, Image, ScrollView } from 'react-native';
+import { View, Image, ScrollView, Linking } from 'react-native';
 import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
 import { Input } from '~/components/ui/input';
@@ -19,9 +19,17 @@ export default function RegisterScreen() {
     router.replace('/(tabs)');
   };
 
+  const openTerms = () => {
+    Linking.openURL('https://google.com');
+  };
+
+  const openPrivacy = () => {
+    Linking.openURL('https://google.com');
+  };
+
   return (
     <ScrollView className="flex-1 bg-background">
-      <View className="flex-1 items-center justify-center p-4 min-h-screen">
+      <View className="flex-1 items-center justify-center p-4 px-12 min-h-screen">
         <Image
           source={require('../assets/images/logoveciapp.png')}
           className="w-48 h-48"
@@ -29,7 +37,7 @@ export default function RegisterScreen() {
         />
         
         <Text className="text-2xl font-bold mb-2 text-center">
-          Crear nueva cuenta
+          Crear una nueva cuenta
         </Text>
 
         <Text className="text-sm text-muted-foreground mb-6 text-center">
@@ -75,18 +83,22 @@ export default function RegisterScreen() {
           <Text className="text-center text-muted-foreground text-sm">
             ¿Ya tienes una cuenta?{' '}
             <Text 
-              className="text-primary underline font-medium"
+              className="text-primary underline font-bold"
               onPress={() => router.push('/')}
             >
               Iniciar sesión
             </Text>
           </Text>
 
-          <Text className="text-xs text-center text-muted-foreground mt-4">
-            Al hacer clic en continuar, aceptas nuestros{' '}
-            <Text className="text-primary">Términos de Servicio</Text> y{' '}
-            <Text className="text-primary">Política de Privacidad</Text>
+          <Text className="text-xs text-center text-muted-foreground mt-16">
+          Al seguir, aceptas nuestros{'\n'}
+          <Text className="text-primary font-semibold py-1 leading-6" onPress={openTerms}>
+            Términos de Servicio
+          </Text> y{' '}
+          <Text className="text-primary font-semibold py-1 leading-6" onPress={openPrivacy}>
+            Política de Privacidad
           </Text>
+        </Text>
         </View>
       </View>
     </ScrollView>
