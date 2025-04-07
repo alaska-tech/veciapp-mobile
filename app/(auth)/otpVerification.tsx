@@ -34,8 +34,11 @@ export default function OtpVerification() {
   const handleVerification = () => {
     const otpValue = otp.join('');
     console.log('OTP:', otpValue);
-    // Add your verification logic here 
+    // Navigate to onboarding1
+    router.push('/onboarding1');
   };
+
+  
     {/* */}
     // stack screen por defecto <Stack.Screen options={{ headerShown: true, title: 'Verificate', headerBackTitle: "volver", headerTitleAlign: 'center' }} />
   return (
