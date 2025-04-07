@@ -4,6 +4,7 @@ import { Text } from '~/components/ui/text';
 import { Input } from '~/components/ui/input';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
+import logo from '~/assets/images/logoveciapp.png'
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function RegisterScreen() {
 
   const handleRegister = () => {
     // TODO: Implement registration logic
-    router.replace('/(tabs)');
+    router.replace('/otpVerification');
   };
 
   const openTerms = () => {
@@ -31,7 +32,7 @@ export default function RegisterScreen() {
     <ScrollView className="flex-1 bg-background">
       <View className="flex-1 items-center justify-center p-4 px-12 min-h-screen">
         <Image
-          source={require('../assets/images/logoveciapp.png')}
+          source={logo}
           className="w-48 h-48"
           resizeMode="contain"
         />
