@@ -5,7 +5,6 @@ import { Text } from '~/components/ui/text';
 import { Input } from '~/components/ui/input';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import logo from '~/assets/images/logoveciapp.png';
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -17,8 +16,9 @@ export default function LoginScreen() {
     if (!showPassword) {
       setShowPassword(true);
     } else {
+      console.log("se logeo ok")
       // TODO: Implement Sign In
-      router.replace('/(tabs)');
+      //router.replace('/(tabs)');
     }
   };
 
@@ -33,7 +33,7 @@ export default function LoginScreen() {
   return (
     <View className="flex-1 items-center justify-center p-4 px-12 bg-background">
       <Image
-        source={logo}
+        source={require('../assets/images/logoveciapp.png')}
         className="w-56 h-48"
         resizeMode="contain"
       />

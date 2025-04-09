@@ -1,18 +1,10 @@
 import { View, Image, ScrollView } from 'react-native';
 import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
-import { Input } from '~/components/ui/input';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
 
-export default function ForgotPasswordScreen() {
+export default function PasswordConfirmationScreen() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-
-  const handleResetPassword = () => {
-    // TODO: Implement password reset logic
-    router.replace('/(auth)/otpVerification');
-  };
 
   return (
     <ScrollView className="flex-1 bg-background">
@@ -24,36 +16,28 @@ export default function ForgotPasswordScreen() {
         />
         
         <Text className="text-2xl font-bold mb-2 text-center">
-          Recuperar contraseña
+          ¡Revisa tu correo!
         </Text>
 
         <Text className="text-sm text-muted-foreground mb-6 text-center">
-          Ingresa tu correo electrónico para recuperar tu contraseña
+          Te enviamos un enlace para que recuperes tu contraseña; Sigue las instrucciones desde tu correo.
         </Text>
 
         <View className="w-full gap-4">
-          <Input
-            placeholder="Correo electrónico"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-
           <Button
-            onPress={handleResetPassword}
+            onPress={() => router.push('/')}
             className="w-full bg-yellow-400 rounded-full"
           >
-            <Text className="text-black font-bold">Enviar instrucciones</Text>
+            <Text className="text-black font-bold">Volver al Inicio de Sesión</Text>
           </Button>
 
           <Text className="text-center text-muted-foreground text-sm">
-            ¿Recordaste tu contraseña?{' '}
+            ¿No te ha llegado aún?{' '}
             <Text 
               className="text-primary underline font-bold"
-              onPress={() => router.push('/')}
+              onPress={() => router.back()}
             >
-              Iniciar sesión
+              Reenviar correo
             </Text>
           </Text>
         </View>
