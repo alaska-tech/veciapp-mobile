@@ -18,7 +18,7 @@ export default function LoginScreen() {
     } else {
       console.log("se logeo ok")
       // TODO: Implement Sign In
-      //router.replace('/(tabs)');
+      router.replace('/(tabs)');
     }
   };
 

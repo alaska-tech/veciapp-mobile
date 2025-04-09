@@ -3,7 +3,7 @@ import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
 import { useRouter } from 'expo-router';
 
-export default function PasswordConfirmationScreen() {
+export default function PassConfirmationScreen() {
   const router = useRouter();
 
   return (
@@ -15,30 +15,34 @@ export default function PasswordConfirmationScreen() {
           resizeMode="contain"
         />
         
-        <Text className="text-2xl font-bold mb-2 text-center">
+        <Text className="text-xl font-bold mb-4 text-center">
           ¡Revisa tu correo!
         </Text>
 
-        <Text className="text-sm text-muted-foreground mb-6 text-center">
+        <Text className="text-sm text-muted-foreground mb-8 text-center">
           Te enviamos un enlace para que recuperes tu contraseña; Sigue las instrucciones desde tu correo.
         </Text>
 
-        <View className="w-full gap-4">
-          <Button
-            onPress={() => router.push('/')}
-            className="w-full bg-yellow-400 rounded-full"
-          >
-            <Text className="text-black font-bold">Volver al Inicio de Sesión</Text>
-          </Button>
-
-          <Text className="text-center text-muted-foreground text-sm">
-            ¿No te ha llegado aún?{' '}
+        <View className="w-full gap-6">
+          <View>
+            <Text className="text-sm text-muted-foreground text-center mb-4">
+              ¿No te ha llegado aún?
+            </Text>
             <Text 
-              className="text-primary underline font-bold"
+              className="text-blue-500 bg-gray-50 p-4 rounded-lg text-center text-md border border-gray-100"
               onPress={() => router.back()}
             >
               Reenviar correo
             </Text>
+          </View>
+
+          <Text 
+            className="text-sm text-muted-foreground text-center"
+          >
+            Volver al <Text className="font-bold" onPress={() => {
+              router.dismissAll();
+              router.navigate('/');
+            }}>Inicio de Sesión</Text>
           </Text>
         </View>
       </View>

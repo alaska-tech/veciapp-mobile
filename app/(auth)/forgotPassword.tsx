@@ -11,7 +11,7 @@ export default function ForgotPasswordScreen() {
 
   const handleResetPassword = () => {
     // TODO: Implement password reset logic
-    router.replace('/(auth)/otpVerification');
+    router.push('/(auth)/passConfirmation');
   };
 
   return (

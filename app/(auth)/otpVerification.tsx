@@ -58,7 +58,7 @@ export default function OtpVerification() {
         
       <Stack.Screen options={{ headerShown: true, title: 'Verifícate', headerBackTitle: "volver", headerTitleAlign: 'center' }} />
 
-      <View className="items-center mt-10">
+      <View className="items-center">
         <Image
           source={require('../../assets/images/logoveciapp.png')}
           className="w-48 h-48"
@@ -101,7 +101,7 @@ export default function OtpVerification() {
 
       <TouchableOpacity className="mt-4">
         <Text className="text-center text-muted-foreground">
-          Reenviar código: <Text className="text-black">05:00</Text>
+          Reenviar código: <Text className="">05:00</Text>
         </Text>
       </TouchableOpacity>
     </View>
