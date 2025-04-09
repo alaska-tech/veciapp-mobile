@@ -3,7 +3,6 @@ import React, { useState, useRef } from 'react';
 import { Stack, useRouter } from 'expo-router';
 import { Text } from '~/components/ui/text';
 import { Button } from '~/components/ui/button';
-import logo from '~/assets/images/logoveciapp.png';
 import { Image } from 'react-native';
 import { ChevronLeft } from 'lucide-react-native';
 
@@ -38,14 +37,8 @@ export default function OtpVerification() {
     router.push('/onboarding1');
   };
 
-  
-    {/* */}
-    // stack screen por defecto <Stack.Screen options={{ headerShown: true, title: 'Verificate', headerBackTitle: "volver", headerTitleAlign: 'center' }} />
-  return (
-    <View className="flex-1 bg-background p-4 items-center justify-center px-12">
-        
-        
-      <Stack.Screen 
+    {/* 
+            <Stack.Screen 
         options={{ 
           headerShown: true, 
             title: 'Verificate', 
@@ -58,17 +51,23 @@ export default function OtpVerification() {
           )
         }} //bloque importante - no eliminar
       />
-      
-      <View className="items-center mt-10">
+      */}
+    // stack screen por defecto <Stack.Screen options={{ headerShown: true, title: 'Verificate', headerBackTitle: "volver", headerTitleAlign: 'center' }} />
+  return (
+    <View className="flex-1 bg-background p-4 items-center justify-center px-12">
+        
+      <Stack.Screen options={{ headerShown: true, title: 'Verifícate', headerBackTitle: "volver", headerTitleAlign: 'center' }} />
+
+      <View className="items-center">
         <Image
-          source={logo}
+          source={require('../../assets/images/logoveciapp.png')}
           className="w-48 h-48"
           resizeMode="contain"
         />
       </View>
 
       <View className="mt-8">
-        <Text className="text-2xl font-bold text-center">Verificate</Text>
+        <Text className="text-2xl font-bold text-center">Verifícate</Text>
         <Text className="text-center text-muted-foreground mt-2">
           Introduce el código que se envió a tu cuenta de correo electrónico
         </Text>
@@ -102,7 +101,7 @@ export default function OtpVerification() {
 
       <TouchableOpacity className="mt-4">
         <Text className="text-center text-muted-foreground">
-          Reenviar código: <Text className="text-black">05:00</Text>
+          Reenviar código: <Text className="">05:00</Text>
         </Text>
       </TouchableOpacity>
     </View>

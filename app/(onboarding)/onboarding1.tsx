@@ -3,7 +3,6 @@ import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
 import { useRouter } from 'expo-router';
 import { ArrowRight } from 'lucide-react-native';
-import onboarding1 from '~/assets/images/onboarding1.png';
 
 export default function Onboarding1() {
   const router = useRouter();
@@ -21,7 +20,7 @@ export default function Onboarding1() {
 
       <View className="flex-1 items-center justify-center relative">
         <Image
-          source={onboarding1}
+          source={require('../../assets/images/onboarding1.png')}
           className="w-72 h-72 -mt-40"
           resizeMode="contain"
         />

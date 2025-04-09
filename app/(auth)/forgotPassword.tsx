@@ -4,7 +4,6 @@ import { Text } from '~/components/ui/text';
 import { Input } from '~/components/ui/input';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import logo from '~/assets/images/logoveciapp.png'
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
@@ -12,14 +11,14 @@ export default function ForgotPasswordScreen() {
 
   const handleResetPassword = () => {
     // TODO: Implement password reset logic
-    router.replace('/otpVerification');
+    router.push('/(auth)/passConfirmation');
   };
 
   return (
     <ScrollView className="flex-1 bg-background">
       <View className="flex-1 items-center justify-center p-4 px-12 min-h-screen">
         <Image
-          source={logo}
+          source={require('../../assets/images/logoveciapp.png')}
           className="w-48 h-48"
           resizeMode="contain"
         />

@@ -3,7 +3,6 @@ import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
 import { useRouter } from 'expo-router';
 import { ArrowRight } from 'lucide-react-native';
-import onboarding4 from '~/assets/images/onboarding4.png';
 
 export default function Onboarding4() {
   const router = useRouter();
@@ -21,7 +20,7 @@ export default function Onboarding4() {
 
       <View className="flex-1 items-center justify-center relative">
         <Image
-          source={onboarding4}
+          source={require('../../assets/images/onboarding4.png')}
           className="w-72 h-72 -mt-40"
           resizeMode="contain"
         />
@@ -36,7 +35,10 @@ export default function Onboarding4() {
           </Text>
 
           <Button
-            onPress={() => router.replace('/(tabs)')}
+            onPress={() => {
+              router.dismissAll();
+              router.navigate('/(tabs)');
+            }}
             className="w-full bg-yellow-400 rounded-full flex-row items-center justify-center gap-2"
           >
             <Text className="text-black font-bold">Empezar</Text>
