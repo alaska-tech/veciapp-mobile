@@ -77,7 +77,7 @@ export default function RegisterScreen() {
             onPress={handleRegister}
             className="w-full bg-yellow-400 rounded-full"
           >
-            <Text className="text-black font-bold">Registrarse</Text>
+            <Text className="text-black font-bold text-md">Registrarse</Text>
           </Button>
 
           <Text className="text-center text-muted-foreground text-sm">

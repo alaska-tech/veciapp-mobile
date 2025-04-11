@@ -34,12 +34,19 @@ export default function Onboarding4() {
             Explora, conéctate y sé parte del cambio en tu comunidad.
           </Text>
 
+          <View className="flex-row justify-center gap-2 mb-4">
+            <View className="w-2 h-2 rounded-full bg-emerald-800/30" />
+            <View className="w-2 h-2 rounded-full bg-emerald-800/30" />
+            <View className="w-2 h-2 rounded-full bg-emerald-800/30" />
+            <View className="w-2 h-2 rounded-full bg-emerald-800" />
+          </View>
+
           <Button
             onPress={() => {
               router.dismissAll();
-              router.navigate('/(tabs)');
+              router.replace('/(tabs)');
             }}
-            className="w-full bg-yellow-400 rounded-full flex-row items-center justify-center gap-2"
+            className="w-full bg-yellow-400 rounded-full flex-row items-center justify-center gap-2 shadow-md"
           >
             <Text className="text-black font-bold">Empezar</Text>
             <ArrowRight size={20} color="black" />
