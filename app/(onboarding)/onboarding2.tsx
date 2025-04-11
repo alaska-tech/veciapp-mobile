@@ -34,9 +34,16 @@ export default function Onboarding2() {
             Compra fácil y seguro en un marketplace que impulsa a los emprendedores de Santa Marta.
           </Text>
 
+          <View className="flex-row justify-center gap-2 mb-4">
+            <View className="w-2 h-2 rounded-full bg-emerald-800/30" />
+            <View className="w-2 h-2 rounded-full bg-emerald-800" />
+            <View className="w-2 h-2 rounded-full bg-emerald-800/30" />
+            <View className="w-2 h-2 rounded-full bg-emerald-800/30" />
+          </View>
+
           <Button
             onPress={() => router.push('/onboarding3')}
-            className="w-full bg-yellow-400 rounded-full flex-row items-center justify-center gap-2"
+            className="w-full bg-yellow-400 rounded-full flex-row items-center justify-center gap-2 shadow-md"
           >
             <Text className="text-black font-bold">Siguiente</Text>
             <ArrowRight size={20} color="black" />

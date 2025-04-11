@@ -44,7 +44,7 @@ export default function ForgotPasswordScreen() {
             onPress={handleResetPassword}
             className="w-full bg-yellow-400 rounded-full"
           >
-            <Text className="text-black font-bold">Enviar instrucciones</Text>
+            <Text className="text-black font-bold text-md">Enviar instrucciones</Text>
           </Button>
 
           <Text className="text-center text-muted-foreground text-sm">

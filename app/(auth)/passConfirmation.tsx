@@ -19,7 +19,7 @@ export default function PassConfirmationScreen() {
           ¡Revisa tu correo!
         </Text>
 
-        <Text className="text-sm text-muted-foreground mb-8 text-center">
+        <Text className="text-md text-muted-foreground mb-8 text-center">
           Te enviamos un enlace para que recuperes tu contraseña; Sigue las instrucciones desde tu correo.
         </Text>
 
@@ -30,14 +30,14 @@ export default function PassConfirmationScreen() {
             </Text>
             <Text 
               className="text-blue-500 bg-gray-50 p-4 rounded-lg text-center text-md border border-gray-100"
-              onPress={() => router.back()}
+              onPress={() => router.back()} //aquí no se ha definido a donde se va a ir. por eso pa atras :v
             >
               Reenviar correo
             </Text>
           </View>
 
           <Text 
-            className="text-sm text-muted-foreground text-center"
+            className="text-muted-foreground text-center"
           >
             Volver al <Text className="font-bold" onPress={() => {
               router.dismissAll();

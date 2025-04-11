@@ -10,9 +10,9 @@ export default function Onboarding1() {
   return (
     <View className="flex-1 bg-emerald-200">
       <View className="flex-row justify-end p-4">
-        <Text 
-          className="text-emerald-800 text-lg font-bold pt-14 mr-4" 
-          onPress={() => router.replace('/(tabs)')}
+        <Text
+          className="text-emerald-800 text-lg font-bold pt-14 mr-4"
+          onPress={() => router.replace("/(tabs)")}
         >
           Saltar
         </Text>
@@ -20,7 +20,7 @@ export default function Onboarding1() {
 
       <View className="flex-1 items-center justify-center relative">
         <Image
-          source={require('../../assets/images/onboarding1.png')}
+          source={require("../../assets/images/onboarding1.png")}
           className="w-72 h-72 -mt-40"
           resizeMode="contain"
         />
@@ -31,12 +31,20 @@ export default function Onboarding1() {
           </Text>
 
           <Text className="text-center text-emerald-800 font-medium mb-8">
-            Conecta con emprendedores locales y descubre productos y servicios de tu comunidad.
+            Conecta con emprendedores locales y descubre productos y servicios
+            de tu comunidad.
           </Text>
 
+          <View className="flex-row justify-center gap-2 mb-4">
+            <View className="w-2 h-2 rounded-full bg-emerald-800" />
+            <View className="w-2 h-2 rounded-full bg-emerald-800/30" />
+            <View className="w-2 h-2 rounded-full bg-emerald-800/30" />
+            <View className="w-2 h-2 rounded-full bg-emerald-800/30" />
+          </View>
+
           <Button
-            onPress={() => router.push('/onboarding2')}
-            className="w-full bg-yellow-400 rounded-full flex-row items-center justify-center gap-2"
+            onPress={() => router.push("/onboarding2")}
+            className="w-full bg-yellow-400 rounded-full flex-row items-center justify-center gap-2 shadow-md"
           >
             <Text className="text-black font-bold">Siguiente</Text>
             <ArrowRight size={20} color="black" />
