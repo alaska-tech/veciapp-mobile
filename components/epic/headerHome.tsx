@@ -12,11 +12,11 @@ export default function HeaderHome() {
   return (
     <View className='mb-6'>
       {/* Logo and Icons */}
-      <View className="mb-2 flex-row items-center justify-between">
-        <View className="w-24 h-24 flex items-center justify-center">
+      <View className="mb-4 flex-row items-center justify-between">
+        <View className="w-10 h-10 flex items-center justify-center">
           <Image 
-            source={require('../../assets/images/logoveciapp.png')}
-            className="w-36 h-34 ml-10"
+            source={require('../../assets/images/logo.png')}
+            className="w-10 h-10"
             resizeMode="contain"
           />
         </View>
@@ -31,7 +31,7 @@ export default function HeaderHome() {
             activeOpacity={0.3}
             className="border-1 border-gray-500 border rounded-xl p-2"
           >
-            <ShoppingCartIcon size={22} color="#666" fill="#666" />
+            <ShoppingCartIcon size={22} color="#666"/>
           </TouchableOpacity>
         </View>
       </View>
@@ -47,21 +47,41 @@ export default function HeaderHome() {
           />
           {!searchText && (
             <View className="absolute left-3 top-3">
-              <Search size={20} color="#666" />
+              <Search size={20} color="#666"/>
             </View>
           )}
         </View>
       </View>
 
-      {/* Location */}
-      <View className="flex-row items-center gap-2">
-        <MapPinIcon size={20} color="#666"/>
-        <Text 
-          className="text-gray-500 text-md flex-1"
-          numberOfLines={1}
-        >
-          Enviar a Calle 123 St 45 # 65 Sta Marta, Calle25...
-        </Text>
+      {/* Profile and Location Container */}
+      <View className="flex-row items-center justify-between">
+        {/* Profile Section */}
+        <View className="flex-row items-center max-w-[150px] gap-2 bg-gray-100 py-2 px-3 rounded-full">
+          <Image 
+            source={require('../../assets/images/profile.png')}
+            className="w-8 h-8 rounded-full"
+            resizeMode="cover"
+          />
+          <Text className="text-gray-700 font-medium flex-1" numberOfLines={1}>
+            Hombre Peneeeeeeeeee
+          </Text>
+        </View>
+
+        {/* Location Section */}
+        <View className="flex-row items-center flex-1 ml-2">
+          <MapPinIcon size={20} color="#ffffff" fill="#666"/>
+          <Text 
+            className="text-gray-500 text-md pr-1"
+          >
+            Enviar a
+          </Text>
+          <Text 
+            className="text-gray-500 text-md font-bold"
+            numberOfLines={1}
+          >
+            Calle 123 St 45 # 65 Sta Marta, Calle25...
+          </Text>
+        </View>
       </View>
     </View>
   );
