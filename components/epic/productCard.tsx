@@ -51,7 +51,7 @@ export default function ProductCard({
             )}
             
             <View className="flex-row items-center gap-1">
-              <MapPin size={18} color="#666666" />
+              <MapPin size={18} color="#ffffff" fill="#666" />
               <Text className="text-md text-gray-500" numberOfLines={1}>
                 {distance} de distancia
               </Text>
