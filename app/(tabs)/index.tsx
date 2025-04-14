@@ -4,7 +4,7 @@ import { Text } from "~/components/ui/text";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import HeaderHome from "../../components/epic/headerHome";
 import CategoriesHome from '~/components/epic/categoriesHome';
-import InfiniteScrollHome from '~/components/epic/infiniteScrollHome';
+import ColumnCard from '~/components/epic/columnCard';
 import { ScrollView } from "react-native"
 
 export default function HomeScreen() {
@@ -12,7 +12,7 @@ export default function HomeScreen() {
     <ScrollView className="h-full w-full p-4 mt-8">
       <HeaderHome />
       <CategoriesHome />
-      <InfiniteScrollHome />
+      <ColumnCard />
     </ScrollView>
   );
 }

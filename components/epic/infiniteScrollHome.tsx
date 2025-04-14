@@ -1,4 +1,4 @@
-import { View, ScrollView, Image, TouchableOpacity } from 'react-native';
+{/*import { View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { Text } from '~/components/ui/text';
 import ProductCard from '~/components/epic/productCard';
 
@@ -54,7 +54,7 @@ export default function InfiniteScrollHome() {
       <Text className="text-3xl font-bold mb-4">para ti</Text>
       
       <View className="flex-row w-full">
-        {/* Left Column */}
+        {/* Left Column 
         <View className="w-1/2 pr-2">
           {leftColumnProducts.map((product, index) => (
             <View key={`left-${index}`} className="mb-4">
@@ -68,7 +68,7 @@ export default function InfiniteScrollHome() {
           ))}
         </View>
 
-        {/* Right Column */}
+        {/* Right Column 
         <View className="w-1/2 pl-2 mt-8">
           {rightColumnProducts.map((product, index) => (
             <View key={`right-${index}`} className="mb-4">
@@ -85,3 +85,4 @@ export default function InfiniteScrollHome() {
     </View>
   );
 }
+*/}
