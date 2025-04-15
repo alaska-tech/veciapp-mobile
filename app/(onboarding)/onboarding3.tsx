@@ -12,7 +12,7 @@ export default function Onboarding3() {
       <View className="flex-row justify-end p-4">
         <Text 
           className="text-emerald-800 text-lg font-bold pt-14 mr-4"
-          onPress={() => router.replace('/(tabs)')}
+          onPress={() => router.replace('/(client)/home')}
         >
           Saltar
         </Text>
