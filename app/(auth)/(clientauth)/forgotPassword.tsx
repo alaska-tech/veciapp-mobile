@@ -11,14 +11,14 @@ export default function ForgotPasswordScreen() {
 
   const handleResetPassword = () => {
     // TODO: Implement password reset logic
-    router.push('/(auth)/passConfirmation');
+    router.push('/passConfirmation');
   };
 
   return (
     <ScrollView className="flex-1 bg-background">
       <View className="flex-1 items-center justify-center p-4 px-12 min-h-screen">
         <Image
-          source={require('../../assets/images/logoveciapp.png')}
+          source={require('../../../assets/images/logoveciapp.png')}
           className="w-48 h-48"
           resizeMode="contain"
         />

@@ -16,7 +16,7 @@ export default function RegisterScreen() {
 
   const handleRegister = () => {
     // TODO: Implement registration logic
-    router.push('/otpVerification');
+    router.push('/passConfirmation');
   };
 
   const openTerms = () => {
@@ -31,7 +31,7 @@ export default function RegisterScreen() {
     <ScrollView className="flex-1 bg-background">
       <View className="flex-1 items-center justify-center p-4 px-12 min-h-screen">
         <Image
-          source={require('../../assets/images/logoveciapp.png')}
+          source={require('../../../assets/images/logoveciapp.png')}
           className="w-48 h-48"
           resizeMode="contain"
         />
