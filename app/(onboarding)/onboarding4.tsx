@@ -12,7 +12,7 @@ export default function Onboarding4() {
       <View className="flex-row justify-end p-4">
         <Text 
           className="text-emerald-800 text-lg font-bold pt-14 mr-4"
-          onPress={() => router.replace('/(tabs)')}
+          onPress={() => router.replace('/(client)/home')}
         >
           Saltar
         </Text>
@@ -44,7 +44,7 @@ export default function Onboarding4() {
           <Button
             onPress={() => {
               router.dismissAll();
-              router.replace('/(tabs)');
+              router.replace('/(client)/home');
             }}
             className="w-full bg-yellow-400 rounded-full flex-row items-center justify-center gap-2 shadow-md"
           >

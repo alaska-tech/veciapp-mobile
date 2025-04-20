@@ -23,8 +23,8 @@ export default function LoginScreen() {
       // Simulate login delay
       setTimeout(() => {
         console.log("se logeo ok");
-        router.replace('/(tabs)');
-      }, 5000);
+        router.replace('/(client)/home');
+      }, 4000);
     }
   };
 
