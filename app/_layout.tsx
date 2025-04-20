@@ -42,15 +42,13 @@ export default function RootLayout() {
   React.useEffect(() => {
     async function prepare() {
       try {
-        // Mantén el splash screen visible
         await SplashScreen.preventAutoHideAsync();
 
         if (Platform.OS === 'web') {
           document.documentElement.classList.add('bg-background');
         }
         
-        await setAndroidNavigationBar(colorScheme);
-        // Simula carga de recursos
+        await setAndroidNavigationBar(isDarkColorScheme ? 'dark' : 'light');
         await new Promise(resolve => setTimeout(resolve, 2000));
       } catch (e) {
         console.warn(e);
@@ -74,11 +72,11 @@ export default function RootLayout() {
 
   return (
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-        <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+      <ThemeProvider value={LIGHT_THEME}>
+        <StatusBar style='dark' />
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen
-            name="(tabs)"
+            name="index"
             options={{
               headerShown: false,
             }}
