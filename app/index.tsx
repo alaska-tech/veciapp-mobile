@@ -1,17 +1,17 @@
-import React from'react';
-import { View, Image, Linking } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
-import { Button } from '~/components/ui/button';
-import { Text } from '~/components/ui/text';
-import { Input } from '~/components/ui/input';
-import { Loader } from '~/components/ui/loader';
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import React from "react";
+import { View, Image, Linking } from "react-native";
+import Animated, { FadeIn } from "react-native-reanimated";
+import { Button } from "~/components/ui/button";
+import { Text } from "~/components/ui/text";
+import { Input } from "~/components/ui/input";
+import { Loader } from "~/components/ui/loader";
+import { useRouter } from "expo-router";
+import { useState } from "react";
 
 export default function LoginScreen() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -23,32 +23,34 @@ export default function LoginScreen() {
       // Simulate login delay
       setTimeout(() => {
         console.log("se logeo ok");
-        router.replace('/(client)/home');
+        router.replace("/(client)/home");
       }, 4000);
     }
   };
 
+  const handleVendorSignIn = () => {
+    router.replace("/otpVerification");
+  };
+
   const openTerms = () => {
-    Linking.openURL('https://google.com');
+    Linking.openURL("https://google.com");
   };
 
   const openPrivacy = () => {
-    Linking.openURL('https://google.com');
+    Linking.openURL("https://google.com");
   };
 
   return (
     <View className="flex-1 items-center justify-center p-4 px-12 bg-background">
       <Image
-        source={require('../assets/images/logoveciapp.png')}
+        source={require("../assets/images/logoveciapp.png")}
         className="w-56 h-48"
         resizeMode="contain"
       />
-      
+
       {!isLoading ? (
         <>
-          <Text className="text-xl font-bold text-center">
-            ¡Qué más, Veci!
-          </Text>
+          <Text className="text-xl font-bold text-center">¡Qué más, Veci!</Text>
           <Text className="text-xl font-bold mb-2 text-center">
             Bienvenido de vuelta a VeciApp.
           </Text>
@@ -58,7 +60,7 @@ export default function LoginScreen() {
           Iniciando Sesión
         </Text>
       )}
-      
+
       {!isLoading && (
         <Text className="text-sm text-muted-foreground text-left w-full mt-4">
           Ingresa tu correo pa' iniciar sesión.
@@ -78,6 +80,9 @@ export default function LoginScreen() {
 
         {showPassword && (
           <Animated.View entering={FadeIn.duration(300)}>
+            <Text className="text-sm text-muted-foreground text-left w-full mt-4">
+              Escribe tu contraseña
+            </Text>
             <Input
               placeholder="Contraseña"
               value={password}
@@ -95,7 +100,7 @@ export default function LoginScreen() {
           disabled={isLoading}
         >
           {isLoading ? (
-            <Loader/>
+            <Loader />
           ) : (
             <Text className="text-black font-bold text-md">
               {showPassword ? "Vamos allá" : "Continuar"}
@@ -103,33 +108,47 @@ export default function LoginScreen() {
           )}
         </Button>
 
+        {/* boton de prueba para probar flujo de vendedor (eliminar al implementar logica de login) */}
+        <Button
+          onPress={handleVendorSignIn}
+          className="w-full bg-yellow-400 rounded-full mb-4"
+        >
+          <Text className="text-black font-bold text-md">
+            Continuar como vendedor
+          </Text>
+        </Button>
+
         {!isLoading && (
           <>
             <Text
               className="text-blue-500 font-medium text-center text-md mb-6"
-              onPress={() => router.push('/forgotPassword')}
+              onPress={() => router.push("/forgotPassword")}
             >
               No recuerdo mi clave
             </Text>
 
             <View className="flex-row justify-center items-center mt-2">
               <Text className="text-md text-muted-foreground">
-                ¿No tienes cuenta?{' '}
+                ¿No tienes cuenta?{" "}
               </Text>
-              <Text 
+              <Text
                 className="text-primary font-bold underline text-md"
-                onPress={() => router.push('/register')}
+                onPress={() => router.push("/register")}
               >
                 Regístrate aquí
               </Text>
             </View>
 
             <Text className="text-center text-muted-foreground mt-4">
-              Al seguir, aceptas nuestros{' '}
+              Al seguir, aceptas nuestros{" "}
               <Text className="text-primary font-semibold" onPress={openTerms}>
                 Términos
-              </Text> y{' '}
-              <Text className="text-primary font-semibold" onPress={openPrivacy}>
+              </Text>{" "}
+              y{" "}
+              <Text
+                className="text-primary font-semibold"
+                onPress={openPrivacy}
+              >
                 Políticas de Privacidad
               </Text>
             </Text>
