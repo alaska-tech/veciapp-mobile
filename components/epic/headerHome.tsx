@@ -1,7 +1,6 @@
 import { View, TouchableOpacity } from 'react-native';
 import { Text } from "~/components/ui/text";
 import { Input } from "~/components/ui/input";
-import { ThemeToggle } from '~/components/ThemeToggle';
 import { MapPinIcon, ShoppingCartIcon, Search } from 'lucide-react-native';
 import { Image } from 'react-native';
 import { useState } from 'react';
@@ -23,13 +22,7 @@ export default function HeaderHome() {
         <View className="flex-row gap-3">
           <TouchableOpacity 
             activeOpacity={0.3}
-            className="border-1 border-gray-500 border rounded-xl p-2"
-          >
-            <ThemeToggle />
-          </TouchableOpacity>
-          <TouchableOpacity 
-            activeOpacity={0.3}
-            className="border-1 border-gray-500 border rounded-xl p-2"
+            className="rounded-xl p-2"
           >
             <ShoppingCartIcon size={22} color="#666"/>
           </TouchableOpacity>

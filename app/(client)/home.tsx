@@ -21,7 +21,7 @@ export default function HomeScreen() {
         subtitle="Solo por hoy"
         buttonText="Aprovecha de una"
         image={require("../../assets/images/beauty.png")}
-        onPress={() => { router.push("/(tabs)/cart") }}
+        onPress={() => { router.push("/(client)/cart") }}
       />
       <ColumnCard />
     </ScrollView>
