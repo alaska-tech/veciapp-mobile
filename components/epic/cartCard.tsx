@@ -1,8 +1,9 @@
 import { View, Image, ImageSourcePropType } from 'react-native';
+import React from 'react';
 import { Card, CardContent } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
-import { Trash2, Plus, MapPin, ChevronUp } from 'lucide-react-native';
+import { Trash2, Plus, Minus, MapPin, ChevronUp, ChevronDown } from 'lucide-react-native';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "~/components/ui/collapsible";
 
 interface CartCardProps {
@@ -42,6 +43,8 @@ export default function CartCard({
     return (price || 0).toLocaleString();
   };
 
+  const [isOpen, setIsOpen] = React.useState(false);
+
   return (
     <Card className="rounded-3xl overflow-hidden">
       {/* Provider Info Section */}
@@ -52,7 +55,7 @@ export default function CartCard({
             source={typeof providerImage === 'string' ? { uri: providerImage } : providerImage}
             className="w-8 h-8 rounded-full"
           />
-          <Text className="ml-2 text-lg font-semibold">{providerName}</Text>
+          <Text className="ml-2 text-lg font-semibold" numberOfLines={1}>{providerName}</Text>
         </View>
       </View>
       
@@ -70,23 +73,33 @@ export default function CartCard({
               className="w-20 h-20 rounded-full"
             />
             <View className="flex-1 ml-4">
-              <Text className="text-lg font-semibold">{item.name}</Text>
+              <Text className="text-lg font-semibold" numberOfLines={1}>{item.name}</Text>
               <View className="flex-row items-center justify-between mt-2">
-                <View className="flex-row items-center">
+                <View className="flex-row items-center rounded-full border border-gray-200 p-2">
                   <Button
                     variant="ghost"
                     size="icon"
-                    onPress={() => onDelete?.(index)}
+                    onPress={() => {
+                      if (item.quantity <= 1) {
+                        onDelete?.(index);
+                      } else {
+                        onQuantityChange?.(index, item.quantity - 1);
+                      }
+                    }}
                     className="h-8 w-8"
                   >
-                    <Trash2 size={18} color="#666666" />
+                    {item.quantity <= 1 ? (
+                      <Trash2 size={18} color="#666666" />
+                    ) : (
+                      <Minus size={18} color="#666666" />
+                    )}
                   </Button>
                   <Text className="mx-4">{item.quantity || 0}</Text>
                   <Button
                     variant="ghost"
                     size="icon"
                     onPress={() => onQuantityChange?.(index, (item.quantity || 0) + 1)}
-                    className="h-8 w-8"
+                    className="h-8 w-8 border border-gray-400 rounded-md"
                   >
                     <Plus size={18} color="#666666" />
                   </Button>
@@ -99,10 +112,18 @@ export default function CartCard({
       ))}
 
       {/* Order Details Section */}
-      <Collapsible className="">
+      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleTrigger className="p-4 flex-row items-center justify-between">
           <Text className="text-lg font-semibold">Detalles de la compra</Text>
-          <ChevronUp size={20} color="#666666" />
+          {isOpen ? (
+            <View className="w-8 h-8 rounded-full border border-gray-400 items-center justify-center">
+              <ChevronUp size={20} color="#666666" />
+            </View>
+          ) : (
+            <View className="w-8 h-8 rounded-full border border-gray-400 items-center justify-center">
+              <ChevronDown size={20} color="#666666" />
+            </View>
+          )}
         </CollapsibleTrigger>
         <CollapsibleContent className="p-4">
           <View className="flex-row justify-between mb-2">
@@ -128,6 +149,7 @@ export default function CartCard({
       <View className="p-4">
         <Button
           className="w-full bg-yellow-400 rounded-full"
+          size="lg"
           onPress={onPayPress}
         >
           <Text className="text-black font-bold text-xl">Pagar ${formatPrice(total)}</Text>
