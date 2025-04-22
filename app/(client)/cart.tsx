@@ -1,39 +1,68 @@
 import { ScrollView } from "react-native";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useRouter } from "expo-router";
 import CartCard from "~/components/epic/cartCard";
+import { useState } from "react";
 
 export default function CartScreen() {
   const router = useRouter();
+  const [cartItems, setCartItems] = useState([
+    {
+      name: "Arroz con Coco Tradicional (Porción)",
+      price: 15000,
+      image: "https://picsum.photos/200",
+      quantity: 1,
+    },
+    {
+      name: "Tostadas de Pescado Frito",
+      price: 22000,
+      image: "https://picsum.photos/200",
+      quantity: 1,
+    },
+    {
+      name: "Ensalada de Frutas",
+      price: 18000,
+      image: "https://picsum.photos/200",
+      quantity: 1,
+    },
+  ]);
+
+  // Calculate totals based on current cart items
+  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const serviceCharge = subtotal * 0.10; // 10% service charge
+  const deliveryFee = 10000;
+  const total = subtotal + serviceCharge + deliveryFee;
+
+  const handleQuantityChange = (index: number, newQuantity: number) => {
+    setCartItems(prevItems => {
+      const newItems = [...prevItems];
+      newItems[index].quantity = newQuantity;
+      return newItems;
+    });
+  };
+
+  const handleDelete = (index: number) => {
+    setCartItems(prevItems => prevItems.filter((_, i) => i !== index));
+  };
+
   return (
     <ScrollView className="h-full w-full p-4 mt-12 mb-12">
       <CartCard
         providerName="Sabores de Santa Marta"
         providerImage="https://picsum.photos/200"
         distance="1.2Km"
-        items={[
-          {
-            name: "Arroz con Coco Tradicional (Porción)",
-            price: 15000,
-            image: "https://picsum.photos/200",
-            quantity: 1,
-          },
-          {
-            name: "Tostadas de Pescado Frito",
-            price: 22000,
-            image: "https://picsum.photos/200",
-            quantity: 1,
-          },
-        ]}
-        subtotal={37000}
-        serviceCharge={3700}
-        deliveryFee={10000}
-        total={50700}
-        onQuantityChange={(index, quantity) => {}}
-        onDelete={(index) => {}}
-        onPayPress={() => {}}
+        items={cartItems}
+        subtotal={subtotal}
+        serviceCharge={serviceCharge}
+        deliveryFee={deliveryFee}
+        total={total}
+        onQuantityChange={handleQuantityChange}
+        onDelete={handleDelete}
+        onPayPress={() => {
+          // Handle payment logic here :v
+          console.log("Processing payment...");
+        }}
       />
     </ScrollView>
   );
