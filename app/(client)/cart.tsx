@@ -4,6 +4,8 @@ import { Text } from "~/components/ui/text";
 import { useRouter } from "expo-router";
 import CartCard from "~/components/epic/cartCard";
 import { useState } from "react";
+import { Stack } from "expo-router";
+import React from "react";
 
 export default function CartScreen() {
   const router = useRouter();
@@ -47,7 +49,17 @@ export default function CartScreen() {
   };
 
   return (
-    <ScrollView className="h-full w-full p-4 mt-12 mb-12">
+    <>
+    <Stack.Screen
+      options={{
+        headerShadowVisible: false,
+        headerTitle: "Carrito de compras",
+        headerTitleAlign: "center",
+        headerShown: true,
+        headerBackVisible: true, 
+      }}
+    />
+    <ScrollView className="h-full w-full p-4 mb-12">
       <CartCard
         providerName="Sabores de Santa Marta"
         providerImage="https://picsum.photos/200"
@@ -65,5 +77,6 @@ export default function CartScreen() {
         }}
       />
     </ScrollView>
+    </>
   );
 }
