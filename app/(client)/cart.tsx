@@ -4,6 +4,10 @@ import { Text } from "~/components/ui/text";
 import { useRouter } from "expo-router";
 import CartCard from "~/components/epic/cartCard";
 import { useState } from "react";
+import { Stack } from "expo-router";
+import React from "react";
+import { View } from "react-native";
+import { MapPinIcon } from "lucide-react-native";
 
 export default function CartScreen() {
   const router = useRouter();
@@ -47,7 +51,31 @@ export default function CartScreen() {
   };
 
   return (
-    <ScrollView className="h-full w-full p-4 mt-12 mb-12">
+    <>
+    <Stack.Screen
+      options={{
+        headerShadowVisible: false,
+        headerTitle: "Carrito de compras",
+        headerTitleAlign: "center",
+        headerShown: true,
+        headerBackVisible: true, 
+      }}
+    />
+    <ScrollView className="h-full w-full p-4 mb-12">
+    <View className="flex-row items-center flex-1 ml-2 mb-4 border-b border-gray-400">
+          <MapPinIcon size={20} color="#ffffff" fill="#666"/>
+          <Text 
+            className="text-gray-500 text-md pr-1"
+          >
+            Enviar a
+          </Text>
+          <Text 
+            className="text-gray-500 text-md font-bold"
+            numberOfLines={1}
+          >
+            Calle 123 St 45 # 65 Sta Marta, Calle25...
+          </Text>
+        </View>
       <CartCard
         providerName="Sabores de Santa Marta"
         providerImage="https://picsum.photos/200"
@@ -65,5 +93,6 @@ export default function CartScreen() {
         }}
       />
     </ScrollView>
+    </>
   );
 }
