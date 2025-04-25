@@ -1,109 +1,163 @@
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Button } from "~/components/ui/button";
+import { ScrollView, View, Image } from "react-native";
 import { Text } from "~/components/ui/text";
-import { View } from 'react-native';
-import { ScrollView } from "react-native";
-import { 
-  ChevronLeft, 
-  Bell, 
-  UserCircle, 
-  Building2, 
-  Users, 
-  Lock, 
-  Shield, 
-  KeyRound, 
-  Moon, 
-  Users2, 
-  PlusCircle, 
-  HelpCircle, 
-  LogOut 
+import { Button } from "~/components/ui/button";
+import { useRouter } from "expo-router";
+import { Stack } from "expo-router";
+import React from "react";
+import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
+import {
+  Bell,
+  UserCircle,
+  Lock,
+  ChevronRight,
+  TimerReset,
+  UserX,
 } from "lucide-react-native";
-import { useColorScheme } from "~/lib/useColorScheme";
+import { Separator } from "~/components/ui/separator";
+import { Card, CardContent } from "~/components/ui/card";
+import { TouchableOpacity } from "react-native";
 
 export default function ProfileScreen() {
-  const { isDarkColorScheme } = useColorScheme();
-  const iconColor = isDarkColorScheme ? '#ffffff' : '#000000';
+  const router = useRouter();
 
   return (
-    <ScrollView className="flex-1 mt-8">
+    <>
+      <Stack.Screen
+        options={{
+          headerShadowVisible: false,
+          headerTitle: "Mi Cuenta",
+          headerTitleAlign: "center",
+          headerShown: true,
+          headerBackVisible: true,
+        }}
+      />
+      <ScrollView className="h-full w-full p-4">
+        <Card className="mb-6 pt-8 rounded-3xl">
+          <CardContent>
+            <View className="flex-col items-center justify-center gap-2">
+              <Avatar className="h-20 w-20" alt="avatar">
+                <AvatarImage source={{ uri: "https://picsum.photos/200" }} />
+                <AvatarFallback>
+                  <Text>JS</Text>
+                </AvatarFallback>
+              </Avatar>
+              <View className="items-center gap-1">
+                <Text className="text-xl font-semibold">JuanchoSM</Text>
+                <Text className="text-muted-foreground">
+                  juancho.santamarta@example.com
+                </Text>
+                <Text className="text-muted-foreground">
+                  Calle 22 #3-45, Centro Histórico
+                </Text>
+              </View>
+            </View>
 
-      <View className="p-4">
-        <View className="flex-row items-center mb-6">
-          <Avatar alt="profile" className="h-16 w-16 mr-4">
-            <AvatarImage source={{ uri: "https://github.com/shadcn.png" }} />
-            <AvatarFallback>
-              <Text>LK</Text>
-            </AvatarFallback>
-          </Avatar>
-          <View>
-            <Text className="text-lg font-semibold">Louise Joy King</Text>
-            <Text className="text-muted-foreground">louisejoy@email.com</Text>
-            <Text className="text-muted-foreground">Birmingham, UK</Text>
-          </View>
+            <Button
+              className="w-full flex-row items-center mt-4 bg-yellow-400 rounded-full gap-2"
+              size="lg"
+            >
+              <Bell className="h-2 w-2" color="#000" />
+              <Text className="text-black text-xl">Notificaciones</Text>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <ScrollView 
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          className="flex-row mb-6 px-1"
+        >
+          <TouchableOpacity 
+            activeOpacity={0.7} 
+            onPress={() => router.push("/home")} 
+            className="flex-1 mr-4"
+          >
+            <Card className="overflow-hidden bg-pink-100 rounded-t-full rounded-b-[3458px]">
+              <CardContent className="p-4 items-center">
+                <View className="w-32 aspect-square rounded-full overflow-hidden mb-3">
+                  <Image
+                    source={require("~/assets/images/orders.png")}
+                    className="w-full h-full"
+                    resizeMode="cover"
+                  />
+                </View>
+                <Text className="text-2xl font-medium text-center">Pedidos</Text>
+              </CardContent>
+            </Card>
+          </TouchableOpacity>
+        
+          <TouchableOpacity 
+            activeOpacity={0.7} 
+            onPress={() => router.push("/home")} 
+            className="flex-1"
+          >
+            <Card className="overflow-hidden bg-pink-100 rounded-t-full rounded-b-[3458px]">
+              <CardContent className="p-4 items-center">
+                <View className="w-32 aspect-square rounded-full overflow-hidden mb-3">
+                  <Image
+                    source={require("~/assets/images/help.png")}
+                    className="w-full h-full"
+                    resizeMode="cover"
+                  />
+                </View>
+                <Text className="text-2xl font-medium text-center">Ayuda</Text>
+              </CardContent>
+            </Card>
+          </TouchableOpacity>
+        </ScrollView>
+
+        <View className="gap-4">
+          <Button
+            className="w-full flex-row items-center justify-between"
+            variant="ghost"
+          >
+            <View className="flex-row items-center gap-2">
+              <UserCircle className="h-5 w-5 mr-3" color="#000000"/>
+              <Text>Perfil</Text>
+            </View>
+            <ChevronRight className="h-5 w-5" color="#000000"/>
+          </Button>
+
+          <Separator />
+
+          <Button
+            className="w-full flex-row items-center justify-between"
+            variant="ghost"
+          >
+            <View className="flex-row items-center gap-2">
+              <TimerReset className="h-5 w-5 mr-3" color="#000000"/>
+              <Text>Historial</Text>
+            </View>
+            <ChevronRight className="h-5 w-5" color="#000000"/>
+          </Button>
+
+          <Separator />
+
+          <Button
+            className="w-full flex-row items-center justify-between"
+            variant="ghost"
+          >
+            <View className="flex-row items-center gap-2">
+              <UserX className="h-5 w-5 mr-3" color="#000000"/>
+              <Text>Cerrar Sesión</Text>
+            </View>
+            <ChevronRight className="h-5 w-5" color="#000000"/>
+          </Button>
+
+          <Separator />
+
+          <Button
+            className="w-full flex-row items-center justify-between"
+            variant="ghost"
+          >
+            <View className="flex-row items-center gap-2">
+              <Lock className="h-5 w-5 mr-3" color="rgb(239 68 68)" />
+              <Text className="text-destructive">Eliminar Cuenta</Text>
+            </View>
+            <ChevronRight className="h-5 w-5" color="#000000"/>
+          </Button>
         </View>
-
-        <Button variant="outline" className="w-full flex-row items-center mb-4 gap-2">
-          <Bell className="h-5 w-5 mr-3" color={iconColor} />
-          <Text>Alerts</Text>
-        </Button>
-
-        <View className="space-y-2 gap-4">
-          <Button variant="outline" className="w-full flex-row items-center justify-start gap-2">
-            <UserCircle className="h-5 w-5 mr-3" color={iconColor} />
-            <Text>Edit Profile</Text>
-          </Button>
-          
-          <Button variant="outline" className="w-full flex-row items-center justify-start gap-2">
-            <Building2 className="h-5 w-5 mr-3" color={iconColor} />
-            <Text>Bank Data</Text>
-          </Button>
-
-          <Button variant="outline" className="w-full flex-row items-center justify-start gap-2">
-            <Users className="h-5 w-5 mr-3" color={iconColor} />
-            <Text>Contacts</Text>
-          </Button>
-
-          <Button variant="outline" className="w-full flex-row items-center justify-start gap-2"> 
-            <Lock className="h-5 w-5 mr-3" color={iconColor} />
-            <Text>Privacy</Text>
-          </Button>
-
-          <Button variant="outline" className="w-full flex-row items-center justify-start gap-2">
-            <Shield className="h-5 w-5 mr-3" color={iconColor} />
-            <Text>Safety</Text>
-          </Button>
-
-          <Button variant="outline" className="w-full flex-row items-center justify-start gap-2">
-            <KeyRound className="h-5 w-5 mr-3" color={iconColor} />
-            <Text>Two-Factor Authentication</Text>
-          </Button>
-
-          <Button variant="outline" className="w-full flex-row items-center justify-start gap-2">
-            <Moon className="h-5 w-5 mr-3" color={iconColor} />
-            <Text>Theme</Text>
-          </Button>
-
-          <Button variant="outline" className="w-full flex-row items-center justify-start gap-2">
-            <Users2 className="h-5 w-5 mr-3" color={iconColor} />
-            <Text>Switch Account</Text>
-          </Button>
-
-          <Button variant="outline" className="w-full flex-row items-center justify-start gap-2">
-            <PlusCircle className="h-5 w-5 mr-3" color={iconColor} />
-            <Text>Add New Account</Text>
-          </Button>
-
-          <Button variant="outline" className="w-full flex-row items-center justify-start gap-2">
-            <HelpCircle className="h-5 w-5 mr-3" color={iconColor} />
-            <Text>Help</Text>
-          </Button>
-
-          <Button variant="outline" className="w-full flex-row items-center justify-start gap-2">
-            <LogOut className="h-5 w-5 mr-3" color="rgb(239 68 68)" />
-            <Text className="text-destructive">Log Out</Text>
-          </Button>
-        </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 }
