@@ -12,7 +12,7 @@ import { useRouter } from "expo-router";
 export default function HomeScreen() {
   const router = useRouter();
   return (
-    <ScrollView className="h-full w-full p-4 mt-12 mb-12">
+    <ScrollView className="h-full w-full p-4 mt-12">
       <HeaderHome />
       <CategoriesHome />
       <ColumnCard />

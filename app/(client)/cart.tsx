@@ -61,7 +61,7 @@ export default function CartScreen() {
         headerBackVisible: true, 
       }}
     />
-    <ScrollView className="h-full w-full p-4 mb-12">
+    <ScrollView className="h-full w-full p-4">
     <View className="flex-row items-center flex-1 ml-2 mb-4 pb-4 border-b border-gray-300">
           <MapPinIcon size={20} color="#ffffff" fill="#666"/>
           <Text 
