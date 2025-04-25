@@ -23,7 +23,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="messages"
+        name="favorites"
         options={{
           title: 'Favoritos',
           tabBarIcon: ({ color }) => <Heart size={24} color={color} />,

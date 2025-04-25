@@ -62,7 +62,7 @@ export default function CartScreen() {
       }}
     />
     <ScrollView className="h-full w-full p-4 mb-12">
-    <View className="flex-row items-center flex-1 ml-2 mb-4 border-b border-gray-400">
+    <View className="flex-row items-center flex-1 ml-2 mb-4 pb-4 border-b border-gray-300">
           <MapPinIcon size={20} color="#ffffff" fill="#666"/>
           <Text 
             className="text-gray-500 text-md pr-1"
@@ -70,10 +70,11 @@ export default function CartScreen() {
             Enviar a
           </Text>
           <Text 
-            className="text-gray-500 text-md font-bold"
+            className="text-black text-md font-bold flex-1"
             numberOfLines={1}
+            ellipsizeMode="tail"
           >
-            Calle 123 St 45 # 65 Sta Marta, Calle25...
+            Calle 123 St 45 # 65 Sta Marta, Calle256723467834...
           </Text>
         </View>
       <CartCard
