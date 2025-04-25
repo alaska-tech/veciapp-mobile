@@ -69,10 +69,11 @@ export default function HeaderHome() {
             Enviar a
           </Text>
           <Text 
-            className="text-gray-500 text-md font-bold"
+            className="text-gray-500 text-md font-bold flex-1"
             numberOfLines={1}
+            ellipsizeMode="tail"
           >
-            Calle 123 St 45 # 65 Sta Marta, Calle25...
+            Calle 123 St 45 # 65 Sta Marta, Calle25
           </Text>
         </View>
       </View>
