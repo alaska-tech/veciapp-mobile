@@ -53,7 +53,7 @@ export default function FavoritesScreen() {
           headerBackVisible: true, 
         }}
       />
-      <ScrollView className="h-full w-full p-4 mb-12">
+      <ScrollView className="h-full w-full p-4">
         {favorites.map((item) => (
           <FavoriteCard
             key={item.id}
