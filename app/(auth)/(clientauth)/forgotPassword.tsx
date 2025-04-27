@@ -4,12 +4,20 @@ import { Text } from '~/components/ui/text';
 import { Input } from '~/components/ui/input';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
+import { validateEmail } from '~/lib/validations';
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
   const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
 
   const handleResetPassword = () => {
+    const emailError = validateEmail(email);
+    if (emailError) {
+      setError(emailError);
+      return;
+    }
+
     // TODO: Implement password reset logic
     router.push('/passConfirmation');
   };
@@ -35,10 +43,16 @@ export default function ForgotPasswordScreen() {
           <Input
             placeholder="Correo electrónico"
             value={email}
-            onChangeText={setEmail}
+            onChangeText={(text) => {
+              setEmail(text);
+              setError('');
+            }}
             keyboardType="email-address"
             autoCapitalize="none"
           />
+          {error ? (
+            <Text className="text-red-500 text-xs">{error}</Text>
+          ) : null}
 
           <Button
             onPress={handleResetPassword}
