@@ -7,6 +7,7 @@ import { Input } from "~/components/ui/input";
 import { Loader } from "~/components/ui/loader";
 import { useRouter } from "expo-router";
 import { useState } from "react";
+import { validateEmail, validatePassword } from '~/lib/validations';
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -14,22 +15,43 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({
+    email: '',
+    password: '',
+  });
+
+  const validateLogin = (): boolean => {
+    if (!showPassword) {
+      const emailError = validateEmail(email);
+      setErrors({ ...errors, email: emailError || '' });
+      return !emailError;
+    }
+
+    const newErrors = {
+      email: validateEmail(email) || '',
+      password: validatePassword(password) || '',
+    };
+
+    setErrors(newErrors);
+    return !Object.values(newErrors).some(error => error !== '');
+  };
 
   const handleSignIn = () => {
+    if (!validateLogin()) return;
+
     if (!showPassword) {
       setShowPassword(true);
     } else {
       setIsLoading(true);
-      // Simulate login delay
+      // Simulate login delay de 4 segundos
       setTimeout(() => {
-        console.log("se logeo ok");
-        router.replace("/(client)/home");
+        if (password === "Miclave.1") {
+          router.replace("/(client)/home");
+        } else if (password === "Miclave.2") {
+          router.replace("/vendorHome");
+        }
       }, 4000);
     }
-  };
-
-  const handleVendorSignIn = () => {
-    router.replace("/otpVerification");
   };
 
   const openTerms = () => {
@@ -71,12 +93,18 @@ export default function LoginScreen() {
         <Input
           placeholder="correo@dominio.com"
           value={email}
-          onChangeText={setEmail}
+          onChangeText={(text) => {
+            setEmail(text);
+            setErrors({ ...errors, email: '' });
+          }}
           keyboardType="email-address"
           autoCapitalize="none"
           className="rounded-xl"
           editable={!isLoading}
         />
+        {errors.email ? (
+          <Text className="text-red-500 text-xs">{errors.email}</Text>
+        ) : null}
 
         {showPassword && (
           <Animated.View entering={FadeIn.duration(300)}>
@@ -86,11 +114,17 @@ export default function LoginScreen() {
             <Input
               placeholder="Contraseña"
               value={password}
-              onChangeText={setPassword}
+              onChangeText={(text) => {
+                setPassword(text);
+                setErrors({ ...errors, password: '' });
+              }}
               secureTextEntry
               className="rounded-xl"
               editable={!isLoading}
             />
+            {errors.password ? (
+              <Text className="text-red-500 text-xs">{errors.password}</Text>
+            ) : null}
           </Animated.View>
         )}
 
@@ -106,16 +140,6 @@ export default function LoginScreen() {
               {showPassword ? "Vamos allá" : "Continuar"}
             </Text>
           )}
-        </Button>
-
-        {/* boton de prueba para probar flujo de vendedor (eliminar al implementar logica de login) */}
-        <Button
-          onPress={handleVendorSignIn}
-          className="w-full bg-yellow-400 rounded-full mb-4"
-        >
-          <Text className="text-black font-bold text-md">
-            Continuar como vendedor
-          </Text>
         </Button>
 
         {!isLoading && (
