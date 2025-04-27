@@ -4,6 +4,7 @@ import { Text } from '~/components/ui/text';
 import { Input } from '~/components/ui/input';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
+import { validateEmail, validateName, validatePassword } from '~/lib/validations';
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -13,10 +14,33 @@ export default function RegisterScreen() {
     password: '',
     confirmPassword: '',
   });
+  
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const validateForm = (): boolean => {
+    const newErrors = {
+      name: validateName(formData.name) || '',
+      email: validateEmail(formData.email) || '',
+      password: validatePassword(formData.password) || '',
+      confirmPassword: formData.password !== formData.confirmPassword 
+        ? 'Las contraseñas no coinciden' 
+        : '',
+    };
+
+    setErrors(newErrors);
+    return !Object.values(newErrors).some(error => error !== '');
+  };
 
   const handleRegister = () => {
-    // TODO: Implement registration logic
-    router.push('/passConfirmation');
+    if (validateForm()) {
+      // TODO: Implement registration logic
+      router.push('/passConfirmation');
+    }
   };
 
   const openTerms = () => {
@@ -48,30 +72,54 @@ export default function RegisterScreen() {
           <Input
             placeholder="Nombre completo"
             value={formData.name}
-            onChangeText={(text) => setFormData({ ...formData, name: text })}
+            onChangeText={(text) => {
+              setFormData({ ...formData, name: text });
+              setErrors({ ...errors, name: '' });
+            }}
           />
+          {errors.name ? (
+            <Text className="text-red-500 text-xs">{errors.name}</Text>
+          ) : null}
 
           <Input
             placeholder="Correo electrónico"
             value={formData.email}
-            onChangeText={(text) => setFormData({ ...formData, email: text })}
+            onChangeText={(text) => {
+              setFormData({ ...formData, email: text });
+              setErrors({ ...errors, email: '' });
+            }}
             keyboardType="email-address"
             autoCapitalize="none"
           />
+          {errors.email ? (
+            <Text className="text-red-500 text-xs">{errors.email}</Text>
+          ) : null}
 
           <Input
             placeholder="Contraseña"
             value={formData.password}
-            onChangeText={(text) => setFormData({ ...formData, password: text })}
+            onChangeText={(text) => {
+              setFormData({ ...formData, password: text });
+              setErrors({ ...errors, password: '' });
+            }}
             secureTextEntry
           />
+          {errors.password ? (
+            <Text className="text-red-500 text-xs">{errors.password}</Text>
+          ) : null}
 
           <Input
             placeholder="Confirmar contraseña"
             value={formData.confirmPassword}
-            onChangeText={(text) => setFormData({ ...formData, confirmPassword: text })}
+            onChangeText={(text) => {
+              setFormData({ ...formData, confirmPassword: text });
+              setErrors({ ...errors, confirmPassword: '' });
+            }}
             secureTextEntry
           />
+          {errors.confirmPassword ? (
+            <Text className="text-red-500 text-xs">{errors.confirmPassword}</Text>
+          ) : null}
 
           <Button
             onPress={handleRegister}
