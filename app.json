@@ -14,8 +14,10 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.veciapp",
-      "config": {"usesNonExemptEncryption": false},
-      "icon":{
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "icon": {
         "dark": "./assets/icons/ios-Dark.png",
         "light": "./assets/icons/ios-Light.png",
         "tinted": "./assets/icons/ios-Tinted.png"
@@ -26,7 +28,8 @@
         "foregroundImage": "./assets/icons/adaptive-icon.png",
         "monochromeImage": "./assets/icons/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.veciapp"
     },
     "web": {
       "bundler": "metro",
