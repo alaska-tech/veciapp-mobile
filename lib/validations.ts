@@ -16,7 +16,7 @@ export const validatePassword = (password: string): string | null => {
     return "La contraseña debe tener al menos 8 caracteres";
   }
   
-  // Puedes agregar más validaciones según tus requisitos
+  // Aquí agregar validaciones adicionales
   const hasUpperCase = /[A-Z]/.test(password);
   const hasLowerCase = /[a-z]/.test(password);
   const hasNumbers = /\d/.test(password);

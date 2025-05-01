@@ -65,27 +65,18 @@ export default function LoginScreen() {
   return (
     <View className="flex-1 items-center justify-center p-4 px-12 bg-background">
       <Image
-        source={require("../assets/images/logoveciapp.png")}
-        className="w-56 h-48"
+        source={require("../assets/images/onboarding1.png")}
+        className="w-80 h-80"
         resizeMode="contain"
       />
 
-      {!isLoading ? (
-        <>
-          <Text className="text-xl font-bold text-center">¡Qué más, Veci!</Text>
-          <Text className="text-xl font-bold mb-2 text-center">
-            Bienvenido de vuelta a VeciApp.
-          </Text>
-        </>
-      ) : (
+      {isLoading ? (
         <Text className="text-xl font-bold mb-5 text-center">
           Iniciando Sesión
         </Text>
-      )}
-
-      {!isLoading && (
+      ) : (
         <Text className="text-sm text-muted-foreground text-left w-full mt-4">
-          Ingresa tu correo pa' iniciar sesión.
+          Ingresa tu correo electrónico
         </Text>
       )}
 
@@ -137,7 +128,7 @@ export default function LoginScreen() {
             <Loader />
           ) : (
             <Text className="text-black font-bold text-md">
-              {showPassword ? "Vamos allá" : "Continuar"}
+              {showPassword ? "Iniciar sesión" : "Continuar"}
             </Text>
           )}
         </Button>
