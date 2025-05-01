@@ -55,17 +55,13 @@ export default function RegisterScreen() {
     <ScrollView className="flex-1 bg-background">
       <View className="flex-1 items-center justify-center p-4 px-12 min-h-screen">
         <Image
-          source={require('../../../assets/images/logoveciapp.png')}
-          className="w-48 h-48"
+          source={require('../../../assets/images/register.png')}
+          className="w-80 h-80"
           resizeMode="contain"
         />
         
         <Text className="text-2xl font-bold mb-2 text-center">
           Crear una nueva cuenta
-        </Text>
-
-        <Text className="text-sm text-muted-foreground mb-6 text-center">
-          Ingresa tus datos para registrarte
         </Text>
 
         <View className="w-full gap-4">
