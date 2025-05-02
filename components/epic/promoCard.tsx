@@ -41,7 +41,8 @@ export default function PromoCard({
 
       <Image
         source={imageSource}
-        className="w-44 h-full p-4 rounded-xl"
+        className="w-44 h-full"
+        style={{ padding: 0 }}
         resizeMode="cover"
       />
     </Card>

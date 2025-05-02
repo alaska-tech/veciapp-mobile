@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Image, Linking } from "react-native";
+import { View, Image, Linking, TouchableOpacity } from "react-native";
+import { Eye, EyeOff } from "lucide-react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
@@ -19,7 +20,8 @@ export default function LoginScreen() {
     email: '',
     password: '',
   });
-
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  
   const validateLogin = (): boolean => {
     if (!showPassword) {
       const emailError = validateEmail(email);
@@ -102,17 +104,29 @@ export default function LoginScreen() {
             <Text className="text-sm text-muted-foreground text-left w-full mt-4">
               Escribe tu contraseña
             </Text>
-            <Input
-              placeholder="Contraseña"
-              value={password}
-              onChangeText={(text) => {
-                setPassword(text);
-                setErrors({ ...errors, password: '' });
-              }}
-              secureTextEntry
-              className="rounded-xl"
-              editable={!isLoading}
-            />
+            <View className="relative">
+              <Input
+                placeholder="Contraseña"
+                value={password}
+                onChangeText={(text) => {
+                  setPassword(text);
+                  setErrors({ ...errors, password: '' });
+                }}
+                secureTextEntry={!isPasswordVisible}
+                className="rounded-xl pr-12"
+                editable={!isLoading}
+              />
+              <TouchableOpacity 
+                className="absolute right-3 top-0 bottom-0 justify-center"
+                onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+              >
+                {isPasswordVisible ? (
+                  <EyeOff size={20} color="#666" />
+                ) : (
+                  <Eye size={20} color="#666" />
+                )}
+              </TouchableOpacity>
+            </View>
             {errors.password ? (
               <Text className="text-red-500 text-xs">{errors.password}</Text>
             ) : null}
