@@ -12,6 +12,8 @@ import {
   ChevronRight,
   TimerReset,
   UserX,
+  PackageOpen,
+  Headphones,
 } from "lucide-react-native";
 import { Separator } from "~/components/ui/separator";
 import { Card, CardContent } from "~/components/ui/card";
@@ -69,21 +71,17 @@ export default function ProfileScreen() {
         >
           <TouchableOpacity 
             activeOpacity={0.7} 
-            onPress={() => router.push("/home")} 
+            onPress={() => router.push("/cart")} 
             className="flex-1 mr-4"
           >
-            <Card className="overflow-hidden bg-pink-100 rounded-t-full rounded-b-[3458px]">
+            <Card className="overflow-hidden bg-green-100 rounded-3xl">
               <CardContent className="p-4 items-center">
-                <View className="w-32 aspect-square rounded-full overflow-hidden mb-3">
-                  <Image
-                    source={require("~/assets/images/orders.png")}
-                    className="w-full h-full"
-                    resizeMode="cover"
-                  />
+                <View className="w-32 aspect-square rounded-full bg-green-200 items-center justify-center mb-3">
+                  <PackageOpen className="h-16 w-16" color="#16a34a" />
                 </View>
-                <Text className="text-2xl font-medium text-center">Pedidos</Text>
               </CardContent>
             </Card>
+            <Text className="text-xl font-medium text-center pt-2">Pedidos</Text>
           </TouchableOpacity>
         
           <TouchableOpacity 
@@ -91,18 +89,14 @@ export default function ProfileScreen() {
             onPress={() => router.push("/home")} 
             className="flex-1"
           >
-            <Card className="overflow-hidden bg-pink-100 rounded-t-full rounded-b-[3458px]">
+            <Card className="overflow-hidden bg-pink-100 rounded-3xl">
               <CardContent className="p-4 items-center">
-                <View className="w-32 aspect-square rounded-full overflow-hidden mb-3">
-                  <Image
-                    source={require("~/assets/images/help.png")}
-                    className="w-full h-full"
-                    resizeMode="cover"
-                  />
+                <View className="w-32 aspect-square rounded-full bg-pink-200 items-center justify-center mb-3">
+                  <Headphones className="h-16 w-16" color="#db2777" />
                 </View>
-                <Text className="text-2xl font-medium text-center">Ayuda</Text>
               </CardContent>
             </Card>
+            <Text className="text-xl font-medium text-center pt-2">Ayuda</Text>
           </TouchableOpacity>
         </ScrollView>
 
