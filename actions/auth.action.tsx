@@ -105,9 +105,9 @@ export default function useAuthAction() {
         }); */
       },
       onSuccess(data, _variables, _context) {
-        const { token, user } = data.data.data;
+        /* const { token, user } = data.data.data;
         localStorage.setItem(JWT_KEY, token);
-        localStorage.setItem(LOGGED_USER_INFO_KEY, JSON.stringify(user));
+        localStorage.setItem(LOGGED_USER_INFO_KEY, JSON.stringify(user)); */
         /* message.success({
           content: "Te has logueado correctamente",
           duration: 5,
