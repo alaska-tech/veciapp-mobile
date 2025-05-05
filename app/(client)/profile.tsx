@@ -18,10 +18,12 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { Card, CardContent } from "~/components/ui/card";
 import { TouchableOpacity } from "react-native";
+import useAuthAction from "~/actions/auth.action";
 
 export default function ProfileScreen() {
   const router = useRouter();
-
+  const authActions = useAuthAction();
+  const logOut = authActions.logOut();
   return (
     <>
       <Stack.Screen
@@ -64,14 +66,14 @@ export default function ProfileScreen() {
           </CardContent>
         </Card>
 
-        <ScrollView 
+        <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           className="flex-row mb-6 px-1"
         >
-          <TouchableOpacity 
-            activeOpacity={0.7} 
-            onPress={() => router.push("/cart")} 
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => router.push("/cart")}
             className="flex-1 mr-4"
           >
             <Card className="overflow-hidden bg-green-100 rounded-3xl">
@@ -81,12 +83,14 @@ export default function ProfileScreen() {
                 </View>
               </CardContent>
             </Card>
-            <Text className="text-xl font-medium text-center pt-2">Pedidos</Text>
+            <Text className="text-xl font-medium text-center pt-2">
+              Pedidos
+            </Text>
           </TouchableOpacity>
-        
-          <TouchableOpacity 
-            activeOpacity={0.7} 
-            onPress={() => router.push("/home")} 
+
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => router.push("/home")}
             className="flex-1"
           >
             <Card className="overflow-hidden bg-pink-100 rounded-3xl">
@@ -106,10 +110,10 @@ export default function ProfileScreen() {
             variant="ghost"
           >
             <View className="flex-row items-center gap-2">
-              <UserCircle className="h-5 w-5 mr-3" color="#000000"/>
+              <UserCircle className="h-5 w-5 mr-3" color="#000000" />
               <Text>Perfil</Text>
             </View>
-            <ChevronRight className="h-5 w-5" color="#000000"/>
+            <ChevronRight className="h-5 w-5" color="#000000" />
           </Button>
 
           <Separator />
@@ -119,10 +123,10 @@ export default function ProfileScreen() {
             variant="ghost"
           >
             <View className="flex-row items-center gap-2">
-              <TimerReset className="h-5 w-5 mr-3" color="#000000"/>
+              <TimerReset className="h-5 w-5 mr-3" color="#000000" />
               <Text>Historial</Text>
             </View>
-            <ChevronRight className="h-5 w-5" color="#000000"/>
+            <ChevronRight className="h-5 w-5" color="#000000" />
           </Button>
 
           <Separator />
@@ -130,12 +134,15 @@ export default function ProfileScreen() {
           <Button
             className="w-full flex-row items-center justify-between"
             variant="ghost"
+            onPress={() => {
+              logOut.mutateAsync({});
+            }}
           >
             <View className="flex-row items-center gap-2">
-              <UserX className="h-5 w-5 mr-3" color="#000000"/>
+              <UserX className="h-5 w-5 mr-3" color="#000000" />
               <Text>Cerrar Sesión</Text>
             </View>
-            <ChevronRight className="h-5 w-5" color="#000000"/>
+            <ChevronRight className="h-5 w-5" color="#000000" />
           </Button>
 
           <Separator />
@@ -148,7 +155,7 @@ export default function ProfileScreen() {
               <Lock className="h-5 w-5 mr-3" color="rgb(239 68 68)" />
               <Text className="text-destructive">Eliminar Cuenta</Text>
             </View>
-            <ChevronRight className="h-5 w-5" color="#000000"/>
+            <ChevronRight className="h-5 w-5" color="#000000" />
           </Button>
         </View>
       </ScrollView>

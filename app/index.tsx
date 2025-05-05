@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Image, Linking, TouchableOpacity } from "react-native";
 import { Eye, EyeOff } from "lucide-react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
@@ -8,51 +8,83 @@ import { Input } from "~/components/ui/input";
 import { Loader } from "~/components/ui/loader";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { validateEmail, validatePassword } from '~/lib/validations';
+import { validateEmail, validatePassword } from "~/lib/validations";
+import useAuthAction, { clearCredentialsInCache } from "~/actions/auth.action";
+import { JWT_KEY } from "~/constants/constants";
 
 export default function LoginScreen() {
   const router = useRouter();
+  const authActions = useAuthAction();
+  const logIn = authActions.logIn();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  
+  useEffect(() => {
+    const jwt = localStorage.getItem(JWT_KEY);
+    if (jwt) {
+      const user = JSON.parse(atob(jwt.split(".")[1]));
+      if (user.role === "user") {
+        router.dismissTo("/(client)/home");
+      } else if (user.role === "vendor") {
+        router.dismissTo("/(vendor)/vendorHome");
+      } else {
+        router.dismissAll();
+        clearCredentialsInCache();
+        //message.error("No tienes permisos para acceder a esta sección", 10);
+      }
+    }
+  }, []);
   const validateLogin = (): boolean => {
     if (!showPassword) {
       const emailError = validateEmail(email);
-      setErrors({ ...errors, email: emailError || '' });
+      setErrors({ ...errors, email: emailError || "" });
       return !emailError;
     }
 
     const newErrors = {
-      email: validateEmail(email) || '',
-      password: validatePassword(password) || '',
+      email: validateEmail(email) || "",
+      password: validatePassword(password) || "",
     };
 
     setErrors(newErrors);
-    return !Object.values(newErrors).some(error => error !== '');
+    return !Object.values(newErrors).some((error) => error !== "");
   };
 
-  const handleSignIn = () => {
-    if (!validateLogin()) return;
+  const handleSignIn = async () => {
+    //if (!validateLogin()) return;
 
     if (!showPassword) {
       setShowPassword(true);
     } else {
       setIsLoading(true);
-      // Simulate login delay de 4 segundos
-      setTimeout(() => {
-        if (password === "Miclave.1") {
-          router.replace("/(client)/home");
-        } else if (password === "Miclave.2") {
-          router.replace("/vendorHome");
-        }
-      }, 4000);
+      logIn
+        .mutateAsync({
+          body: {
+            email: email,
+            password: password,
+          },
+        })
+        .then(
+          (response) => {
+            if (response.data.data.user.role === "customer") {
+              router.push("/(client)/home");
+            } else if (response.data.data.user.role === "vendor") {
+              router.push("/(vendor)/vendorHome");
+            } else {
+              // message.error("No tienes permisos para acceder a esta sección", 10);
+            }
+          },
+          () => {}
+        )
+        .finally(() => {
+          setIsLoading(false);
+        });
     }
   };
 
@@ -88,7 +120,7 @@ export default function LoginScreen() {
           value={email}
           onChangeText={(text) => {
             setEmail(text);
-            setErrors({ ...errors, email: '' });
+            setErrors({ ...errors, email: "" });
           }}
           keyboardType="email-address"
           autoCapitalize="none"
@@ -110,13 +142,13 @@ export default function LoginScreen() {
                 value={password}
                 onChangeText={(text) => {
                   setPassword(text);
-                  setErrors({ ...errors, password: '' });
+                  setErrors({ ...errors, password: "" });
                 }}
                 secureTextEntry={!isPasswordVisible}
                 className="rounded-xl pr-12"
                 editable={!isLoading}
               />
-              <TouchableOpacity 
+              <TouchableOpacity
                 className="absolute right-3 top-0 bottom-0 justify-center"
                 onPress={() => setIsPasswordVisible(!isPasswordVisible)}
               >
