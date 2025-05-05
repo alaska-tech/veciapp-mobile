@@ -57,7 +57,7 @@ export default function LoginScreen() {
   };
 
   const handleSignIn = async () => {
-    //if (!validateLogin()) return;
+    if (!validateLogin()) return;
 
     if (!showPassword) {
       setShowPassword(true);
