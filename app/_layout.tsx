@@ -82,8 +82,8 @@ export default function RootLayout() {
 
   return (
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <AuthProvider>
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
           <ThemeProvider value={LIGHT_THEME}>
             <StatusBar style="dark" />
             <Stack screenOptions={{ headerShown: false }}>
@@ -96,8 +96,8 @@ export default function RootLayout() {
             </Stack>
             <PortalHost />
           </ThemeProvider>
-        </QueryClientProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </QueryClientProvider>
     </View>
   );
 }

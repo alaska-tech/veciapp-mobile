@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Image, Linking, TouchableOpacity } from "react-native";
+import { View, Image, Linking, TouchableOpacity, Alert } from "react-native";
 import { Eye, EyeOff } from "lucide-react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { Button } from "~/components/ui/button";
@@ -57,7 +57,7 @@ export default function LoginScreen() {
   };
 
   const handleSignIn = async () => {
-    if (!validateLogin()) return;
+    //if (!validateLogin()) return;
 
     if (!showPassword) {
       setShowPassword(true);
@@ -77,6 +77,19 @@ export default function LoginScreen() {
             } else if (response.data.data.user.role === "vendor") {
               router.push("/(vendor)/vendorHome");
             } else {
+              Alert.alert(
+                "Error",
+                "No tienes permisos para acceder a esta sección",
+                [
+                  {
+                    text: "OK",
+                    onPress: () => {
+                      router.dismissAll();
+                      clearCredentialsInCache();
+                    },
+                  },
+                ]
+              );
               // message.error("No tienes permisos para acceder a esta sección", 10);
             }
           },
