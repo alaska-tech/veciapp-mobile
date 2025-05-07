@@ -15,7 +15,7 @@ export default function TabLayout() {
     return null;
   }
 
-  if (!authState.isLoggedIn) {
+  if (!authState.isLoggedIn|| authState.user?.role !== "vendor") {
     return <Redirect href="/" />;
   }
   return (

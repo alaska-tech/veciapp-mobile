@@ -14,10 +14,9 @@ export default function TabLayout() {
     return null;
   }
 
-  if (!authState.isLoggedIn) {
+  if (!authState.isLoggedIn || authState.user?.role !== "customer") {
     return <Redirect href="/" />;
   }
-
   return (
     <Tabs
       screenOptions={{
