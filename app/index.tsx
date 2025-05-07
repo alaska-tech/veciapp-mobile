@@ -52,7 +52,7 @@ export default function LoginScreen() {
         } else if (password === "Miclave.2") {
           router.replace("/vendorHome");
         }
-      }, 4000);
+      }, 2000);
     }
   };
 
