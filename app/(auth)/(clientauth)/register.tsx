@@ -5,6 +5,8 @@ import { Input } from '~/components/ui/input';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { validateEmail, validateName, validatePassword } from '~/lib/validations';
+import { TouchableOpacity } from 'react-native';
+import { Eye, EyeOff } from 'lucide-react-native';
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -14,13 +16,17 @@ export default function RegisterScreen() {
     password: '',
     confirmPassword: '',
   });
-  
+
   const [errors, setErrors] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
+
+  // Add state for password visibility
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
 
   const validateForm = (): boolean => {
     const newErrors = {
@@ -91,28 +97,54 @@ export default function RegisterScreen() {
             <Text className="text-red-500 text-xs">{errors.email}</Text>
           ) : null}
 
-          <Input
-            placeholder="Contraseña"
-            value={formData.password}
-            onChangeText={(text) => {
-              setFormData({ ...formData, password: text });
-              setErrors({ ...errors, password: '' });
-            }}
-            secureTextEntry
-          />
+          {/* Password Field with show/hide */}
+          <View className="relative">
+            <Input
+              placeholder="Contraseña"
+              value={formData.password}
+              onChangeText={(text) => {
+                setFormData({ ...formData, password: text });
+                setErrors({ ...errors, password: '' });
+              }}
+              secureTextEntry={!isPasswordVisible}
+            />
+            <TouchableOpacity
+              className="absolute right-3 top-0 bottom-0 justify-center"
+              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+            >
+              {isPasswordVisible ? (
+                <EyeOff size={20} color="#666" />
+              ) : (
+                <Eye size={20} color="#666" />
+              )}
+            </TouchableOpacity>
+          </View>
           {errors.password ? (
             <Text className="text-red-500 text-xs">{errors.password}</Text>
           ) : null}
 
-          <Input
-            placeholder="Confirmar contraseña"
-            value={formData.confirmPassword}
-            onChangeText={(text) => {
-              setFormData({ ...formData, confirmPassword: text });
-              setErrors({ ...errors, confirmPassword: '' });
-            }}
-            secureTextEntry
-          />
+          {/* Confirm Password Field with show/hide */}
+          <View className="relative">
+            <Input
+              placeholder="Confirmar contraseña"
+              value={formData.confirmPassword}
+              onChangeText={(text) => {
+                setFormData({ ...formData, confirmPassword: text });
+                setErrors({ ...errors, confirmPassword: '' });
+              }}
+              secureTextEntry={!isConfirmPasswordVisible}
+            />
+            <TouchableOpacity
+              className="absolute right-3 top-0 bottom-0 justify-center"
+              onPress={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
+            >
+              {isConfirmPasswordVisible ? (
+                <EyeOff size={20} color="#666" />
+              ) : (
+                <Eye size={20} color="#666" />
+              )}
+            </TouchableOpacity>
+          </View>
           {errors.confirmPassword ? (
             <Text className="text-red-500 text-xs">{errors.confirmPassword}</Text>
           ) : null}
