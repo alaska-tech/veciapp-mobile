@@ -20,21 +20,23 @@ export default function VendorHome() {
     history: 120,
     earnings: 250000,
     messages: 5,
-    sales: 16, 
+    sales: 16,
   };
 
   // Example handlers for each card
   const handleActiveOrders = () => {
-    // Navigate or handle active orders
+    router.push("/orders?tab=activos");
   };
-  const handleEarnings = () => {
-    // Navigate or handle earnings
+
+  const handlePendingOrders = () => {
+    router.push("/orders?tab=pendientes");
   };
+
   const handleOrderHistory = () => {
-    router.push("/orders");
+    router.push("/orders?tab=historial");
   };
   const handleDashboard = () => {
-    Linking.openURL("https://www.adminveciapp.com.co/"); //TODO: julian agrega el token eche :v
+    router.push("/(aux)/dashboard");
   };
   const handleMessages = () => {
     router.push("/chats");
@@ -49,7 +51,10 @@ export default function VendorHome() {
           Pedidos del día
         </Text>
         <View className="flex-row gap-4 mb-6">
-          <TouchableOpacity style={{ flex: 1, aspectRatio: 1 }} onPress={handleActiveOrders}>
+          <TouchableOpacity
+            style={{ flex: 1, aspectRatio: 1 }}
+            onPress={handlePendingOrders}
+          >
             <Card className="flex-1 justify-center bg-green-200">
               <CardContent className="flex-1 flex-row items-center justify-center">
                 <View className="mr-4">
@@ -65,7 +70,10 @@ export default function VendorHome() {
             </Card>
           </TouchableOpacity>
 
-          <TouchableOpacity style={{ flex: 1, aspectRatio: 1 }} onPress={handleEarnings}>
+          <TouchableOpacity
+            style={{ flex: 1, aspectRatio: 1 }}
+            onPress={handleActiveOrders}
+          >
             <Card className="flex-1 justify-center bg-blue-200">
               <CardContent className="flex-1 flex-row items-center justify-center">
                 <View className="mr-4">
@@ -83,7 +91,10 @@ export default function VendorHome() {
         </View>
 
         <View className="flex-row gap-4 mb-6">
-          <TouchableOpacity style={{ flex: 1, aspectRatio: 1 }} onPress={handleOrderHistory}>
+          <TouchableOpacity
+            style={{ flex: 1, aspectRatio: 1 }}
+            onPress={handleOrderHistory}
+          >
             <Card className="flex-1 justify-center bg-yellow-200">
               <CardContent className="flex-1 flex-row items-center justify-center">
                 <View className="mr-4">
@@ -99,7 +110,10 @@ export default function VendorHome() {
             </Card>
           </TouchableOpacity>
 
-          <TouchableOpacity style={{ flex: 1, aspectRatio: 1 }} onPress={handleMessages}>
+          <TouchableOpacity
+            style={{ flex: 1, aspectRatio: 1 }}
+            onPress={handleMessages}
+          >
             <Card className="flex-1 justify-center bg-purple-200">
               <CardContent className="flex-1 flex-row items-center justify-center">
                 <View className="mr-4">
