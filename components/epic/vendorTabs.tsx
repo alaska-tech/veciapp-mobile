@@ -5,6 +5,9 @@ import { Card, CardContent } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { Clock, ListChecks, History } from "lucide-react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import VendorActiveCard from "./vendorActiveCard";
+import VendorPendingCard from "./vendorPendingCard";
+import VendorHistoryCard from "./vendorHistoryCard";
 
 export default function VendorTabs() {
   const { tab } = useLocalSearchParams<{ tab: string }>();
@@ -45,37 +48,120 @@ export default function VendorTabs() {
         </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="activos">
-        <Card>
-          <CardContent className="p-4">
-            <Text className="text-lg font-semibold">Pedidos Activos</Text>
-            <Text className="text-gray-500">
-              Aquí puedes ver los pedidos que están en proceso
-            </Text>
-          </CardContent>
-        </Card>
+      <TabsContent value="activos" className="px-4">
+        <VendorActiveCard
+          date="12 de Marzo"
+          productName="Arepas Rellenas de Carne y Queso"
+          price={20000}
+          lastUpdate="12 minutos"
+          onChat={() => console.log("Chat pressed")}
+          onMarkAsReady={() => console.log("Mark as ready pressed")}
+        />
+        <VendorActiveCard
+          date="12 de Marzo"
+          productName="Empanadas de Carne (x5)"
+          price={15000}
+          lastUpdate="15 minutos"
+          onChat={() => console.log("Chat pressed")}
+          onMarkAsReady={() => console.log("Mark as ready pressed")}
+        />
+        <VendorActiveCard
+          date="12 de Marzo"
+          productName="Tequeños (x8)"
+          price={18000}
+          lastUpdate="20 minutos"
+          onChat={() => console.log("Chat pressed")}
+          onMarkAsReady={() => console.log("Mark as ready pressed")}
+        />
       </TabsContent>
 
-      <TabsContent value="pendientes">
-        <Card>
-          <CardContent className="p-4">
-            <Text className="text-lg font-semibold">Pedidos Pendientes</Text>
-            <Text className="text-gray-500">
-              Pedidos que necesitan tu confirmación
-            </Text>
-          </CardContent>
-        </Card>
+      <TabsContent value="pendientes" className="px-4">
+        <VendorPendingCard
+          date="12 de Marzo"
+          productName="Picada Samaria"
+          price={35000}
+          clientName="EdgarPerez"
+          clientAddress="Calle 123 St 45 # 65 - Gaira"
+          clientImage="https://picsum.photos/201"
+          isNewOrder={true}
+          lastUpdate="12 min"
+          onChat={() => console.log("Chat pressed")}
+          onAttendOrder={() => console.log("Attend order pressed")}
+        />
+        <VendorPendingCard
+          date="12 de Marzo"
+          productName="Hamburguesa Especial"
+          price={28000}
+          clientName="CarlosRodriguez"
+          clientAddress="Av Principal #45-12"
+          clientImage="https://picsum.photos/202"
+          isNewOrder={true}
+          lastUpdate="15 min"
+          onChat={() => console.log("Chat pressed")}
+          onAttendOrder={() => console.log("Attend order pressed")}
+        />
+        <VendorPendingCard
+          date="12 de Marzo"
+          productName="Pizza Familiar"
+          price={42000}
+          clientName="MariaGarcia"
+          clientAddress="Calle 78 #23-45"
+          clientImage="https://picsum.photos/203"
+          isNewOrder={true}
+          lastUpdate="18 min"
+          onChat={() => console.log("Chat pressed")}
+          onAttendOrder={() => console.log("Attend order pressed")}
+        />
       </TabsContent>
 
-      <TabsContent value="historial">
-        <Card>
-          <CardContent className="p-4">
-            <Text className="text-lg font-semibold">Historial de Pedidos</Text>
-            <Text className="text-gray-500">
-              Registro completo de pedidos anteriores
-            </Text>
-          </CardContent>
-        </Card>
+      <TabsContent value="historial" className="px-4">
+        <VendorHistoryCard
+          date="11 de Marzo"
+          products={["Arepas Rellenas de Carne y Queso", "Jugo de Mango"]}
+          price={20000}
+          clientName="Luis B"
+          clientAddress="Calle 10 # 50 - Santa Marta"
+          clientImage="https://picsum.photos/203"
+          status="Entregado"
+          timeline={[
+            { status: "Pago recibido", time: "8:38 am" },
+            { status: "Preparando el pedido", time: "8:45 am" },
+            { status: "Listo para entregar/recoger", time: "9:15 am" },
+            { status: "Entregado", time: "9:25 am" },
+          ]}
+        />
+        <VendorHistoryCard
+          date="11 de Marzo"
+          products={["Pizza Familiar Hawaiana"]}
+          price={35000}
+          clientName="Maria G"
+          clientAddress="Calle 15 # 45 - Santa Marta"
+          clientImage="https://picsum.photos/202"
+          status="Entregado"
+          timeline={[
+            { status: "Pago recibido", time: "2:30 pm" },
+            { status: "Preparando el pedido", time: "2:35 pm" },
+            { status: "Listo para entregar/recoger", time: "3:00 pm" },
+            { status: "Entregado", time: "3:15 pm" },
+          ]}
+          onChat={() => console.log("Chat pressed")}
+        />
+        <VendorHistoryCard
+          date="11 de Marzo"
+          products={["Hamburguesa Especial", "Papas Fritas"]}
+          price={25000}
+          clientName="Carlos R"
+          clientAddress="Calle 20 # 30 - Santa Marta"
+          clientImage="https://picsum.photos/200"
+          status="Entregado"
+          timeline={[
+            { status: "Pago recibido", time: "7:00 pm" },
+            { status: "Preparando el pedido", time: "7:05 pm" },
+            { status: "Listo para entregar/recoger", time: "7:25 pm" },
+            { status: "Entregado", time: "7:40 pm" },
+          ]}
+          onChat={() => console.log("Chat pressed")}
+        />
       </TabsContent>
     </Tabs>
   );

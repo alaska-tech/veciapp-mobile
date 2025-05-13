@@ -4,42 +4,88 @@ import { Card } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Search } from "lucide-react-native";
 import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
+import { useState } from 'react'; 
+import { Stack } from "expo-router";
 
 export default function ChatsScreen() {
+  const [searchText, setSearchText] = useState('');  
+
   const chats = [
     {
       id: '1',
-      name: 'John Doe',
+      name: 'Julian Rivera',
       lastMessage: 'When will my order arrive?',
       time: '12:30 PM',
       unread: true,
-      avatar: 'https://picsum.photos/200'
+      avatar: 'https://picsum.photos/203'
     },
     {
       id: '2',
-      name: 'Jane Smith',
+      name: 'Adriana Angulo',
       lastMessage: 'Thank you for the quick delivery!',
       time: '11:45 AM',
       unread: false,
       avatar: 'https://picsum.photos/201'
-    }
+    },
+    {
+      id: '3',
+      name: 'Brayan Mercado',
+      lastMessage: 'I have a question about my order.',
+      time: '10:15 AM',
+      unread: true,
+      avatar: 'https://picsum.photos/202'
+    },
+    {
+      id: '4',
+      name: 'Julian Angulo',
+      lastMessage: 'I need help with my order.',
+      time: '9:30 AM',
+      unread: false,
+      avatar: 'https://picsum.photos/203'
+    },
+    {
+      id: '5',
+      name: 'Elder Sarmiento',
+      lastMessage: 'I need help with my order.',
+      time: '9:30 AM',
+      unread: false,
+      avatar: 'URL_ADDRESSicsum.photos/204'
+    },
   ];
 
-  return (
-    <ScrollView className="h-full w-full p-4 mt-12">
-      <Text className="text-3xl font-bold mb-6">Messages</Text>
+  // Add filtered chats logic
+  const filteredChats = chats.filter((chat) =>
+    chat.name.toLowerCase().includes(searchText.toLowerCase())
+  );
 
-      <View className="mb-6">
-        <View className="relative">
+  return (
+    <ScrollView className="h-full w-full p-4">
+      <Stack.Screen 
+        options={{
+          title: "Chat",
+          headerTitleAlign: "center",
+          headerLargeTitle: true,
+          headerShown: true,
+        }} 
+      />
+
+      <View className="mb-5">
+        <View className="flex-row items-center rounded-lg relative">
           <Input
-            placeholder="Search conversations..."
-            className="pl-12 py-3"
+            placeholder="Busca por nombre de cliente"
+            className="flex-1 py-3 text-base pl-12 rounded-full shadow-sm"
+            value={searchText}
+            onChangeText={setSearchText}
           />
-          <Search className="absolute left-4 top-3" size={20} color="#666" />
+          {!searchText && (
+            <View className="absolute left-3 top-3">
+              <Search size={20} color="#666"/>
+            </View>
+          )}
         </View>
       </View>
 
-      {chats.map((chat) => (
+      {filteredChats.map((chat) => (
         <TouchableOpacity key={chat.id} activeOpacity={0.7}>
           <Card className="mb-4">
             <View className="p-4 flex-row items-center">
