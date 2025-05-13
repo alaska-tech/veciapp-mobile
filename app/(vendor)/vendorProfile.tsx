@@ -3,19 +3,25 @@ import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
-import { 
-  Store, 
-  Settings, 
-  Clock, 
-  Bell, 
+import {
+  Bell,
   LogOut,
-  ChevronRight 
+  ChevronRight,
+  Package,
+  CreditCard,
+  History,
+  User,
+  XCircle,
+  MapPin,
+  BadgeDollarSign,
+  Headset,
 } from "lucide-react-native";
 import { Separator } from "~/components/ui/separator";
+import { TouchableOpacity } from "react-native";
 
 export default function VendorProfileScreen() {
   return (
-    <ScrollView className="h-full w-full p-4 mt-12">
+    <ScrollView className="h-full w-full p-4 mt-12 bg-white">
       <Card className="mb-6 pt-8 rounded-3xl">
         <CardContent>
           <View className="flex-col items-center justify-center gap-2">
@@ -26,38 +32,70 @@ export default function VendorProfileScreen() {
               </AvatarFallback>
             </Avatar>
             <View className="items-center gap-1">
-              <Text className="text-xl font-semibold">Vendor Store</Text>
+              <Text className="text-xl font-semibold">Laura Riascos</Text>
               <Text className="text-muted-foreground">
-                vendor.store@example.com
+                laura.lopez@example.com
               </Text>
-              <Text className="text-muted-foreground">
-                Calle 123 #45-67, Centro
-              </Text>
+              <View className="flex-row items-center gap-1 mt-0.5">
+                <MapPin size={14} color="#000000" />
+                <Text className="text-muted-foreground">
+                  Calle 22 #3-45, Centro Histórico
+                </Text>
+              </View>
             </View>
           </View>
-
           <Button
-            className="w-full flex-row items-center mt-4 bg-yellow-400 rounded-full gap-2"
+            className="w-full flex-row items-center mt-4 bg-[#FFD100] rounded-full gap-2"
             size="lg"
           >
-            <Store className="h-5 w-5" color="#000" />
-            <Text className="text-black text-xl">Manage Store</Text>
+            <Bell className="h-5 w-5" color="#000" />
+            <Text className="text-black text-base">Notificaciones</Text>
           </Button>
         </CardContent>
       </Card>
 
-      <View className="gap-4">
+      {/* Botones principales */}
+      <View className="flex-row justify-between mb-8">
+        <View className="flex-1 items-center mx-1">
+          <TouchableOpacity 
+            className="w-[72px] h-[72px] bg-[#FFD100] rounded-2xl items-center justify-center"
+          >
+            <Package size={30} color="#FFFFFF" />
+          </TouchableOpacity>
+          <Text className="text-sm font-medium text-black mt-2">Productos</Text>
+        </View>
+        
+        <View className="flex-1 items-center mx-1">
+          <TouchableOpacity 
+            className="w-[72px] h-[72px] bg-[#DD6F9C] rounded-2xl items-center justify-center"
+          >
+            <Headset size={30} color="#FFFFFF" />
+          </TouchableOpacity>
+          <Text className="text-sm font-medium text-black mt-2">Ayuda</Text>
+        </View>
+        
+        <View className="flex-1 items-center mx-1">
+          <TouchableOpacity 
+            className="w-[72px] h-[72px] bg-[#9747FF] rounded-2xl items-center justify-center"
+          >
+            <BadgeDollarSign size={30} color="#FFFFFF" />
+          </TouchableOpacity>
+          <Text className="text-sm font-medium text-black mt-2">Mis Ofertas</Text>
+        </View>
+      </View>
+
+      {/* Opciones de perfil */}
+      <View className="gap-2">
         <Button
           className="w-full flex-row items-center justify-between"
           variant="ghost"
         >
           <View className="flex-row items-center gap-2">
-            <Settings className="h-5 w-5 mr-3" color="#000000"/>
-            <Text>Store Settings</Text>
+            <User className="h-5 w-5 mr-3" color="#000000" />
+            <Text>Editar Perfil</Text>
           </View>
-          <ChevronRight className="h-5 w-5" color="#000000"/>
+          <ChevronRight className="h-5 w-5" color="#000000" />
         </Button>
-
         <Separator />
 
         <Button
@@ -65,12 +103,11 @@ export default function VendorProfileScreen() {
           variant="ghost"
         >
           <View className="flex-row items-center gap-2">
-            <Clock className="h-5 w-5 mr-3" color="#000000"/>
-            <Text>Business Hours</Text>
+            <CreditCard className="h-5 w-5 mr-3" color="#000000" />
+            <Text>Datos Bancarios</Text>
           </View>
-          <ChevronRight className="h-5 w-5" color="#000000"/>
+          <ChevronRight className="h-5 w-5" color="#000000" />
         </Button>
-
         <Separator />
 
         <Button
@@ -78,12 +115,11 @@ export default function VendorProfileScreen() {
           variant="ghost"
         >
           <View className="flex-row items-center gap-2">
-            <Bell className="h-5 w-5 mr-3" color="#000000"/>
-            <Text>Notifications</Text>
+            <History className="h-5 w-5 mr-3" color="#000000" />
+            <Text>Historial de Pedidos</Text>
           </View>
-          <ChevronRight className="h-5 w-5" color="#000000"/>
+          <ChevronRight className="h-5 w-5" color="#000000" />
         </Button>
-
         <Separator />
 
         <Button
@@ -91,10 +127,21 @@ export default function VendorProfileScreen() {
           variant="ghost"
         >
           <View className="flex-row items-center gap-2">
-            <LogOut className="h-5 w-5 mr-3" color="rgb(239 68 68)"/>
-            <Text className="text-destructive">Sign Out</Text>
+            <LogOut className="h-5 w-5 mr-3" color="rgb(239 68 68)" />
+            <Text className="text-destructive">Cerrar Sesión</Text>
           </View>
-          <ChevronRight className="h-5 w-5" color="#000000"/>
+          <ChevronRight className="h-5 w-5" color="#000000" />
+        </Button>
+        <Separator />
+
+        <Button
+          className="w-full flex-row items-center justify-between"
+          variant="ghost"
+        >
+          <View className="flex-row items-center gap-2">
+            <XCircle className="h-5 w-5 mr-3" color="#EF4444" />
+            <Text className="text-[#EF4444]">Darse de baja</Text>
+          </View>
         </Button>
       </View>
     </ScrollView>

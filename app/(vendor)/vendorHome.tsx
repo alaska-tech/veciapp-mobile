@@ -1,4 +1,4 @@
-import { View, ScrollView, Linking } from "react-native";
+import { View, ScrollView } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Card, CardContent } from "~/components/ui/card";
 import {
@@ -6,8 +6,8 @@ import {
   Package,
   CircleDollarSign,
   MessageSquareMore,
-  History,
   LayoutDashboard,
+  ScrollText,
 } from "lucide-react-native";
 import HeaderVendor from "~/components/epic/headerVendor";
 import { Separator } from "~/components/ui/separator";
@@ -42,150 +42,157 @@ export default function VendorHome() {
     router.push("/chats");
   };
 
+  // Shadow style for cards
+  const cardShadow = {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
+  };
+
   return (
     <ScrollView className="h-full w-full pt-4 mt-12">
       <HeaderVendor />
       <Separator />
       <View className="px-4 pb-4">
         <Text className="text-3xl font-bold text-black py-4">
-          Pedidos del día
+          Indicadores del día
         </Text>
         <View className="flex-row gap-4 mb-6">
           <TouchableOpacity
-            style={{ flex: 1, aspectRatio: 1 }}
+            style={{ flex: 1, aspectRatio: 1, ...cardShadow }}
             onPress={handlePendingOrders}
           >
-            <Card className="flex-1 justify-center bg-green-200">
-              <CardContent className="flex-1 flex-row items-center justify-center">
-                <View className="mr-4">
-                  <Package size={44} color="#16a34a" />
-                </View>
-                <View className="flex-1">
-                  <Text className="text-muted-foreground font-semibold mb-1 text-lg">
-                    Pendientes
+            <View className="flex-1 rounded-2xl bg-[#FFD100] border-2 border-[#bfa100]">
+              <CardContent className="flex-1 flex-col justify-center px-4">
+                <View className="flex-row items-center mb-2">
+                  <Package size={28} color="#000" />
+                  <Text className="ml-2 text-base font-medium text-black">
+                    Pedidos
                   </Text>
-                  <Text className="text-4xl font-bold">{stats.orders}</Text>
                 </View>
+                <Text className="text-2xl font-semibold text-black mb-1">
+                  Pendientes
+                </Text>
+                <Text className="text-5xl font-extrabold text-black">
+                  {stats.orders}
+                </Text>
               </CardContent>
-            </Card>
+            </View>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={{ flex: 1, aspectRatio: 1 }}
+            style={{ flex: 1, aspectRatio: 1, ...cardShadow }}
             onPress={handleActiveOrders}
           >
-            <Card className="flex-1 justify-center bg-blue-200">
-              <CardContent className="flex-1 flex-row items-center justify-center">
-                <View className="mr-4">
-                  <PackageOpen size={44} color="#2563eb" />
-                </View>
-                <View className="flex-1">
-                  <Text className="text-muted-foreground font-semibold mb-1 text-lg">
-                    Activos
+            <View className="flex-1 rounded-2xl bg-[#ffffff] border-2 border-[#666666]">
+              <CardContent className="flex-1 flex-col justify-center px-4">
+                <View className="flex-row items-center mb-2">
+                  <PackageOpen size={28} color="#666666" />
+                  <Text className="ml-2 text-base font-medium text-[#666666]">
+                    Pedidos
                   </Text>
-                  <Text className="text-4xl font-bold">{stats.history}</Text>
                 </View>
+                <Text className="text-2xl font-semibold text-[#666666] mb-1">
+                  Activos
+                </Text>
+                <Text className="text-5xl font-extrabold text-[#666666]">
+                  2
+                </Text>
               </CardContent>
-            </Card>
+            </View>
           </TouchableOpacity>
         </View>
 
-        <View className="flex-row gap-4 mb-6">
-          <TouchableOpacity
-            style={{ flex: 1, aspectRatio: 1 }}
-            onPress={handleOrderHistory}
-          >
-            <Card className="flex-1 justify-center bg-yellow-200">
-              <CardContent className="flex-1 flex-row items-center justify-center">
-                <View className="mr-4">
-                  <History size={44} color="#ca8a04" />
-                </View>
-                <View className="flex-1">
-                  <Text className="text-muted-foreground font-semibold mb-1 text-lg">
+        <View className="gap-4 mb-6">
+          <TouchableOpacity onPress={handleOrderHistory}>
+            <View
+              className="rounded-2xl bg-[#ffffff] border-2 border-[#666666]"
+              style={cardShadow}
+            >
+              <CardContent className="px-4 py-2">
+                <View className="flex-row items-center mb-1">
+                  <ScrollText size={20} color="#666666" />
+                  <Text className="ml-2 text-base font-medium text-[#666666]">
                     Historial
                   </Text>
-                  <Text className="text-4xl font-bold">{stats.history}</Text>
                 </View>
+                <Text className="text-2xl font-semibold text-[#666666]">
+                  Ventas
+                </Text>
+                <Text className="text-4xl font-bold text-[#666666]">
+                  {stats.history}
+                </Text>
               </CardContent>
-            </Card>
+            </View>
           </TouchableOpacity>
+        </View>
 
-          <TouchableOpacity
-            style={{ flex: 1, aspectRatio: 1 }}
-            onPress={handleMessages}
-          >
-            <Card className="flex-1 justify-center bg-purple-200">
-              <CardContent className="flex-1 flex-row items-center justify-center">
-                <View className="mr-4">
-                  <MessageSquareMore size={44} color="#a21caf" />
-                </View>
-                <View className="flex-1 justify-center">
-                  <Text className="text-muted-foreground font-semibold text-lg">
+        <View className="gap-4 mb-4">
+          <TouchableOpacity onPress={handleMessages}>
+            <View
+              className="rounded-2xl bg-[#ffffff] border-2 border-[#666666]"
+              style={cardShadow}
+            >
+              <CardContent className="px-4 py-2">
+                <View className="flex-row items-center mb-1">
+                  <MessageSquareMore size={20} color="#666666" />
+                  <Text className="ml-2 text-base font-medium text-[#666666]">
                     Mensajes
                   </Text>
-                  <Text className="text-muted-foreground font-semibold mb-1 text-lg">
-                    no leidos
-                  </Text>
-                  <Text className="text-4xl font-bold">{stats.messages}</Text>
                 </View>
+                <Text className="text-2xl font-semibold text-[#666666]">
+                  No leídos
+                </Text>
+                <Text className="text-4xl font-bold text-[#666666]">
+                  {stats.messages}
+                </Text>
               </CardContent>
-            </Card>
+            </View>
           </TouchableOpacity>
         </View>
       </View>
 
-      <Separator />
-
-      <View className="px-4 pb-4 pt-8">
+      <View className="px-4 pb-4">
         <TouchableOpacity onPress={handleDashboard}>
-          <Card className="mb-6 bg-pink-100">
+          <View
+            className="rounded-2xl bg-[#DD6F9C] border-2 border-[#B15B7D] mb-4"
+            style={cardShadow}
+          >
             <CardContent className="p-4 flex-row items-center">
-              <View className="mr-4">
-                <LayoutDashboard size={40} color="#db2777" />
-              </View>
-              <View className="flex-1">
-                <Text className="text-muted-foreground text-lg font-medium">
+              <LayoutDashboard size={28} color="#ffffff" />
+              <View className="ml-2 flex-1">
+                <Text className="text-base font-medium text-white">
                   Administración
                 </Text>
+                <Text className="text-lg underline text-white">
+                  Gestionar mi cuenta
+                </Text>
               </View>
             </CardContent>
-          </Card>
+          </View>
         </TouchableOpacity>
 
-        <TouchableOpacity>
-          <Card className="mb-6 bg-red-100">
+          <View
+            className="rounded-2xl bg-[#35B675] border-2 border-[#218c4a] mb-4"
+            style={cardShadow}
+          >
             <CardContent className="p-4 flex-row items-center">
-              <View className="mr-4">
-                <CircleDollarSign size={40} color="#fd3500" />
-              </View>
-              <View className="flex-1">
-                <Text className="text-muted-foreground text-lg font-medium mb-1">
+              <CircleDollarSign size={28} color="#ffffff" />
+              <View className="ml-2 flex-1">
+                <Text className="text-base font-medium text-white">
                   Ventas del día
                 </Text>
-                <Text className="text-xl font-bold">
-                  ${stats.earnings.toLocaleString()} ({stats.sales} ventas)
+                <Text className="text-2xl font-bold text-white">
+                  ${stats.earnings.toLocaleString()}{" "}
+                  <Text className="text-base font-normal text-white">
+                    ({stats.sales} ventas)
+                  </Text>
                 </Text>
               </View>
             </CardContent>
-          </Card>
-        </TouchableOpacity>
-        {/* 
-         <View className="gap-4">
-           <Button 
-             className="w-full bg-primary" 
-             size="lg"
-           >
-             <Text className="text-white text-lg">Ver pedidos activos</Text>
-           </Button>
-           
-           <Button 
-             className="w-full" 
-             variant="outline"
-             size="lg"
-           >
-             <Text className="text-lg">Gestionar productos</Text>
-           </Button>
-         </View>*/}
+          </View>
       </View>
     </ScrollView>
   );
