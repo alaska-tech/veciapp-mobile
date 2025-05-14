@@ -127,8 +127,8 @@ export default function VendorProfileScreen() {
           variant="ghost"
         >
           <View className="flex-row items-center gap-2">
-            <LogOut className="h-5 w-5 mr-3" color="rgb(239 68 68)" />
-            <Text className="text-destructive">Cerrar Sesión</Text>
+            <LogOut className="h-5 w-5 mr-3" color="#000000" />
+            <Text>Cerrar Sesión</Text>
           </View>
           <ChevronRight className="h-5 w-5" color="#000000" />
         </Button>
@@ -139,8 +139,8 @@ export default function VendorProfileScreen() {
           variant="ghost"
         >
           <View className="flex-row items-center gap-2">
-            <XCircle className="h-5 w-5 mr-3" color="#EF4444" />
-            <Text className="text-[#EF4444]">Darse de baja</Text>
+            <XCircle className="h-5 w-5 mr-3" color="#000000" />
+            <Text>Darse de baja</Text>
           </View>
         </Button>
       </View>
