@@ -36,7 +36,7 @@ export default function VendorHome() {
     router.push("/orders?tab=historial");
   };
   const handleDashboard = () => {
-    router.push("/(aux)/dashboard");
+    router.push("/(dashboard)/dashboard");
   };
   const handleMessages = () => {
     router.push("/chats");
