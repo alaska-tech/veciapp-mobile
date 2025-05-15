@@ -1,4 +1,4 @@
-import { ScrollView, View } from "react-native";
+import { ScrollView, View, Linking } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
@@ -18,8 +18,15 @@ import {
 } from "lucide-react-native";
 import { Separator } from "~/components/ui/separator";
 import { TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function VendorProfileScreen() {
+  const router = useRouter();
+  
+  const handleSendEmail = () => {
+    Linking.openURL('mailto:veciapp@maleua.org');
+  };
+
   return (
     <ScrollView className="h-full w-full p-4 mt-12 bg-white">
       <Card className="mb-6 pt-8 rounded-3xl">
@@ -47,6 +54,7 @@ export default function VendorProfileScreen() {
           <Button
             className="w-full flex-row items-center mt-4 bg-[#FFD100] rounded-full gap-2"
             size="lg"
+            onPress={() => router.push("/(vendorsettings)/notificationScreen")}
           >
             <Bell className="h-5 w-5" color="#000" />
             <Text className="text-black text-base">Notificaciones</Text>
@@ -68,6 +76,7 @@ export default function VendorProfileScreen() {
         <View className="flex-1 items-center mx-1">
           <TouchableOpacity 
             className="w-[72px] h-[72px] bg-[#DD6F9C] rounded-2xl items-center justify-center"
+            onPress={handleSendEmail}
           >
             <Headset size={30} color="#FFFFFF" />
           </TouchableOpacity>
@@ -89,6 +98,7 @@ export default function VendorProfileScreen() {
         <Button
           className="w-full flex-row items-center justify-between"
           variant="ghost"
+          onPress={() => router.push("/(vendorsettings)/profileSettingScreen")}
         >
           <View className="flex-row items-center gap-2">
             <User className="h-5 w-5 mr-3" color="#000000" />
@@ -113,6 +123,7 @@ export default function VendorProfileScreen() {
         <Button
           className="w-full flex-row items-center justify-between"
           variant="ghost"
+          onPress={() => router.push("/orders?tab=historial")}
         >
           <View className="flex-row items-center gap-2">
             <History className="h-5 w-5 mr-3" color="#000000" />
