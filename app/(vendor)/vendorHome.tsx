@@ -8,6 +8,7 @@ import {
   MessageSquareMore,
   LayoutDashboard,
   ScrollText,
+  Truck,
 } from "lucide-react-native";
 import HeaderVendor from "~/components/epic/headerVendor";
 import { Separator } from "~/components/ui/separator";
@@ -89,7 +90,7 @@ export default function VendorHome() {
             <View className="flex-1 rounded-2xl bg-[#ffffff] border-2 border-[#666666]">
               <CardContent className="flex-1 flex-col justify-center px-4">
                 <View className="flex-row items-center mb-2">
-                  <PackageOpen size={28} color="#666666" />
+                  <Truck size={28} color="#666666" />
                   <Text className="ml-2 text-base font-medium text-[#666666]">
                     Pedidos
                   </Text>
