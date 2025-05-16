@@ -5,9 +5,10 @@ import { Input } from "~/components/ui/input";
 import { Search } from "lucide-react-native";
 import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
 import { useState } from 'react'; 
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 
 export default function ChatsScreen() {
+  const router = useRouter();
   const [searchText, setSearchText] = useState('');  
 
   const chats = [
@@ -59,6 +60,10 @@ export default function ChatsScreen() {
     chat.name.toLowerCase().includes(searchText.toLowerCase())
   );
 
+  const navigateToChat = (chatId: string) => {
+    router.push(`/(vendorscreens)/(vendorchat)/internalVendorChat`);
+  };
+
   return (
     <ScrollView className="h-full w-full p-4">
       <Stack.Screen 
@@ -87,10 +92,14 @@ export default function ChatsScreen() {
       </View>
 
       {filteredChats.map((chat) => (
-        <TouchableOpacity key={chat.id} activeOpacity={0.7}>
+        <TouchableOpacity 
+          key={chat.id} 
+          activeOpacity={0.7} 
+          onPress={() => navigateToChat(chat.id)}
+        >
           <Card className="mb-4">
             <View className="p-4 flex-row items-center">
-              <Avatar alt="avatar" className="h-12 w-12 mr-4">
+              <Avatar alt={chat.name} className="h-12 w-12 mr-4">
                 <AvatarImage source={{ uri: chat.avatar }} />
                 <AvatarFallback>
                   <Text>{chat.name.charAt(0)}</Text>
