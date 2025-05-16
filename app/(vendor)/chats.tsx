@@ -51,6 +51,7 @@ export default function ChatsScreen() {
       unread: false,
       avatar: 'URL_ADDRESSicsum.photos/204'
     },
+    
   ];
 
   // Add filtered chats logic
