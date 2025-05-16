@@ -1,0 +1,88 @@
+import { createContext, useContext, useEffect, useState } from "react";
+import { usePathname, useRouter } from "expo-router";
+import { CustomerRoleType, User } from "~/constants/models";
+import {
+  getToken,
+  getUserInfo,
+  isTokenValid,
+  clearAllInfoFromLocalStorage,
+  useLocalStorageAction,
+} from "~/actions/localStorage.actions";
+
+interface AuthContextType {
+  isAuthenticated: boolean;
+  userRole: string | null;
+  loading: boolean;
+}
+
+const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState<CustomerRoleType[number] | null>(
+    null
+  );
+  const router = useRouter();
+  const currentRoute = usePathname();
+  const localStorageActions = useLocalStorageAction();
+  useEffect(() => {
+    async function checkIfThereIsValidStoredJwt() {
+      const token = await getToken();
+      if (!token) {
+        clearAllInfoFromLocalStorage();
+        router.replace("/");
+        return;
+      }
+      const isValid = await isTokenValid();
+      if (!isValid) {
+        try {
+          await localStorageActions.refreshCurrentToken();
+        } catch (error) {
+          clearAllInfoFromLocalStorage();
+          router.replace("/");
+        }
+      }
+      console.log(currentRoute);
+      if (currentRoute !== "/") {
+        return;
+      }
+      try {
+        const storedUser = await getUserInfo();
+        if (!storedUser) {
+          return;
+        }
+        const storedRole = storedUser?.role;
+        console.log(storedRole);
+        if (!storedRole) {
+          return;
+        }
+        setIsAuthenticated(!!token);
+        setUserRole(storedRole);
+
+        if (storedRole === "customer") {
+          router.replace("/(client)/home");
+          return;
+        }
+        if (storedRole === "vendor") {
+          router.replace("/(vendor)/vendorHome");
+          return;
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    checkIfThereIsValidStoredJwt();
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, userRole, loading }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export const useAuth = () => useContext(AuthContext);

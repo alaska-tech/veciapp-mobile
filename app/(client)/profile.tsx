@@ -19,6 +19,7 @@ import { Separator } from "~/components/ui/separator";
 import { Card, CardContent } from "~/components/ui/card";
 import { TouchableOpacity } from "react-native";
 import useAuthAction from "~/actions/auth.action";
+import { clearAllInfoFromLocalStorage } from "~/actions/localStorage.actions";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -134,8 +135,14 @@ export default function ProfileScreen() {
           <Button
             className="w-full flex-row items-center justify-between"
             variant="ghost"
-            onPress={() => {
-              logOut.mutateAsync({});
+            onPress={async () => {
+              try {
+                await logOut.mutateAsync({});
+              } catch (error) {
+              } finally {
+                clearAllInfoFromLocalStorage();
+                router.dismissTo("/");
+              }
             }}
           >
             <View className="flex-row items-center gap-2">

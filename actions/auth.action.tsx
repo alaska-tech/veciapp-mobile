@@ -1,10 +1,9 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { mutateEntity } from "./action";
+import { apiClient } from "../services/clients";
 import { AxiosError, AxiosResponse } from "axios";
+import { mutateEntity } from "./action";
+import { LOGGED_USER_INFO_KEY } from "~/constants/constants";
 import { User, Response } from "~/constants/models";
-import { useRouter } from "expo-router";
-import { JWT_KEY, LOGGED_USER_INFO_KEY } from "~/constants/constants";
-import { apiClient } from "~/services/clients";
 
 export interface UpdatePasswordBody {
   password: string;
@@ -16,14 +15,9 @@ export type LogInResponse = {
   token: string;
   user: User;
 };
-export type LogInForm = {
-  email: string;
-  password: string;
-};
 export default function useAuthAction() {
-  const router = useRouter();
   const queryClient = useQueryClient();
-  const userSession = useQuery<User | null>({
+/*   const userSession = useQuery<User | null>({
     queryKey: [LOGGED_USER_INFO_KEY],
     queryFn: () => {
       const loggedUserInfo = localStorage.getItem(LOGGED_USER_INFO_KEY);
@@ -32,7 +26,7 @@ export default function useAuthAction() {
       }
       return JSON.parse(loggedUserInfo) as User;
     },
-  });
+  }); */
 
   const logOut = mutateEntity<
     AxiosResponse<Extract<Response<null>, { status: "Success" }>>,
@@ -55,21 +49,17 @@ export default function useAuthAction() {
       onMutate: (res) => res,
       onError: (error, _variables, _context) => {
         const receivedErrorMessage = error.response?.data.error.message;
-        /* notification.error({
+        /*         notification.error({
           message: "Error",
           description: receivedErrorMessage,
           duration: 0,
         }); */
       },
       onSuccess(data, _variables, _context) {
-        /* message.success({
+        /*         message.success({
           content: "Te has deslogueado correctamente",
           duration: 5,
         }); */
-        clearCredentialsInCache();
-        queryClient.removeQueries({ queryKey: [JWT_KEY] });
-        queryClient.removeQueries({ queryKey: [LOGGED_USER_INFO_KEY] });
-        router.dismissTo("/");
       },
     }
   );
@@ -77,7 +67,12 @@ export default function useAuthAction() {
   const logIn = mutateEntity<
     AxiosResponse<Extract<Response<LogInResponse>, { status: "Success" }>>,
     AxiosError<Extract<Response<null>, { status: "Error" }>>,
-    { body: LogInForm }
+    {
+      body: {
+        email: string;
+        password: string;
+      };
+    }
   >(
     () => {
       return async function mutationFn({ body }) {
@@ -98,6 +93,7 @@ export default function useAuthAction() {
       onMutate: (res) => res,
       onError: (error, _variables, _context) => {
         const receivedErrorMessage = error.response?.data.error.message;
+        console.error(JSON.stringify(error,null,4))
         /*         notification.error({
           message: "Error",
           description: receivedErrorMessage,
@@ -105,20 +101,12 @@ export default function useAuthAction() {
         }); */
       },
       onSuccess(data, _variables, _context) {
-        /* const { token, user } = data.data.data;
-        localStorage.setItem(JWT_KEY, token);
-        localStorage.setItem(LOGGED_USER_INFO_KEY, JSON.stringify(user)); */
-        /* message.success({
+        /*         message.success({
           content: "Te has logueado correctamente",
           duration: 5,
         }); */
       },
     }
   );
-  return { logOut, userSession, logIn };
-}
-
-export function clearCredentialsInCache() {
-  localStorage.removeItem(JWT_KEY);
-  localStorage.removeItem(LOGGED_USER_INFO_KEY);
+  return { logOut, logIn };
 }

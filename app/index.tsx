@@ -9,13 +9,18 @@ import { Loader } from "~/components/ui/loader";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { validateEmail, validatePassword } from "~/lib/validations";
-import useAuthAction, { clearCredentialsInCache } from "~/actions/auth.action";
 import { JWT_KEY } from "~/constants/constants";
+import useAuthAction from "~/actions/auth.action";
+import {
+  clearAllInfoFromLocalStorage,
+  setToken,
+  setUserInfo,
+} from "~/actions/localStorage.actions";
 
 export default function LoginScreen() {
   const router = useRouter();
   const authActions = useAuthAction();
-  const logIn = authActions.logIn();
+  const login = authActions.logIn();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -25,7 +30,7 @@ export default function LoginScreen() {
     password: "",
   });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  useEffect(() => {
+  /*   useEffect(() => {
     const jwt = localStorage.getItem(JWT_KEY);
     if (jwt) {
       const user = JSON.parse(atob(jwt.split(".")[1]));
@@ -39,7 +44,7 @@ export default function LoginScreen() {
         //message.error("No tienes permisos para acceder a esta sección", 10);
       }
     }
-  }, []);
+  }, []); */
   const validateLogin = (): boolean => {
     if (!showPassword) {
       const emailError = validateEmail(email);
@@ -58,46 +63,61 @@ export default function LoginScreen() {
 
   const handleSignIn = async () => {
     //if (!validateLogin()) return;
+    try {
+      //if (!validateLogin()) return;
 
-    if (!showPassword) {
-      setShowPassword(true);
-    } else {
+      if (!showPassword) {
+        setShowPassword(true);
+        return;
+      }
+
       setIsLoading(true);
-      logIn
-        .mutateAsync({
-          body: {
-            email: email,
-            password: password,
-          },
-        })
-        .then(
-          (response) => {
-            if (response.data.data.user.role === "customer") {
-              router.push("/(client)/home");
-            } else if (response.data.data.user.role === "vendor") {
-              router.push("/(vendor)/vendorHome");
-            } else {
-              Alert.alert(
-                "Error",
-                "No tienes permisos para acceder a esta sección",
-                [
-                  {
-                    text: "OK",
-                    onPress: () => {
-                      router.dismissAll();
-                      clearCredentialsInCache();
-                    },
-                  },
-                ]
-              );
-              // message.error("No tienes permisos para acceder a esta sección", 10);
-            }
-          },
-          () => {}
-        )
-        .finally(() => {
-          setIsLoading(false);
-        });
+      const response = await login.mutateAsync({
+        body: {
+          email: email.trim(),
+          password: password,
+        },
+      });
+
+      if (!response?.data?.data) {
+        throw new Error("Invalid response from server");
+      }
+
+      const { token, user } = response.data.data;
+
+      await setUserInfo(user);
+      await setToken(token);
+
+      switch (user.role) {
+        case "customer":
+          router.replace("/(client)/home");
+          break;
+        case "vendor":
+          router.replace("/(vendor)/vendorHome");
+          break;
+        default:
+          Alert.alert(
+            "Error",
+            "No tienes permisos para acceder a esta sección",
+            [
+              {
+                text: "OK",
+                onPress: async () => {
+                  await clearAllInfoFromLocalStorage();
+                  router.replace("/");
+                },
+              },
+            ]
+          );
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      Alert.alert(
+        "Error",
+        "Ha ocurrido un error al iniciar sesión. Por favor intenta nuevamente."
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -179,7 +199,9 @@ export default function LoginScreen() {
         )}
 
         <Button
-          onPress={handleSignIn}
+          onPress={async () => {
+            await handleSignIn();
+          }}
           className="w-full bg-yellow-400 rounded-full mb-4"
           disabled={isLoading}
         >

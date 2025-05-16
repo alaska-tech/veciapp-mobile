@@ -8,7 +8,7 @@ export const unstable_settings = {
 };
 
 export default function TabLayout() {
-  const authState = useContext(AuthContext);
+/*   const authState = useContext(AuthContext);
 
   if (!authState.isReady) {
     return null;
@@ -16,7 +16,7 @@ export default function TabLayout() {
 
   if (!authState.isLoggedIn || authState.user?.role !== "customer") {
     return <Redirect href="/" />;
-  }
+  } */
   return (
     <Tabs
       screenOptions={{

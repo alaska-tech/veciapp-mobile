@@ -19,7 +19,8 @@ import * as SplashScreen from "expo-splash-screen";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { addJWTInterceptor } from "~/services/axios.interceptor";
 import { apiClient } from "~/services/clients";
-import { AuthProvider } from "~/lib/authContext";
+import { useRouter } from "expo-router";
+import { AuthProvider } from "~/components/auth/AuthProvider";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -48,6 +49,7 @@ export default function RootLayout() {
   const { colorScheme, isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
   const queryClient = new QueryClient();
+  const router = useRouter();
   addJWTInterceptor(apiClient);
   React.useEffect(() => {
     async function prepare() {

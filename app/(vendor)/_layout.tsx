@@ -1,23 +1,13 @@
-import { Redirect, Tabs } from "expo-router";
+import { Tabs } from "expo-router";
 import {
   Home,
   PackageOpen,
   MessageSquareMore,
   User,
 } from "lucide-react-native";
-import { useContext } from "react";
-import { AuthContext } from "~/lib/authContext";
 
 export default function TabLayout() {
-  const authState = useContext(AuthContext);
 
-  if (!authState.isReady) {
-    return null;
-  }
-
-  if (!authState.isLoggedIn|| authState.user?.role !== "vendor") {
-    return <Redirect href="/" />;
-  }
   return (
     <Tabs
       screenOptions={{
