@@ -1,9 +1,14 @@
-import { View, Text } from 'react-native';
+import { View, ScrollView } from "react-native";
+import HeaderVendor from "~/components/epic/headerVendor";
+import VendorTabs from "~/components/epic/vendorTabs";
+import { Separator } from "~/components/ui/separator";
 
-export default function VendorHome() {
+export default function OrdersScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 24 }}>Welcome cachón 2</Text>
-    </View>
+    <ScrollView className="h-full w-full pt-4 mt-12">
+      <HeaderVendor />
+      <Separator />
+      <VendorTabs />
+    </ScrollView>
   );
 }
