@@ -213,3 +213,39 @@ export interface Branch extends BaseAttributes {
   availablePaymentMethods: string[]; //default []
   description?: string;
 }
+
+export interface Product {
+  id: string;
+  vendorId: string;
+  branchId: string;
+  categoryId: string;
+  type: string;
+  name: string;
+  description: string;
+  shortDescription: string;
+  price: string;
+  discount: string;
+  finalPrice: string;
+  currency: string;
+  mainImage: string;
+  images: string[];
+  tags: string[];
+  state: string;
+  inventory: number;
+  presentation: string | null;
+  ingredients: string[];
+  allergens: string[];
+  isHighlighted: boolean;
+  isBestseller: boolean;
+  isNew: boolean;
+  serviceScheduling: null;
+  createdBy: string;
+  updatedBy: string | null;
+  createdAt: string;
+  updatedAt: string;
+  stateHistory: Array<{
+    state: string;
+    reason: string;
+    changedAt: string;
+  }>;
+}
