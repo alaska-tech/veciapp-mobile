@@ -2,7 +2,8 @@ import { View } from "react-native";
 import { Text } from "~/components/ui/text";
 import HeaderHome from "../../components/epic/headerHome";
 import CategoriesHome from "~/components/epic/categoriesHome";
-import PromoCard from "~/components/epic/promoCard";
+import ImageCarousel from "~/components/epic/imageCarousel";
+import Veciproveedores from "~/components/epic/veciproveedores";
 import { ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import ColumnCards from "~/components/epic/columnCards";
@@ -51,15 +52,55 @@ export default function HomeScreen() {
     },
   ];
 
+  const sampleProveedores = [
+    {
+      id: '1',
+      name: 'Super Tienda',
+      imageUrl: 'https://picsum.photos/200',
+    },
+    {
+      id: '2',
+      name: 'Terribol Mascotas',
+      imageUrl: 'https://picsum.photos/201',
+    },
+    {
+      id: '3',
+      name: 'Belleza & Estilo',
+      imageUrl: 'https://picsum.photos/202',
+    },
+    {
+      id: '4',
+      name: 'Moda Express',
+      imageUrl: 'https://picsum.photos/203',
+    },
+    {
+      id: '5',
+      name: 'Frutas & Verduras',
+      imageUrl: 'https://picsum.photos/204',
+    },
+    {
+      id: '6',
+      name: 'Tech Gadgets',
+      imageUrl: 'https://picsum.photos/205',
+    },
+    {
+      id: '7',
+      name: 'Artesanías',
+      imageUrl: 'https://picsum.photos/206',
+    }
+  ];
+
   return (
-    <ScrollView className="h-full w-full p-4 mt-12">
+    <ScrollView className="h-full w-full p-4 mt-14">
       <HeaderHome />
-      <PromoCard
-        title="¡Oferta del día!"
-        subtitle="Solo por hoy"
-        buttonText="Aprovecha de una"
-        image="https://picsum.photos/200"
-        onPress={() => { router.push("/(client)/cart") }}
+      <ImageCarousel />
+      <Veciproveedores 
+        proveedores={sampleProveedores}
+        onSeeAllPress={() => {
+          console.log('Ver todos pressed');
+          // Navigate to all providers screen
+          // router.push('/proveedores');
+        }}
       />
       <CategoriesHome />
       <View className="mt-4">
