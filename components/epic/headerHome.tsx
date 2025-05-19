@@ -4,78 +4,64 @@ import { Input } from "~/components/ui/input";
 import { MapPinIcon, ShoppingCartIcon, Search } from 'lucide-react-native';
 import { Image } from 'react-native';
 import { useState } from 'react';
+import { useRouter } from 'expo-router';
+import { useCartItemsCount } from '~/store/cartStore';
 
 export default function HeaderHome() {
   const [searchText, setSearchText] = useState('');
+  const router = useRouter();
+  
+  // Usar el hook selector especializado que observa cambios en la cantidad total
+  const cartItemsCount = useCartItemsCount();
 
   return (
     <View className='mb-6'>
-      {/* Logo and Icons */}
-      <View className="mb-4 flex-row items-center justify-between">
-        <View className="w-10 h-10 flex items-center justify-center">
-          <Image 
-            source={require('../../assets/images/logo.png')}
-            className="w-10 h-10"
-            resizeMode="contain"
-          />
+      {/* Search Bar and Cart */}
+      <View className="mb-4 flex-row items-center">
+        <View className="flex-1 mr-3">
+          <View className="flex-row items-center rounded-lg relative">
+            <Input
+              placeholder="Busca empanadas para hoy"
+              className="flex-1 py-3 text-base pl-12 rounded-full border border-gray-400"
+              value={searchText}
+              onChangeText={setSearchText}
+            />
+            {!searchText && (
+              <View className="absolute left-3 top-3">
+                <Search size={20} color="#666"/>
+              </View>
+            )}
+          </View>
         </View>
-        <View className="flex-row gap-3">
-          <TouchableOpacity 
-            activeOpacity={0.3}
-            className="rounded-xl p-2"
-          >
-            <ShoppingCartIcon size={22} color="#666"/>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* Search Bar */}
-      <View className="mb-5">
-        <View className="flex-row items-center rounded-lg relative">
-          <Input
-            placeholder="Encuentra lo que necesitas..."
-            className="flex-1 py-3 text-base pl-12 rounded-full shadow-md"
-            value={searchText}
-            onChangeText={setSearchText}
-          />
-          {!searchText && (
-            <View className="absolute left-3 top-3">
-              <Search size={20} color="#666"/>
+        <TouchableOpacity 
+          activeOpacity={0.3}
+          className="rounded-xl p-2"
+          onPress={() => router.push('/cart')}
+        >
+          <ShoppingCartIcon size={22} color="#666"/>
+          {cartItemsCount > 0 && (
+            <View className="absolute -top-1 -right-1 bg-red-500 rounded-full w-5 h-5 flex items-center justify-center">
+              <Text className="text-white text-xs font-bold">{cartItemsCount}</Text>
             </View>
           )}
-        </View>
+        </TouchableOpacity>
       </View>
 
-      {/* Profile and Location Container */}
-      <View className="flex-row items-center justify-between">
-        {/* Profile Section */}
-        <View className="flex-row items-center max-w-[150px] gap-2 bg-gray-100 py-2 px-3 rounded-full">
-          <Image 
-            source={require('../../assets/images/profile.png')}
-            className="w-8 h-8 rounded-full"
-            resizeMode="cover"
-          />
-          <Text className="text-gray-700 font-medium flex-1" numberOfLines={1}>
-            Hombre Peneeeeeeeeee
-          </Text>
-        </View>
-
-        {/* Location Section */}
-        <View className="flex-row items-center flex-1 ml-2">
-          <MapPinIcon size={20} color="#ffffff" fill="#666"/>
-          <Text 
-            className="text-gray-500 text-md pr-1"
-          >
-            Enviar a
-          </Text>
-          <Text 
-            className="text-gray-500 text-md font-bold flex-1"
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
-            Calle 123 St 45 # 65 Sta Marta, Calle25
-          </Text>
-        </View>
+      {/* Location Section */}
+      <View className="flex-row items-center">
+        <MapPinIcon size={20} color="#ffffff" fill="#666"/>
+        <Text 
+          className="text-gray-500 text-md pr-1"
+        >
+          Enviar a
+        </Text>
+        <Text 
+          className="text-gray-500 text-md font-bold flex-1"
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          Calle 123 St 45 # 65 - 123 barrio la esmeralda donde chepito
+        </Text>
       </View>
     </View>
   );
