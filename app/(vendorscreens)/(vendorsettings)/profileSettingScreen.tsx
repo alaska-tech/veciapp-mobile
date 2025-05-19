@@ -168,14 +168,6 @@ export default function ProfileSettingsScreen() {
                 </View>
               </View>
             </View>
-            <Button
-              className="w-full flex-row items-center mt-4 bg-[#FFD100] rounded-full gap-2"
-              size="lg"
-              onPress={() => router.push("/(vendorsettings)/notificationScreen")}
-            >
-              <Bell className="h-5 w-5" color="#000" />
-              <Text className="text-black text-base">Notificaciones</Text>
-            </Button>
           </CardContent>
         </Card>
 
@@ -303,7 +295,7 @@ export default function ProfileSettingsScreen() {
 
             <TabsContent value="seguridad" className="w-full">
               <View className="gap-4">
-                <View className="mb-4">
+                <View className="mb-2">
                   <Text className="text-base font-medium mb-2">Contraseña actual</Text>
                   <View className="border border-gray-200 rounded-lg p-3 flex-row items-center relative">
                     <TextInput 
@@ -391,7 +383,7 @@ export default function ProfileSettingsScreen() {
                 </View>
 
                 <Button 
-                  className="w-full bg-[#FFD100] rounded-full py-6 mb-4"
+                  className="w-full bg-[#FFD100] rounded-full py-6 mb-2"
                   onPress={handleChangePassword}
                 >
                   <Text className="text-black text-base font-medium">Cambiar Contraseña</Text>
@@ -415,14 +407,14 @@ export default function ProfileSettingsScreen() {
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button className="w-full bg-red-500 rounded-full mt-4 py-6 mb-8">
-                      <Text className="text-white text-base font-medium">Eliminar cuenta</Text>
+                      <Text className="text-white text-base font-medium">Solicitar dar de baja</Text>
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>¿Estás seguro de eliminar tu cuenta?</DialogTitle>
+                      <DialogTitle>¿Estás seguro de solicitar dar de baja?</DialogTitle>
                       <DialogDescription>
-                        Esta acción es permanente y no se puede deshacer. Se eliminarán todos tus datos y configuraciones de la plataforma.
+                        Esta acción es permanente y no se puede deshacer. Se enviara una solicitud a Maleua para eliminar tu cuenta y se eliminarán todos tus datos y configuraciones de la plataforma.
                       </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
