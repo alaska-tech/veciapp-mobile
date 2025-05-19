@@ -4,7 +4,7 @@ import {
   AxiosRequestConfig,
   AxiosResponse,
 } from "axios";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import {
   clearAllInfoFromLocalStorage,
   getToken,
@@ -37,12 +37,10 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 };
 
 const onResponseError = async (error: AxiosError): Promise<AxiosError> => {
-  const router = useRouter();
   if (error.response?.status === 403) {
     //TODO: Comprobar que el error es 403 para cuando el usuario no tenga permisos
     await clearAllInfoFromLocalStorage();
-    router.dismissTo("/");
-    /* window.location.href = '/' */
+    router.replace("/");
   }
   return Promise.reject(error);
 };

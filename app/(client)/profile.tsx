@@ -139,6 +139,7 @@ export default function ProfileScreen() {
               try {
                 await logOut.mutateAsync({});
               } catch (error) {
+                console.error(error);
               } finally {
                 clearAllInfoFromLocalStorage();
                 router.dismissTo("/");

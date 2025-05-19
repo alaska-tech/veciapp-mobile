@@ -19,12 +19,16 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
+import useAuthAction from "~/actions/auth.action";
+import { clearAllInfoFromLocalStorage } from "~/actions/localStorage.actions";
 
 export default function VendorProfileScreen() {
   const router = useRouter();
-  
+  const authActions = useAuthAction();
+  const logOut = authActions.logOut();
+
   const handleSendEmail = () => {
-    Linking.openURL('mailto:veciapp@maleua.org');
+    Linking.openURL("mailto:veciapp@maleua.org");
   };
 
   return (
@@ -65,16 +69,14 @@ export default function VendorProfileScreen() {
       {/* Botones principales */}
       <View className="flex-row justify-between mb-8">
         <View className="flex-1 items-center mx-1">
-          <TouchableOpacity 
-            className="w-[72px] h-[72px] bg-[#FFD100] rounded-2xl items-center justify-center"
-          >
+          <TouchableOpacity className="w-[72px] h-[72px] bg-[#FFD100] rounded-2xl items-center justify-center">
             <Package size={30} color="#FFFFFF" />
           </TouchableOpacity>
           <Text className="text-sm font-medium text-black mt-2">Productos</Text>
         </View>
-        
+
         <View className="flex-1 items-center mx-1">
-          <TouchableOpacity 
+          <TouchableOpacity
             className="w-[72px] h-[72px] bg-[#DD6F9C] rounded-2xl items-center justify-center"
             onPress={handleSendEmail}
           >
@@ -82,14 +84,14 @@ export default function VendorProfileScreen() {
           </TouchableOpacity>
           <Text className="text-sm font-medium text-black mt-2">Ayuda</Text>
         </View>
-        
+
         <View className="flex-1 items-center mx-1">
-          <TouchableOpacity 
-            className="w-[72px] h-[72px] bg-[#9747FF] rounded-2xl items-center justify-center"
-          >
+          <TouchableOpacity className="w-[72px] h-[72px] bg-[#9747FF] rounded-2xl items-center justify-center">
             <BadgeDollarSign size={30} color="#FFFFFF" />
           </TouchableOpacity>
-          <Text className="text-sm font-medium text-black mt-2">Mis Ofertas</Text>
+          <Text className="text-sm font-medium text-black mt-2">
+            Mis Ofertas
+          </Text>
         </View>
       </View>
 
@@ -136,6 +138,16 @@ export default function VendorProfileScreen() {
         <Button
           className="w-full flex-row items-center justify-between"
           variant="ghost"
+          onPress={async () => {
+            try {
+              await logOut.mutateAsync({});
+            } catch (error) {
+              console.error(error);
+            } finally {
+              clearAllInfoFromLocalStorage();
+              router.dismissTo("/");
+            }
+          }}
         >
           <View className="flex-row items-center gap-2">
             <LogOut className="h-5 w-5 mr-3" color="#000000" />
