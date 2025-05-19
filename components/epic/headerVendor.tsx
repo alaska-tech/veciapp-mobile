@@ -21,11 +21,6 @@ export default function HeaderHome() {
             </Text>
           </Text>
         </View>
-        <View className="flex-row gap-3">
-          <TouchableOpacity activeOpacity={0.3} className="rounded-xl p-2">
-            <Bell size={22} color="#000000" fill="#ffffff" />
-          </TouchableOpacity>
-        </View>
       </View>
     </View>
   );
