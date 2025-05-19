@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { View, Image, Linking, TouchableOpacity, Alert } from "react-native";
 import { Eye, EyeOff } from "lucide-react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
@@ -9,18 +9,18 @@ import { Loader } from "~/components/ui/loader";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { validateEmail, validatePassword } from "~/lib/validations";
-import { JWT_KEY } from "~/constants/constants";
 import useAuthAction from "~/actions/auth.action";
 import {
   clearAllInfoFromLocalStorage,
   setToken,
   setUserInfo,
 } from "~/actions/localStorage.actions";
+import { refreshParameters } from "~/actions/parameter.action";
 
 export default function LoginScreen() {
   const router = useRouter();
-  const authActions = useAuthAction();
-  const login = authActions.logIn();
+  const { logIn } = useAuthAction();
+  const loginMutation = logIn();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -30,21 +30,7 @@ export default function LoginScreen() {
     password: "",
   });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  /*   useEffect(() => {
-    const jwt = localStorage.getItem(JWT_KEY);
-    if (jwt) {
-      const user = JSON.parse(atob(jwt.split(".")[1]));
-      if (user.role === "user") {
-        router.dismissTo("/(client)/home");
-      } else if (user.role === "vendor") {
-        router.dismissTo("/(vendor)/vendorHome");
-      } else {
-        router.dismissAll();
-        clearCredentialsInCache();
-        //message.error("No tienes permisos para acceder a esta sección", 10);
-      }
-    }
-  }, []); */
+
   const validateLogin = (): boolean => {
     if (!showPassword) {
       const emailError = validateEmail(email);
@@ -62,21 +48,23 @@ export default function LoginScreen() {
   };
 
   const handleSignIn = async () => {
-    //if (!validateLogin()) return;
+    if (!validateLogin()) return;
     try {
-      //if (!validateLogin()) return;
-
       if (!showPassword) {
         setShowPassword(true);
         return;
       }
 
       setIsLoading(true);
-      const response = await login.mutateAsync({
+      const response = await loginMutation.mutateAsync({
         body: {
           email: email.trim(),
           password: password,
         },
+        /* body: {
+          email: "eldersarmiento1@gmail.com",
+          password: "123456",
+        }, */
       });
 
       if (!response?.data?.data) {
@@ -87,7 +75,7 @@ export default function LoginScreen() {
 
       await setUserInfo(user);
       await setToken(token);
-
+      await refreshParameters();
       switch (user.role) {
         case "customer":
           router.replace("/(client)/home");

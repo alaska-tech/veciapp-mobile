@@ -1,9 +1,12 @@
-import { useMutation } from "@tanstack/react-query";
 import { mutateEntity } from "./action";
 import { AxiosError, AxiosResponse } from "axios";
-import { JWT_KEY, LOGGED_USER_INFO_KEY } from "~/constants/constants";
+import {
+  JWT_KEY,
+  LOGGED_USER_INFO_KEY,
+  PARAMETERS_KEY,
+} from "~/constants/constants";
 import { apiClient } from "~/services/clients";
-import { User, Response } from "~/constants/models";
+import { User, Response, Parameter } from "~/constants/models";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface DecodedToken {
@@ -13,25 +16,73 @@ interface DecodedToken {
 
 const MIN_REMAINING_HOURS = 24;
 
-export const getToken = async (): Promise<string | null> => {
-  const jwt = await AsyncStorage.getItem(JWT_KEY);
-  return jwt;
+export const getParameters = async (): Promise<Record<
+  string,
+  Parameter
+> | null> => {
+  try {
+    const rawParameters = await AsyncStorage.getItem(PARAMETERS_KEY);
+    if (!rawParameters) return null;
+
+    const Parameters = JSON.parse(rawParameters) as Record<string, Parameter>;
+    return Parameters;
+  } catch (error) {
+    console.error("Error getting parameter info:", error);
+    return null;
+  }
 };
 
-export const setToken = async (newToken: string) => {
-  await AsyncStorage.setItem(JWT_KEY, newToken);
+export const setParameters = async (
+  newParameters: Record<string, Parameter>
+): Promise<void> => {
+  try {
+    const stringifiedParameters = JSON.stringify(newParameters);
+    await AsyncStorage.setItem(PARAMETERS_KEY, stringifiedParameters);
+  } catch (error) {
+    console.error("Error setting parameter info:", error);
+    throw error;
+  }
+};
+
+export const getToken = async (): Promise<string | null> => {
+  try {
+    return await AsyncStorage.getItem(JWT_KEY);
+  } catch (error) {
+    console.error("Error getting token:", error);
+    return null;
+  }
+};
+
+export const setToken = async (newToken: string): Promise<void> => {
+  try {
+    await AsyncStorage.setItem(JWT_KEY, newToken);
+  } catch (error) {
+    console.error("Error setting token:", error);
+    throw error;
+  }
 };
 
 export const getUserInfo = async (): Promise<User | null> => {
-  const rawUserInfo =
-    (await AsyncStorage.getItem(LOGGED_USER_INFO_KEY)) || "null";
-  const userInfo = JSON.parse(rawUserInfo);
-  return userInfo;
+  try {
+    const rawUserInfo = await AsyncStorage.getItem(LOGGED_USER_INFO_KEY);
+    if (!rawUserInfo) return null;
+
+    const userInfo = JSON.parse(rawUserInfo) as User;
+    return userInfo;
+  } catch (error) {
+    console.error("Error getting user info:", error);
+    return null;
+  }
 };
 
-export const setUserInfo = async (newUserInfo: User) => {
-  const stringifiedUserInfo = JSON.stringify(newUserInfo);
-  await AsyncStorage.setItem(LOGGED_USER_INFO_KEY, stringifiedUserInfo);
+export const setUserInfo = async (newUserInfo: User): Promise<void> => {
+  try {
+    const stringifiedUserInfo = JSON.stringify(newUserInfo);
+    await AsyncStorage.setItem(LOGGED_USER_INFO_KEY, stringifiedUserInfo);
+  } catch (error) {
+    console.error("Error setting user info:", error);
+    throw error;
+  }
 };
 
 export const clearAllInfoFromLocalStorage = async () => {

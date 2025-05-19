@@ -8,11 +8,12 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import ProductCard from "~/components/epic/productCard";
 import { Button } from "~/components/ui/button";
 import { useProductAction } from "~/actions/product.action";
+import { useParameters } from "~/components/ContextProviders/ParametersProvider";
 
 export default function HomeScreen() {
   const router = useRouter();
-  const actions = useProductAction()
-  const fetchProductsPage = actions.fetchProductsFunction
+  const actions = useProductAction();
+  const fetchProductsPage = actions.fetchProductsFunction;
   const {
     data,
     fetchNextPage,
@@ -32,7 +33,7 @@ export default function HomeScreen() {
     },
     initialPageParam: 0,
   });
-
+  const parameters = useParameters();
   if (status === "pending") {
     return <ActivityIndicator />;
   }

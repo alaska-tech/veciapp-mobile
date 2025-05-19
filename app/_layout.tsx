@@ -13,14 +13,14 @@ import { Platform, View } from "react-native";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { PortalHost } from "@rn-primitives/portal";
-import { ThemeToggle } from "~/components/ThemeToggle";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import * as SplashScreen from "expo-splash-screen";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { addJWTInterceptor } from "~/services/axios.interceptor";
 import { apiClient } from "~/services/clients";
 import { useRouter } from "expo-router";
-import { AuthProvider } from "~/components/auth/AuthProvider";
+import { AuthProvider } from "~/components/ContextProviders/AuthProvider";
+import { ParametersProvider } from "~/components/ContextProviders/ParametersProvider";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -61,7 +61,7 @@ export default function RootLayout() {
         }
 
         await setAndroidNavigationBar(isDarkColorScheme ? "dark" : "light");
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        //await new Promise((resolve) => setTimeout(resolve, 2000));
       } catch (e) {
         console.warn(e);
       } finally {
@@ -86,18 +86,20 @@ export default function RootLayout() {
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <ThemeProvider value={LIGHT_THEME}>
-            <StatusBar style="dark" />
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen
-                name="index"
-                options={{
-                  headerShown: false,
-                }}
-              />
-            </Stack>
-            <PortalHost />
-          </ThemeProvider>
+          <ParametersProvider>
+            <ThemeProvider value={LIGHT_THEME}>
+              <StatusBar style="dark" />
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen
+                  name="index"
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+              </Stack>
+              <PortalHost />
+            </ThemeProvider>
+          </ParametersProvider>
         </AuthProvider>
       </QueryClientProvider>
     </View>
