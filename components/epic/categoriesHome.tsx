@@ -35,7 +35,7 @@ const categories = [
 export default function CategoriesHome() {
   return (
     <View className="">
-      <Text className="text-3xl font-bold mb-2">Categorías</Text>
+      <Text className="text-2xl font-bold mb-2">Categorías</Text>
       
       <ScrollView 
         horizontal 
