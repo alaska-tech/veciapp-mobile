@@ -15,6 +15,7 @@ import {
   Headphones,
   MapPin,
   MessageCircleQuestion,
+  Users,
 } from "lucide-react-native";
 import { Separator } from "~/components/ui/separator";
 import { Card, CardContent } from "~/components/ui/card";
@@ -111,6 +112,20 @@ export default function ProfileScreen() {
             </View>
             <Switch checked={pushEnabled} onCheckedChange={setPushEnabled} />
           </View>
+          <Separator />
+
+          {/* Nosotros */}
+          <Button
+            className="w-full flex-row items-center justify-between"
+            variant="ghost"
+            onPress={() => router.push('/aboutUsScreen')}
+          >
+            <View className="flex-row items-center gap-2">
+              <Users className="h-5 w-5 mr-3" color="#000000" />
+              <Text>Nosotros</Text>
+            </View>
+            <ChevronRight className="h-5 w-5" color="#000000" />
+          </Button>
           <Separator />
 
           {/* Preguntas frecuentes */}
