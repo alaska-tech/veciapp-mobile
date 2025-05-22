@@ -1,5 +1,6 @@
 import { View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { Text } from '~/components/ui/text';
+import { useRouter } from 'expo-router';
 
 const categories = [
   {
@@ -33,9 +34,12 @@ const categories = [
 ];
 
 export default function CategoriesHome() {
+  const router = useRouter();
   return (
     <View className="">
-      <Text className="text-2xl font-bold mb-2">Categorías</Text>
+      <TouchableOpacity onPress={() => router.push('/(customerscreens)/customerCategories')}>
+        <Text className="text-2xl font-bold mb-2">Categorías</Text>
+      </TouchableOpacity>
       
       <ScrollView 
         horizontal 
