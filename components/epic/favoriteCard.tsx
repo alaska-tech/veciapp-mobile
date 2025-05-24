@@ -12,6 +12,7 @@ interface FavoriteCardProps {
   discount?: number;
   onDelete?: () => void;
   onWantIt?: () => void;  // Add new prop for the "Lo quiero" button
+  veciproveedor: string; // Nueva prop para el nombre del veciproveedor
 }
 
 export default function FavoriteCard({
@@ -20,7 +21,8 @@ export default function FavoriteCard({
   image,
   discount,
   onDelete,
-  onWantIt
+  onWantIt,
+  veciproveedor
 }: FavoriteCardProps) {
   const formatPrice = (price: number) => {
     return price.toLocaleString();
@@ -38,6 +40,10 @@ export default function FavoriteCard({
           />
           <View className="flex-1 ml-4 gap-2">
             <Text className="text-lg font-semibold" numberOfLines={2}>{name}</Text>
+            <View className="flex-row items-center mt-1">
+              <Text className="text-gray-500 font-semibold">Veci: </Text>
+              <Text className="text-base text-black font-medium">{veciproveedor}</Text>
+            </View>
             <View className="flex-row items-center mt-2">
               <Text className="text-xl font-bold">${formatPrice(discountedPrice)}</Text>
               {discount && (

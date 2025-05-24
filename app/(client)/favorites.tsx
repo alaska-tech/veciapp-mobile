@@ -15,12 +15,14 @@ export default function FavoritesScreen() {
       price: 20000,
       image: "https://picsum.photos/200",
       discount: 20,
+      veciproveedor: "Erica Madeleine Soto",
     },
     {
       id: 2,
       name: "Bandeja Paisa Tradicional",
       price: 25000,
       image: "https://picsum.photos/200",
+      veciproveedor: "Juan Pérez",
     },
     {
       id: 3,
@@ -28,6 +30,7 @@ export default function FavoritesScreen() {
       price: 35000,
       image: "https://picsum.photos/200",
       discount: 10,
+      veciproveedor: "María Gómez",
     },
     {
       id: 4,
@@ -35,6 +38,7 @@ export default function FavoritesScreen() {
       price: 15000,
       image: "https://picsum.photos/200",
       discount: 25,
+      veciproveedor: "Carlos Ramírez",
     },
   ]);
 
@@ -61,6 +65,7 @@ export default function FavoritesScreen() {
             price={item.price}
             image={item.image}
             discount={item.discount}
+            veciproveedor={item.veciproveedor}
             onDelete={() => handleDelete(item.id)}
             onWantIt={() => {
               // Handle "Lo quiero" action
