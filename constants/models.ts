@@ -248,4 +248,6 @@ export interface Product {
     reason: string;
     changedAt: string;
   }>;
+  distance:string, //TODO: Consultar con el tocayo por estos atributos
+  rating?: number
 }

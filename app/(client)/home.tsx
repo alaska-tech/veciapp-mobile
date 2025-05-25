@@ -100,12 +100,10 @@ export default function HomeScreen() {
             <ProductCard
               title={item.name}
               price={Number.parseFloat(item.price)}
-              distance={"1km"}
-              rating={3}
+              distance={item.distance || ""}
+              rating={item.rating}
               category={item.categoryId}
-              imageUrl={
-                "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/NCI_Visuals_Food_Hamburger.jpg/1200px-NCI_Visuals_Food_Hamburger.jpg"
-              }
+              imageUrl={item.mainImage || ""}
               discount={Number.parseFloat(item.discount)}
               onPress={() => {
                 console.log(JSON.stringify(item, null, 4));
