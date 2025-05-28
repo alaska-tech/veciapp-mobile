@@ -1,10 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { Parameter } from "~/constants/models";
-import { getParameters } from "~/actions/localStorage.actions";
 import { refreshParameters } from "~/actions/parameter.action";
 
 interface ContextType {
-  parameters: Record<string, Parameter>;
+  parameters: Parameter[];
   loading: boolean;
 }
 
@@ -16,7 +15,7 @@ export function ParametersProvider({
   children: React.ReactNode;
 }) {
   const [loading, setLoading] = useState(true);
-  const [parameters, setParameters] = useState<ContextType["parameters"]>({});
+  const [parameters, setParameters] = useState<ContextType["parameters"]>([]);
   useEffect(() => {
     async function tryrefreshParameters() {
       try {

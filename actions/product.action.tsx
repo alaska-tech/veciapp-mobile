@@ -11,7 +11,6 @@ export const useProductAction = () => {
     const response = await apiClient.get<
       Extract<Response<PaginatedResult<Product>>, { status: "Success" }>
     >(`/productservice/list?page=${pageParam}&limit=10`);
-    console.log(JSON.stringify(response, null, 4));
     return response.data;
   };
   const getProducts = queryEntity<

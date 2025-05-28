@@ -16,15 +16,12 @@ interface DecodedToken {
 
 const MIN_REMAINING_HOURS = 24;
 
-export const getParameters = async (): Promise<Record<
-  string,
-  Parameter
-> | null> => {
+export const getParameters = async (): Promise<Parameter[] | null> => {
   try {
     const rawParameters = await AsyncStorage.getItem(PARAMETERS_KEY);
     if (!rawParameters) return null;
 
-    const Parameters = JSON.parse(rawParameters) as Record<string, Parameter>;
+    const Parameters = JSON.parse(rawParameters) as Parameter[];
     return Parameters;
   } catch (error) {
     console.error("Error getting parameter info:", error);
@@ -33,7 +30,7 @@ export const getParameters = async (): Promise<Record<
 };
 
 export const setParameters = async (
-  newParameters: Record<string, Parameter>
+  newParameters: Parameter[]
 ): Promise<void> => {
   try {
     const stringifiedParameters = JSON.stringify(newParameters);
