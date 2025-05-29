@@ -99,7 +99,7 @@ export default function HomeScreen() {
         onSeeAllPress={() => {
           console.log('Ver todos pressed');
           // Navigate to all providers screen
-          // router.push('/proveedores');
+          router.push('/(customerscreens)/allVendorsScreen');
         }}
       />
       <CategoriesHome />
