@@ -1,65 +1,125 @@
 # VeciApp
 
-## Instalación de dependencias
-Antes de ejecutar la aplicación, asegúrate de instalar las dependencias necesarias:
+VeciApp es una aplicación móvil moderna desarrollada para conectar vendedores y clientes, ofreciendo una experiencia de usuario fluida y atractiva.
+
+## 🚀 Características Principales
+
+- **Multiplataforma**: Soporte para iOS, Android y Web
+- **Diseño Moderno**: Interfaz de usuario intuitiva con soporte para modo claro y oscuro
+- **Autenticación**: Sistema completo de registro y login
+- **Roles de Usuario**: 
+  - Cliente: Acceso a catálogo y compras
+  - Vendedor: Gestión de productos y pedidos
+  - Dashboard: Panel de administración
+- **Carrito de Compras**: Gestión de productos y pedidos
+- **Navegación Intuitiva**: Sistema de navegación por pestañas y rutas anidadas
+
+## 🛠 Tecnologías Utilizadas
+
+- **Frontend**:
+  - React Native con Expo
+  - TypeScript para tipo seguro
+  - NativeWind v4 (Tailwind CSS para React Native)
+  - Expo Router para navegación
+  - Zustand para manejo de estado
+  - React Native Reanimated para animaciones
+
+- **UI/UX**:
+  - Componentes primitivos de React Native
+  - Fuentes personalizadas (Inter y Poppins)
+  - Sistema de temas claro/oscuro
+  - Barra de navegación adaptativa
+  - Componentes reutilizables
+
+## 📁 Estructura del Proyecto
+
+```plaintext
+veciapp/
+├── app/                    # Pantallas y rutas de la aplicación
+│   ├── (auth)/            # Pantallas de autenticación
+│   ├── (client)/          # Pantallas para clientes
+│   ├── (vendor)/          # Pantallas para vendedores
+│   ├── (dashboard)/       # Panel de administración
+│   └── (onboarding)/      # Pantallas de bienvenida
+├── components/            # Componentes reutilizables
+│   ├── ui/               # Componentes de interfaz básicos
+│   ├── auth/             # Componentes de autenticación
+│   └── epic/             # Componentes complejos
+├── store/                # Estado global (Zustand)
+├── assets/              # Recursos estáticos
+└── lib/                 # Utilidades y configuraciones
+```
+
+## 🚀 Instalación
+
+1. Clona el repositorio:
+```bash
+git clone [url-del-repositorio]
+cd veciapp
+```
+
+2. Instala las dependencias:
 ```bash
 npm install
 ```
 
-## Ejecución de la Aplicación
-1. Inicia el servidor de desarrollo:
-   ```bash
-   npm run dev
-   ```
-2. Descarga **Expo Go** en tu dispositivo móvil, desde tu tienda de aplicaciones preferidas:
-   - **iOS**: Usa la cámara para escanear el código QR que aparece en la terminal.
-   - **Android**: Abre Expo Go y escanea el código QR mostrado en la terminal.
-
-## Características de Desarrollo
-- Construido con **React Native** y **Expo**.
-- Uso de **TypeScript** para mayor seguridad en el código.
-- **TailwindCSS** para la estilización.
-- **Expo Router** para la navegación.
-- Fuentes personalizadas (**Inter** y **Poppins**).
-- NativeWind v4
-- Dark and light mode
-- Android Navigation Bar matches mode
-- Persistent mode
-- Common components
-- ThemeToggle, Avatar, Button, Card, Progress, Text, Tooltip
-
-## Estructura del Proyecto
-```plaintext
-veciapp/
-├── app/                 # Pantallas principales de la aplicación
-│   └── (tabs)/         # Pantallas con navegación en pestañas
-├── assets/             # Recursos estáticos (imágenes, fuentes)
-├── components/         # Componentes reutilizables
-└── hooks/              # Hooks personalizados de React
+3. Inicia el servidor de desarrollo:
+```bash
+npm run dev
 ```
 
-## Scripts Disponibles
-- `npm run dev` - Inicia el servidor de desarrollo.
-- `npm run build:web` - Construye la aplicación para la plataforma web.
-- `npm run lint` - Ejecuta el análisis de código para verificar errores de estilo y sintaxis.
+## 📱 Ejecución en Dispositivos
 
-## Solución de Problemas
-Si encuentras algún problema al ejecutar la aplicación, prueba lo siguiente:
+### iOS
+1. Instala Expo Go desde la App Store
+2. Escanea el código QR con la cámara del iPhone
+3. Abre la aplicación en Expo Go
 
-1. Asegúrate de que Expo Go esté actualizado.
-2. Limpia la caché de npm:
-   ```bash
-   npm cache clean --force
-   ```
-3. Elimina y reinstala las dependencias:
-   ```bash
-   rm -rf node_modules
-   npm install
-   ```
-4. Reinicia el servidor de desarrollo limpiando la caché:
-   ```bash
-   npm run dev -- --clear
-   ```
-   
-Este README proporciona información esencial para que los desarrolladores de Alaska Tech comiencen con VeciApp, incluyendo instrucciones de instalación, ejecución y solución de problemas. ¡Déjame saber si necesitas ajustes! 🚀
+### Android
+1. Instala Expo Go desde Google Play Store
+2. Abre Expo Go y escanea el código QR
+3. La aplicación se cargará automáticamente
+
+## 🛠 Scripts Disponibles
+
+- `npm run dev` - Inicia el servidor de desarrollo
+- `npm run dev:web` - Inicia la versión web
+- `npm run dev:android` - Inicia la versión Android
+- `npm run ios` - Inicia la versión iOS
+- `npm run clean` - Limpia la caché y node_modules
+
+## 🔧 Solución de Problemas
+
+Si encuentras problemas durante el desarrollo:
+
+1. Limpia la caché:
+```bash
+npm run clean
+```
+
+2. Reinstala las dependencias:
+```bash
+npm install
+```
+
+3. Reinicia el servidor con caché limpia:
+```bash
+npm run dev -- --clear
+```
+
+## 🤝 Contribución
+
+1. Haz fork del proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## 📝 Licencia
+
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.md) para más detalles.
+
+---
+
+Desarrollado con ❤️ por Alaska Tech
 
