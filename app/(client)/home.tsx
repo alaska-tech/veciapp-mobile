@@ -11,43 +11,43 @@ import { Button } from "~/components/ui/button";
 import { useProductAction } from "~/actions/product.action";
 import { useParameters } from "~/components/ContextProviders/ParametersProvider";
 
-  const sampleProveedores = [
-    {
-      id: "1",
-      name: "Super Tienda",
-      imageUrl: "https://picsum.photos/200",
-    },
-    {
-      id: "2",
-      name: "Terribol Mascotas",
-      imageUrl: "https://picsum.photos/201",
-    },
-    {
-      id: "3",
-      name: "Belleza & Estilo",
-      imageUrl: "https://picsum.photos/202",
-    },
-    {
-      id: "4",
-      name: "Moda Express",
-      imageUrl: "https://picsum.photos/203",
-    },
-    {
-      id: "5",
-      name: "Frutas & Verduras",
-      imageUrl: "https://picsum.photos/204",
-    },
-    {
-      id: "6",
-      name: "Tech Gadgets",
-      imageUrl: "https://picsum.photos/205",
-    },
-    {
-      id: "7",
-      name: "Artesanías",
-      imageUrl: "https://picsum.photos/206",
-    },
-  ] 
+const sampleProveedores = [
+  {
+    id: "1",
+    name: "Super Tienda",
+    imageUrl: "https://picsum.photos/200",
+  },
+  {
+    id: "2",
+    name: "Terribol Mascotas",
+    imageUrl: "https://picsum.photos/201",
+  },
+  {
+    id: "3",
+    name: "Belleza & Estilo",
+    imageUrl: "https://picsum.photos/202",
+  },
+  {
+    id: "4",
+    name: "Moda Express",
+    imageUrl: "https://picsum.photos/203",
+  },
+  {
+    id: "5",
+    name: "Frutas & Verduras",
+    imageUrl: "https://picsum.photos/204",
+  },
+  {
+    id: "6",
+    name: "Tech Gadgets",
+    imageUrl: "https://picsum.photos/205",
+  },
+  {
+    id: "7",
+    name: "Artesanías",
+    imageUrl: "https://picsum.photos/206",
+  },
+];
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -146,7 +146,10 @@ export default function HomeScreen() {
               imageUrl={item.mainImage || ""}
               discount={Number.parseFloat(item.discount)}
               onPress={() => {
-                console.log(JSON.stringify(item, null, 4));
+                router.push({
+                  pathname: "/(client)/product/[id]",
+                  params: { id: item.id },
+                });
               }}
             />
           </View>

@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from "axios";
-import { queryEntity } from "./action";
+import { queryEntity, queryEntityById } from "./action";
 import { PaginatedResult, Response, Product } from "../constants/models";
 import { QueryKey } from "@tanstack/react-query";
 import { apiClient } from "~/services/clients";
@@ -28,9 +28,24 @@ export const useProductAction = () => {
       throw error;
     }
   });
-
+  const getProductById = queryEntityById<
+    Product,
+    AxiosError<Extract<Response<null>, { status: "Error" }>>
+  >([QUERY_KEY_PRODUCT] as QueryKey, (id) => {
+    return async function queryFn() {
+      try {
+        const response = await apiClient.get<
+          Extract<Response<Product>, { status: "Success" }>
+        >(`/productservice/get-details/${id}`);
+        console.log(response)
+        return response.data.data;
+      } catch (error) {
+        throw error;
+      }
+    };
+  });
   return {
     fetchProductsFunction,
-    getProducts,
+    getProducts,getProductById
   };
 };
