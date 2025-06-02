@@ -1,6 +1,6 @@
 import { ActivityIndicator, FlatList, View } from "react-native";
 import { Text } from "~/components/ui/text";
-import HeaderHome from "../../components/epic/headerHome";
+import HeaderHome from "../../../components/epic/headerHome";
 import CategoriesHome from "~/components/epic/categoriesHome";
 import ImageCarousel from "~/components/epic/imageCarousel";
 import Veciproveedores from "~/components/epic/veciproveedores";
