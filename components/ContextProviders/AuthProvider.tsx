@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { usePathname, useRouter } from "expo-router";
-import { CustomerRoleType, User } from "~/constants/models";
+import { Customer, CustomerRoleType, User } from "~/constants/models";
 import {
   getToken,
   getUserInfo,
@@ -12,6 +12,7 @@ import {
 interface AuthContextType {
   isAuthenticated: boolean;
   userRole: string | null;
+  customer: Customer | null;
   loading: boolean;
 }
 
@@ -21,6 +22,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<CustomerRoleType[number] | null>(
+    null
+  );
+  const [customer, setCustomer] = useState<Customer | null>(
     null
   );
   const router = useRouter();
@@ -59,9 +63,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         setIsAuthenticated(!!token);
         setUserRole(storedRole);
-
+        setCustomer(storedUser as unknown as Customer);
         if (storedRole === "customer") {
-          router.replace("/(client)/home");
+          router.replace("/(client)/(tabs)/home");
           return;
         }
         if (storedRole === "vendor") {
@@ -79,7 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, userRole, loading }}>
+    <AuthContext.Provider value={{ isAuthenticated, userRole, loading, customer }}>
       {children}
     </AuthContext.Provider>
   );

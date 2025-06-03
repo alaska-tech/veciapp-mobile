@@ -23,12 +23,14 @@ import { TouchableOpacity } from "react-native";
 import { Switch } from "~/components/ui/switch";
 import useAuthAction from "~/actions/auth.action";
 import { clearAllInfoFromLocalStorage } from "~/actions/localStorage.actions";
+import { useAuth } from "~/components/ContextProviders/AuthProvider";
 
 export default function ProfileScreen() {
   const router = useRouter();
   const [pushEnabled, setPushEnabled] = useState(true);
   const authActions = useAuthAction();
   const logOut = authActions.logOut();
+  const {fullName = '', email = ''} = useAuth().customer ?? {};
   return (
     <>
       <Stack.Screen
@@ -52,9 +54,9 @@ export default function ProfileScreen() {
                 </AvatarFallback>
               </Avatar>
               <View className="items-center gap-1 mt-2">
-                <Text className="text-xl font-semibold">JuanchoSM</Text>
+                <Text className="text-xl font-semibold">{fullName}</Text>
                 <Text className="text-muted-foreground">
-                  juancho.santamarta@example.com
+                  {email}
                 </Text>
                 <View className="flex-row items-center gap-1 mt-0.5">
                   <MapPin size={14} color="#ef4444" />

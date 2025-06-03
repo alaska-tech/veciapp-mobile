@@ -26,6 +26,7 @@ import {
   DialogTrigger,
   DialogClose
 } from "~/components/ui/dialog";
+import { useAuth } from "~/components/ContextProviders/AuthProvider";
 
 interface Direccion {
   id: string;
@@ -56,6 +57,7 @@ export default function CustomerSettingsScreen() {
     confirmPassword: "",
   });
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const {fullName = '', email = ''} = useAuth().customer ?? {};
 
   const updateTipoVivienda = (index: number, tipo: string) => {
     const newDirecciones = [...direcciones];
@@ -153,9 +155,9 @@ export default function CustomerSettingsScreen() {
                 </AvatarFallback>
               </Avatar>
               <View className="items-center gap-1">
-                <Text className="text-xl font-semibold">Juan Doe</Text>
+                <Text className="text-xl font-semibold">{fullName}</Text>
                 <Text className="text-muted-foreground">
-                  juan.doe@example.com
+                  {email}
                 </Text>
                 <View className="flex-row items-center gap-1 mt-0.5">
                   <MapPin size={14} color="#000000" />
