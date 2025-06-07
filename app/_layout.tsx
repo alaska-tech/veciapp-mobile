@@ -15,6 +15,8 @@ import { useColorScheme } from "~/lib/useColorScheme";
 import { PortalHost } from "@rn-primitives/portal";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import * as SplashScreen from "expo-splash-screen";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { addJWTInterceptor } from "~/services/axios.interceptor";
 import { apiClient } from "~/services/clients";
@@ -50,7 +52,9 @@ export default function RootLayout() {
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
   const queryClient = new QueryClient();
   const router = useRouter();
+  
   addJWTInterceptor(apiClient);
+  
   React.useEffect(() => {
     async function prepare() {
       try {
@@ -83,25 +87,29 @@ export default function RootLayout() {
   }
 
   return (
-    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <ParametersProvider>
-            <ThemeProvider value={LIGHT_THEME}>
-              <StatusBar style="dark" />
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen
-                  name="index"
-                  options={{
-                    headerShown: false,
-                  }}
-                />
-              </Stack>
-              <PortalHost />
-            </ThemeProvider>
-          </ParametersProvider>
-        </AuthProvider>
-      </QueryClientProvider>
-    </View>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <BottomSheetModalProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <ParametersProvider>
+              <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+                <ThemeProvider value={LIGHT_THEME}>
+                  <StatusBar style="dark" />
+                  <Stack screenOptions={{ headerShown: false }}>
+                    <Stack.Screen
+                      name="index"
+                      options={{
+                        headerShown: false,
+                      }}
+                    />
+                  </Stack>
+                  <PortalHost />
+                </ThemeProvider>
+              </View>
+            </ParametersProvider>
+          </AuthProvider>
+        </QueryClientProvider>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   );
 }
