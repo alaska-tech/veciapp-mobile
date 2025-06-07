@@ -21,11 +21,14 @@ import { Separator } from "~/components/ui/separator";
 import { Card, CardContent } from "~/components/ui/card";
 import { TouchableOpacity } from "react-native";
 import { Switch } from "~/components/ui/switch";
+import useAuthAction from "~/actions/auth.action";
+import { clearAllInfoFromLocalStorage } from "~/actions/localStorage.actions";
 
 export default function ProfileScreen() {
   const router = useRouter();
   const [pushEnabled, setPushEnabled] = useState(true);
-
+  const authActions = useAuthAction();
+  const logOut = authActions.logOut();
   return (
     <>
       <Stack.Screen
@@ -74,7 +77,9 @@ export default function ProfileScreen() {
             >
               <PackageOpen size={40} color="#16a34a" />
             </TouchableOpacity>
-            <Text className="text-base font-medium text-black mt-2">Pedidos</Text>
+            <Text className="text-base font-medium text-black mt-2">
+              Pedidos
+            </Text>
           </View>
           <View className="flex-1 items-center mx-1">
             <TouchableOpacity
@@ -118,7 +123,7 @@ export default function ProfileScreen() {
           <Button
             className="w-full flex-row items-center justify-between"
             variant="ghost"
-            onPress={() => router.push('/aboutUsScreen')}
+            onPress={() => router.push("/aboutUsScreen")}
           >
             <View className="flex-row items-center gap-2">
               <Users className="h-5 w-5 mr-3" color="#000000" />
@@ -132,7 +137,9 @@ export default function ProfileScreen() {
           <Button
             className="w-full flex-row items-center justify-between"
             variant="ghost"
-            onPress={() => router.push("/(vendorscreens)/(vendorsettings)/faqScreen")}
+            onPress={() =>
+              router.push("/(vendorscreens)/(vendorsettings)/faqScreen")
+            }
           >
             <View className="flex-row items-center gap-2">
               <MessageCircleQuestion className="h-5 w-5 mr-3" color="#000000" />
@@ -159,6 +166,16 @@ export default function ProfileScreen() {
           <Button
             className="w-full flex-row items-center justify-between"
             variant="ghost"
+            onPress={async () => {
+              try {
+                await logOut.mutateAsync({});
+              } catch (error) {
+                console.error(error);
+              } finally {
+                clearAllInfoFromLocalStorage();
+                router.dismissTo("/");
+              }
+            }}
           >
             <View className="flex-row items-center gap-2">
               <UserX className="h-5 w-5 mr-3" color="#000000" />
