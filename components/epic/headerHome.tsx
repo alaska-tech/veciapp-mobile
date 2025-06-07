@@ -3,15 +3,15 @@ import { Text } from "~/components/ui/text";
 import { Input } from "~/components/ui/input";
 import { MapPinIcon, ShoppingCartIcon, Search } from 'lucide-react-native';
 import { Image } from 'react-native';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'expo-router';
 import { useCartItemsCount } from '~/store/cartStore';
+import LocationSheet, { LocationSheetRef } from './bottomSheetLocation';
 
 export default function HeaderHome() {
   const [searchText, setSearchText] = useState('');
   const router = useRouter();
-  
-  // Usar el hook selector especializado que observa cambios en la cantidad total
+  const locationSheetRef = useRef<LocationSheetRef>(null);
   const cartItemsCount = useCartItemsCount();
 
   return (
@@ -48,7 +48,10 @@ export default function HeaderHome() {
       </View>
 
       {/* Location Section */}
-      <View className="flex-row items-center">
+      <TouchableOpacity 
+        onPress={() => locationSheetRef.current?.show()}
+        className="flex-row items-center"
+      >
         <MapPinIcon size={20} color="#ffffff" fill="#666"/>
         <Text 
           className="text-gray-500 text-md pr-1"
@@ -62,7 +65,16 @@ export default function HeaderHome() {
         >
           Calle 123 St 45 # 65 - 123 barrio la esmeralda donde chepito
         </Text>
-      </View>
+      </TouchableOpacity>
+
+      <LocationSheet 
+        ref={locationSheetRef}
+        defaultAddress="Calle 123 St 45 # 65 - 123 barrio la esmeralda donde chepito"
+        onSave={(newAddress) => {
+          console.log('New address:', newAddress);
+          // Here you can implement the logic to update the address
+        }}
+      />
     </View>
   );
 }

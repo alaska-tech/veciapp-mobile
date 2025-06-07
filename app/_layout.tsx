@@ -11,6 +11,8 @@ import { PortalHost } from '@rn-primitives/portal';
 import { ThemeToggle } from '~/components/ThemeToggle';
 import { setAndroidNavigationBar } from '~/lib/android-navigation-bar';
 import * as SplashScreen from 'expo-splash-screen';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -71,19 +73,23 @@ export default function RootLayout() {
   }
 
   return (
-    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <ThemeProvider value={LIGHT_THEME}>
-        <StatusBar style='dark' />
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen
-            name="index"
-            options={{
-              headerShown: false,
-            }}
-          />
-        </Stack>
-        <PortalHost />
-      </ThemeProvider>
-    </View>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <BottomSheetModalProvider>
+        <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+          <ThemeProvider value={LIGHT_THEME}>
+            <StatusBar style='dark' />
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen
+                name="index"
+                options={{
+                  headerShown: false,
+                }}
+              />
+            </Stack>
+            <PortalHost />
+          </ThemeProvider>
+        </View>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   );
 }
