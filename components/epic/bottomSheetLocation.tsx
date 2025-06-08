@@ -81,6 +81,7 @@ const LocationSheet = forwardRef<LocationSheetRef, LocationSheetProps>(({ onSave
         <Button
           onPress={handleSave}
           className="bg-yellow-400 rounded-full py-4 mb-4"
+          size="lg"
         >
           <Text className="text-black text-center font-semibold text-base">
             Guardar dirección

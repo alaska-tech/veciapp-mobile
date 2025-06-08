@@ -51,6 +51,11 @@ export default function CartScreen() {
     removeSalonItem(index);
   };
 
+  const handlePayment = (cartType: 'regular' | 'salon') => {
+    console.log(`Processing ${cartType} payment...`);
+    // Here you can add your payment logic based on the cart type
+  };
+
   return (
     <>
     <Stack.Screen
@@ -90,10 +95,7 @@ export default function CartScreen() {
           total={total}
           onQuantityChange={handleQuantityChange}
           onDelete={handleDelete}
-          onPayPress={() => {
-            // Handle payment logic here :v
-            console.log("Processing payment...");
-          }}
+          onPayPress={() => handlePayment('regular')}
         />
       )}
       
