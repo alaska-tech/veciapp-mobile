@@ -81,21 +81,7 @@ export default function CustomerSettingsScreen() {
   };
 
   const agregarNuevaDireccion = () => {
-    if (showNewAddressForm && newDireccion.trim()) {
-      setDirecciones([
-        ...direcciones,
-        {
-          id: Date.now().toString(),
-          direccion: newDireccion,
-          tipo: newTipo,
-        },
-      ]);
-      setNewDireccion("");
-      setNewTipo("Casa");
-      setShowNewAddressForm(false);
-    } else {
-      setShowNewAddressForm(true);
-    }
+    router.push("/newLocation");
   };
 
   const handleDeleteAccount = () => {
@@ -309,9 +295,7 @@ export default function CustomerSettingsScreen() {
                 >
                   <Plus size={20} color="#000" />
                   <Text className="ml-2 text-base">
-                    {showNewAddressForm
-                      ? "Guardar Nueva Ubicación"
-                      : "Agregar Nueva Ubicación"}
+                    Agregar Nueva Ubicación
                   </Text>
                 </TouchableOpacity>
 
