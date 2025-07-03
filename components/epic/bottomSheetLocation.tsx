@@ -75,7 +75,7 @@ const LocationSheet = forwardRef<LocationSheetRef, LocationSheetProps>(({ onSave
           className="flex-row items-center mb-6"
         >
           <MapPin size={20} color="#3B82F6" />
-          <Text className="text-blue-500 ml-2">Usar mi ubicación actual</Text>
+          <Text className="text-blue-500 ml-2">Seleccionar ubicación</Text>
         </TouchableOpacity>
 
         <Button
