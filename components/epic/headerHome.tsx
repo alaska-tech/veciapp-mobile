@@ -25,6 +25,7 @@ export default function HeaderHome() {
               className="flex-1 py-3 text-base pl-12 rounded-full border border-gray-400"
               value={searchText}
               onChangeText={setSearchText}
+              onFocus={() => router.push('/(customerscreens)/searchResultsScreen')}
             />
             {!searchText && (
               <View className="absolute left-3 top-3">
