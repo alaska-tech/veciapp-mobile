@@ -1,6 +1,7 @@
-import { View, ScrollView, Image, TouchableOpacity } from 'react-native';
-import { Text } from '~/components/ui/text';
-import { useRouter } from 'expo-router';
+import { View, ScrollView, Image, TouchableOpacity } from "react-native";
+import { Text } from "~/components/ui/text";
+import { useRouter } from "expo-router";
+import { ChevronRight } from "lucide-react-native";
 
 type Veciproveedor = {
   id: string;
@@ -13,15 +14,24 @@ type VeciproveedoresProps = {
   onSeeAllPress: () => void;
 };
 
-export default function Veciproveedores({ proveedores, onSeeAllPress }: VeciproveedoresProps) {
+export default function Veciproveedores({
+  proveedores,
+  onSeeAllPress,
+}: VeciproveedoresProps) {
   const router = useRouter();
 
   return (
     <View className="mt-4">
-      <Text className="text-2xl font-bold mb-2">Nuestros Veciproveedores</Text>
-      
-      <ScrollView 
-        horizontal 
+      <TouchableOpacity
+        onPress={() => router.push("/(customerscreens)/allVendorsScreen")}
+        className="flex-row items-center"
+      >
+        <Text className="text-2xl font-bold mb-2">Nuestros Veciproveedores</Text>
+        <ChevronRight size={24} color={"#000"} className="mb-1" />
+      </TouchableOpacity>
+
+      <ScrollView
+        horizontal
         showsHorizontalScrollIndicator={false}
         className="h-40"
       >
@@ -55,11 +65,9 @@ export default function Veciproveedores({ proveedores, onSeeAllPress }: Veciprov
           <View className="w-24 h-24 rounded-full bg-gray-100 items-center justify-center mb-2">
             <Text className="text-2xl font-bold">+</Text>
           </View>
-          <Text className="text-center text-sm font-medium">
-            Ver todos
-          </Text>
+          <Text className="text-center text-sm font-medium">Ver todos</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
   );
-} 
+}
