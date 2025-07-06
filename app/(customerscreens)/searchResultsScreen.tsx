@@ -15,6 +15,68 @@ import { useParameters } from '~/components/ContextProviders/ParametersProvider'
 const categories = ['Todas las categorias', 'Gastronomía', 'Belleza', 'Confecciones'];
 const orderOptions = ['Relevancia', 'Cerca de mi', 'Mejor calificado'];
 
+// ListHeader fuera del cuerpo principal
+function ListHeader({
+  searchText,
+  setSearchText,
+  selectedTab,
+  setSelectedTab,
+  selectedCategory,
+  filterSheetRef,
+  selectedOrder,
+  orderSheetRef,
+}: {
+  searchText: string;
+  setSearchText: (text: string) => void;
+  selectedTab: string;
+  setSelectedTab: (tab: string) => void;
+  selectedCategory: string;
+  filterSheetRef: React.RefObject<any>;
+  selectedOrder: string;
+  orderSheetRef: React.RefObject<any>;
+}) {
+  return (
+    <View className="pt-8 pb-2 px-4 bg-white">
+      {/* barra de búsqueda */}
+      <View className="flex-row items-center rounded-lg relative mb-4">
+        <Input
+          placeholder="Busca en Empanadas para hoy"
+          className="flex-1 py-3 text-base pl-12 rounded-full border border-gray-400"
+          value={searchText}
+          onChangeText={setSearchText}
+        />
+        {!searchText && (
+          <View className="absolute left-3 top-3">
+            <Search size={20} color="#666" />
+          </View>
+        )}
+      </View>
+      {/* Tabs */}
+      <Tabs value={selectedTab} onValueChange={setSelectedTab}>
+        <TabsList className="flex-row bg-gray-100 rounded-md mb-4">
+          <TabsTrigger value="productos" className="flex-1 rounded-md px-2"><Text>Productos</Text></TabsTrigger>
+          <TabsTrigger value="servicios" className="flex-1 rounded-md px-2"><Text>Servicios</Text></TabsTrigger>
+        </TabsList>
+      </Tabs>
+      {/* Filtros */}
+      <View className="flex-row justify-between items-center mb-8">
+        <TouchableOpacity onPress={() => filterSheetRef.current?.show()}>
+          <View>
+            <Text className="text-gray-600">Buscar en:</Text>
+            <Text className="text-base font-medium">{selectedCategory} ▼</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => orderSheetRef.current?.show()}>
+          <View>
+            <Text className="text-gray-600">Ordenar por:</Text>
+            <Text className="text-base font-medium">{selectedOrder} ▼</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
 export default function SearchResultsScreen() {
   const router = useRouter();
   const filterSheetRef = useRef<FilterSheetRef>(null);
@@ -89,49 +151,6 @@ export default function SearchResultsScreen() {
     </View>
   );
 
-  // Header de la lista
-  const ListHeader = () => (
-    <View className="pt-8 pb-2 px-4 bg-white">
-      {/* Título y barra de búsqueda */}
-      <View className="flex-row items-center rounded-lg relative mb-4">
-        <Input
-          placeholder="Busca en Empanadas para hoy"
-          className="flex-1 py-3 text-base pl-12 rounded-full border border-gray-400"
-          value={searchText}
-          onChangeText={setSearchText}
-          onFocus={() => Keyboard.dismiss()}
-        />
-        {!searchText && (
-          <View className="absolute left-3 top-3">
-            <Search size={20} color="#666" />
-          </View>
-        )}
-      </View>
-      {/* Tabs */}
-      <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-        <TabsList className="flex-row bg-gray-100 rounded-md mb-4">
-          <TabsTrigger value="productos" className="flex-1 rounded-md px-2"><Text>Productos</Text></TabsTrigger>
-          <TabsTrigger value="servicios" className="flex-1 rounded-md px-2"><Text>Servicios</Text></TabsTrigger>
-        </TabsList>
-      </Tabs>
-      {/* Filtros */}
-      <View className="flex-row justify-between items-center mb-8">
-        <TouchableOpacity onPress={() => filterSheetRef.current?.show()}>
-          <View>
-            <Text className="text-gray-600">Buscar en:</Text>
-            <Text className="text-base font-medium">{selectedCategory} ▼</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => orderSheetRef.current?.show()}>
-          <View>
-            <Text className="text-gray-600">Ordenar por:</Text>
-            <Text className="text-base font-medium">{selectedOrder} ▼</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-
   // Componente de error
   const ErrorComponent = () => (
     <View className="flex-1 justify-center items-center p-4">
@@ -150,7 +169,16 @@ export default function SearchResultsScreen() {
       {/* Listado de productos o servicios según tab */}
       {selectedTab === 'productos' ? (
         <FlatList
-          ListHeaderComponent={ListHeader}
+          ListHeaderComponent={<ListHeader
+            searchText={searchText}
+            setSearchText={setSearchText}
+            selectedTab={selectedTab}
+            setSelectedTab={setSelectedTab}
+            selectedCategory={selectedCategory}
+            filterSheetRef={filterSheetRef}
+            selectedOrder={selectedOrder}
+            orderSheetRef={orderSheetRef}
+          />}
           data={isError ? [] : sortedProducts}
           ListEmptyComponent={isError ? ErrorComponent : null}
           keyExtractor={(item: any) => item.id}
