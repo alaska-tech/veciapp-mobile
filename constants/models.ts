@@ -50,7 +50,11 @@ export enum vendorState {
   VERIFIED = "verified",
   SUSPENDED = "suspended",
 }
-
+export interface AddressLocation {
+  alias: string;
+  address: string;
+  coordinates: [number, number]; //lat, lng
+}
 export interface Customer extends BaseAttributes {
   id: string;
   fullName: string; //max 255
@@ -70,14 +74,7 @@ export interface Customer extends BaseAttributes {
   isActive: boolean; //default true
   score: number;
   interests: string[];
-  locations?: Record<
-    string,
-    {
-      label: string;
-      address: string;
-      coordinates?: { lat: number; lng: number };
-    }
-  >;
+  locations?: Array<AddressLocation>;
   codeOtpAuthorization?: string; //max 10
   avatar?: string; //max 255
   totalSpent: number; //default 0
@@ -248,6 +245,6 @@ export interface Product {
     reason: string;
     changedAt: string;
   }>;
-  distance:string, //TODO: Consultar con el tocayo por estos atributos
-  rating?: number
+  distance: string; //TODO: Consultar con el tocayo por estos atributos
+  rating?: number;
 }
