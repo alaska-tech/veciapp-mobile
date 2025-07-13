@@ -30,7 +30,7 @@ const FilterSheet = forwardRef<FilterSheetRef, FilterSheetProps>(({ categories, 
     setLocalSelected(selectedCategory);
   }, [selectedCategory]);
 
-  const snapPoints = useMemo(() => ['50%'], []);
+  const snapPoints = useMemo(() => ['70%'], []);
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (

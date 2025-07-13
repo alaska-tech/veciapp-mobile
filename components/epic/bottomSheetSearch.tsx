@@ -33,7 +33,7 @@ const SearchOrderSheet = forwardRef<SearchOrderSheetRef, SearchOrderSheetProps>(
     setLocalSelected(selectedOrder);
   }, [selectedOrder]);
 
-  const snapPoints = useMemo(() => ['40%'], []);
+  const snapPoints = useMemo(() => ['50%'], []);
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
