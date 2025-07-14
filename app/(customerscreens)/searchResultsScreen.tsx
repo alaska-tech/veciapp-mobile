@@ -36,7 +36,7 @@ function ListHeader({
   orderSheetRef: React.RefObject<any>;
 }) {
   return (
-    <View className="pt-8 pb-2 px-4 bg-white">
+    <View className="pt-6 pb-2 px-4 bg-white">
       {/* barra de búsqueda */}
       <View className="flex-row items-center rounded-lg relative mb-4">
         <Input
@@ -166,19 +166,22 @@ export default function SearchResultsScreen() {
   return (
     <View className="flex-1 bg-white">
       <Stack.Screen options={{ title: 'Resultado de busqueda', headerShown: true, headerTitleAlign: 'center', headerBackTitle: 'Volver' }} />
-      {/* Listado de productos o servicios según tab */}
+      
+      {/* Header siempre visible */}
+      <ListHeader
+        searchText={searchText}
+        setSearchText={setSearchText}
+        selectedTab={selectedTab}
+        setSelectedTab={setSelectedTab}
+        selectedCategory={selectedCategory}
+        filterSheetRef={filterSheetRef}
+        selectedOrder={selectedOrder}
+        orderSheetRef={orderSheetRef}
+      />
+      
+      {/* Contenido según tab */}
       {selectedTab === 'productos' ? (
         <FlatList
-          ListHeaderComponent={<ListHeader
-            searchText={searchText}
-            setSearchText={setSearchText}
-            selectedTab={selectedTab}
-            setSelectedTab={setSelectedTab}
-            selectedCategory={selectedCategory}
-            filterSheetRef={filterSheetRef}
-            selectedOrder={selectedOrder}
-            orderSheetRef={orderSheetRef}
-          />}
           data={isError ? [] : sortedProducts}
           ListEmptyComponent={isError ? ErrorComponent : null}
           keyExtractor={(item: any) => item.id}
@@ -196,10 +199,11 @@ export default function SearchResultsScreen() {
           }
         />
       ) : (
-        <View className="flex-1 justify-center items-center">
-          <Text className="text-gray-400">No hay servicios disponibles aún.</Text>
+        <View className="flex-1 justify-center items-center px-4">
+          <Text className="text-gray-400 text-center">No hay servicios disponibles aún. julian angulo mapear los que seán servicios aquí</Text>
         </View>
       )}
+      
       {/* BottomSheets */}
       <FilterSheet
         ref={filterSheetRef}
