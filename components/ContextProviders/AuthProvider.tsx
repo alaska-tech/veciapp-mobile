@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { usePathname, useRouter } from "expo-router";
-import { Customer, CustomerRoleType, User } from "~/constants/models";
+import { CustomerRoleType, User } from "~/constants/models";
 import {
   getToken,
   getUserInfo,
@@ -8,13 +8,11 @@ import {
   clearAllInfoFromLocalStorage,
   useLocalStorageAction,
 } from "~/actions/localStorage.actions";
-import useCustomerAction from "~/actions/customer.action";
 
 interface AuthContextType {
   isAuthenticated: boolean;
   userRole: string | null;
   user: User | null;
-  customer: Customer | null;
   loading: boolean;
 }
 
@@ -27,11 +25,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     null
   );
   const [user, setUser] = useState<User | null>(null);
-  const [customer, setCustomer] = useState<Customer | null>(null);
   const router = useRouter();
   const currentRoute = usePathname();
   const localStorageActions = useLocalStorageAction();
-  const { fetchCustomerDetailsFunction } = useCustomerAction();
   useEffect(() => {
     async function checkIfThereIsValidStoredJwt() {
       const token = await getToken();
@@ -63,16 +59,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (!storedRole) {
           return;
         }
-        console.log("Stored user:", storedUser);
-        console.log("Stored role:", storedRole);
-        //if (storedRole === "customer") {
-          const customerDetails = await fetchCustomerDetailsFunction(
-            storedUser.id
-            
-          );
-          console.log("Customer details:", customerDetails);
-          setCustomer(customerDetails.data);
-        //}
         setIsAuthenticated(!!token);
         setUserRole(storedRole);
         setUser(storedUser);
@@ -95,9 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider
-      value={{ isAuthenticated, userRole, loading, user, customer }}
-    >
+    <AuthContext.Provider value={{ isAuthenticated, userRole, loading, user }}>
       {children}
     </AuthContext.Provider>
   );

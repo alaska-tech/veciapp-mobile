@@ -40,6 +40,7 @@ import {
   DialogClose,
 } from "~/components/ui/dialog";
 import { useAuth } from "~/components/ContextProviders/AuthProvider";
+import useCustomerAction from "~/actions/customer.action";
 
 interface Direccion {
   id: string;
@@ -50,12 +51,6 @@ interface Direccion {
 export default function CustomerSettingsScreen() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("general");
-  const [direcciones, setDirecciones] = useState<Direccion[]>([
-    { id: "1", direccion: "Calle 22 #3-45, Centro Histórico", tipo: "Casa" },
-  ]);
-  const [newDireccion, setNewDireccion] = useState("");
-  const [newTipo, setNewTipo] = useState("Casa");
-  const [showNewAddressForm, setShowNewAddressForm] = useState(false);
 
   // Password related states
   const [currentPassword, setCurrentPassword] = useState("");
@@ -72,13 +67,11 @@ export default function CustomerSettingsScreen() {
     confirmPassword: "",
   });
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const { fullName = "", email = "" } = useAuth().customer ?? {};
 
-  const updateTipoVivienda = (index: number, tipo: string) => {
-    const newDirecciones = [...direcciones];
-    newDirecciones[index].tipo = tipo;
-    setDirecciones(newDirecciones);
-  };
+  const { user } = useAuth();
+  const customerActions = useCustomerAction();
+  const customer = customerActions.getCustomerDetails(user?.foreignPersonId);
+  const { fullName = "", email = "", locations = [] } = customer.data ?? {};
 
   const agregarNuevaDireccion = () => {
     router.push("/newLocation");
@@ -145,7 +138,7 @@ export default function CustomerSettingsScreen() {
         }}
       />
 
-      <ScrollView className="h-full w-full bg-white p-4">
+      <ScrollView className="h-full w-full bg-white p-4 mb-16">
         <Card className="mb-6 rounded-3xl">
           <CardContent className="pt-6">
             <View className="flex-col items-center justify-center gap-2">
@@ -158,12 +151,6 @@ export default function CustomerSettingsScreen() {
               <View className="items-center gap-1">
                 <Text className="text-xl font-semibold">{fullName}</Text>
                 <Text className="text-muted-foreground">{email}</Text>
-                <View className="flex-row items-center gap-1 mt-0.5">
-                  <MapPin size={14} color="#000000" />
-                  <Text className="text-muted-foreground">
-                    Calle 22 #3-45, Centro Histórico
-                  </Text>
-                </View>
               </View>
             </View>
           </CardContent>
@@ -190,7 +177,7 @@ export default function CustomerSettingsScreen() {
                   General
                 </Text>
               </TabsTrigger>
-              <TabsTrigger
+              {/* <TabsTrigger
                 value="seguridad"
                 onPress={() => setActiveTab("seguridad")}
                 className="flex-1 justify-center bg-transparent rounded-lg"
@@ -203,92 +190,31 @@ export default function CustomerSettingsScreen() {
                 >
                   Seguridad
                 </Text>
-              </TabsTrigger>
+              </TabsTrigger> */}
             </TabsList>
 
             <TabsContent value="general" className="w-full">
-              <View className="gap-4">
-                {direcciones.map((item, index) => (
-                  <View key={item.id}>
+              <ScrollView className="gap-4 mb-24">
+                {/* <Text>{JSON.stringify(customer.data)}</Text>  */}
+                {locations.map((item, index) => (
+                  <View key={index}>
                     <Text className="text-base font-medium mb-2">
                       Dirección {index + 1}
                     </Text>
-                    <View className="border border-gray-200 rounded-lg p-3 mb-2">
+                    <View className="border border-gray-200 rounded-lg p-2 mb-2">
                       <TextInput
-                        value={item.direccion}
-                        onChangeText={(text) => {
-                          const newDirecciones = [...direcciones];
-                          newDirecciones[index].direccion = text;
-                          setDirecciones(newDirecciones);
-                        }}
+                        value={(JSON.stringify(item, null, 6))}
                         className="text-base"
                       />
-                    </View>
-                    <View className="mb-4">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger className="w-full">
-                          <View className="border border-gray-200 rounded-lg p-3 flex-row justify-between items-center w-full">
-                            <Text className="text-gray-500">Tipo:</Text>
-                            <Text>{item.tipo}</Text>
-                            <ChevronDown size={20} color="#000" />
-                          </View>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem
-                            onPress={() => updateTipoVivienda(index, "Casa")}
-                          >
-                            <Text>Casa</Text>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onPress={() =>
-                              updateTipoVivienda(index, "Edificio")
-                            }
-                          >
-                            <Text>Edificio</Text>
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <View className="mb-4">
+                        <View className="border border-gray-200 rounded-lg p-3 flex-row start items-center">
+                          <Text className="text-gray-500">Tipo: </Text>
+                          <Text>{item.alias}</Text>
+                        </View>
+                      </View>
                     </View>
                   </View>
                 ))}
-
-                {showNewAddressForm && (
-                  <View>
-                    <Text className="text-base font-medium mb-2">
-                      Nueva Dirección
-                    </Text>
-                    <View className="border border-gray-200 rounded-lg p-3 mb-2">
-                      <TextInput
-                        value={newDireccion}
-                        onChangeText={setNewDireccion}
-                        placeholder="Ingresa la dirección"
-                        className="text-base"
-                      />
-                    </View>
-                    <View className="mb-4">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger className="w-full">
-                          <View className="border border-gray-200 rounded-lg p-3 flex-row justify-between items-center w-full">
-                            <Text className="text-gray-500">Tipo:</Text>
-                            <Text>{newTipo}</Text>
-                            <ChevronDown size={20} color="#000" />
-                          </View>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem onPress={() => setNewTipo("Casa")}>
-                            <Text>Casa</Text>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onPress={() => setNewTipo("Edificio")}
-                          >
-                            <Text>Edificio</Text>
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </View>
-                  </View>
-                )}
-
                 <TouchableOpacity
                   className="border border-gray-200 rounded-full p-4 flex-row items-center justify-center mb-1"
                   onPress={agregarNuevaDireccion}
@@ -298,16 +224,10 @@ export default function CustomerSettingsScreen() {
                     Agregar Nueva Ubicación
                   </Text>
                 </TouchableOpacity>
-
-                <Button className="w-full bg-[#FFD100] rounded-full py-6 mb-6">
-                  <Text className="text-black text-base font-medium">
-                    Guardar Cambios
-                  </Text>
-                </Button>
-              </View>
+              </ScrollView>
             </TabsContent>
 
-            <TabsContent value="seguridad" className="w-full">
+            {/*  <TabsContent value="seguridad" className="w-full">
               <View className="gap-4">
                 <View className="mb-2">
                   <Text className="text-base font-medium mb-2">
@@ -484,7 +404,7 @@ export default function CustomerSettingsScreen() {
                   </DialogContent>
                 </Dialog>
               </View>
-            </TabsContent>
+            </TabsContent> */}
           </Tabs>
         </View>
       </ScrollView>

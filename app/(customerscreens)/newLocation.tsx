@@ -12,8 +12,11 @@ import * as Location from "expo-location";
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
 import useCustomerAction from "~/actions/customer.action";
-import { AddressLocation } from "~/constants/models";
+import { AddressLocation, Customer } from "~/constants/models";
 import { Loader } from "~/components/ui/loader";
+import { useAuth } from "~/components/ContextProviders/AuthProvider";
+import { Alert } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,11 +26,16 @@ export default function App() {
     latitude: 0,
     longitude: 0,
   });
-  const [adrress, setAdrress] = useState("");
+  const [address, setAddress] = useState("");
   const [adrressError, setAdrressError] = useState(false);
-  const [nickname, setNickname] = useState("");
+  const [nickname, setNickname] = useState("Casa");
+  const router = useRouter();
+  const { user } = useAuth();
   const customerActions = useCustomerAction();
-  const addAddress = customerActions.addAddress();
+  const getCustomerDetails = customerActions.getCustomerDetails(
+    user?.foreignPersonId
+  );
+  const updateCustomer = customerActions.updateCustomer();
   useEffect(() => {
     async function getCurrentLocation() {
       try {
@@ -57,21 +65,41 @@ export default function App() {
   }, []);
 
   async function handleSubmit() {
-    if (addAddress.isPending) {
+    if (updateCustomer.isPending) {
       return;
     }
-    if (!adrress) {
+    if (!address) {
       setAdrressError(true);
       return;
     }
+    if (!getCustomerDetails.data) {
+      Alert.alert(
+        "Error",
+        "No se pudo obtener los detalles del cliente. Por favor, inténtalo de nuevo más tarde."
+      );
+      return;
+    }
     const newAddress: AddressLocation = {
-      address: adrress,
+      address: address,
       alias: nickname,
       coordinates: [markerPosition.latitude, markerPosition.longitude], // lat, lng
     };
-    console.log("New address submitted:", newAddress);
+    const newCustomer = {
+      id: getCustomerDetails.data.id,
+      locations: [newAddress, ...(getCustomerDetails.data.locations || [])],
+    };
+    console.log("newCustomer submitted:", newCustomer);
     try {
-      await addAddress.mutateAsync({ body: newAddress });
+      await updateCustomer
+        .mutateAsync({
+          body: newCustomer,
+        })
+        .then(
+          () => {
+            router.dismissTo("/(customerscreens)/customerSettings");
+          },
+          () => {}
+        );
     } catch (error) {
       console.log(JSON.stringify(error, null, 4));
     }
@@ -116,10 +144,10 @@ export default function App() {
       >
         <View className="border border-gray-200 rounded-lg p-1 mb-2 bg-white w-full">
           <Textarea
-            value={adrress}
+            value={address}
             onChangeText={(text) => {
               setAdrressError(false);
-              setAdrress(text);
+              setAddress(text);
             }}
             className={
               adrressError
@@ -129,21 +157,27 @@ export default function App() {
             placeholder="Dirección"
           />
         </View>
-        <View className="border border-gray-200 rounded-lg p-1 mb-2 bg-white">
-          <TextInput
-            value={nickname}
-            onChangeText={(text) => {
-              setNickname(text);
-            }}
-            className="text-base w-full"
-            placeholder="Apodo (opcional)"
-          />
+        <View className="flex-row justify-between border border-gray-200 rounded-lg p-1 mb-2 bg-white w-full">
+          {["Casa", "Trabajo", "Pareja"].map((option) => (
+            <Button
+              key={option}
+              className={`flex-1 mx-1 py-4 rounded-lg ${
+          nickname === option ? "bg-[#FFD100]" : "bg-white border border-gray-300"
+              }`}
+              onPress={() => setNickname(option)}
+              variant="ghost"
+            >
+              <Text className={`text-base text-center ${nickname === option ? "text-black font-bold" : "text-gray-700"}`}>
+          {option}
+              </Text>
+            </Button>
+          ))}
         </View>
         <Button
           className="w-full bg-[#FFD100] rounded-full py-6 mb-6"
           onPress={handleSubmit}
         >
-          {addAddress.isPending ? (
+          {updateCustomer.isPending ? (
             <Loader />
           ) : (
             <Text className="text-black text-base font-medium">

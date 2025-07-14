@@ -24,13 +24,17 @@ import { Switch } from "~/components/ui/switch";
 import useAuthAction from "~/actions/auth.action";
 import { clearAllInfoFromLocalStorage } from "~/actions/localStorage.actions";
 import { useAuth } from "~/components/ContextProviders/AuthProvider";
+import useCustomerAction from "~/actions/customer.action";
 
 export default function ProfileScreen() {
   const router = useRouter();
   const [pushEnabled, setPushEnabled] = useState(true);
   const authActions = useAuthAction();
   const logOut = authActions.logOut();
-  const {fullName = '', email = ''} = useAuth().customer ?? {};
+  const { user } = useAuth();
+  const customerActions = useCustomerAction();
+  const customer = customerActions.getCustomerDetails(user?.foreignPersonId);
+  const { fullName = "", email = "" } = customer.data ?? {};
   return (
     <>
       <Stack.Screen
@@ -55,9 +59,7 @@ export default function ProfileScreen() {
               </Avatar>
               <View className="items-center gap-1 mt-2">
                 <Text className="text-xl font-semibold">{fullName}</Text>
-                <Text className="text-muted-foreground">
-                  {email}
-                </Text>
+                <Text className="text-muted-foreground">{email}</Text>
                 <View className="flex-row items-center gap-1 mt-0.5">
                   <MapPin size={14} color="#ef4444" />
                   <Text className="text-muted-foreground">

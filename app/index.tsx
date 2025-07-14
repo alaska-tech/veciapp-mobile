@@ -48,7 +48,7 @@ export default function LoginScreen() {
   };
 
   const handleSignIn = async () => {
-    if (!validateLogin()) return;
+    //if (!validateLogin()) return;
     try {
       if (!showPassword) {
         setShowPassword(true);
@@ -78,7 +78,7 @@ export default function LoginScreen() {
       await refreshParameters();
       switch (user.role) {
         case "customer":
-          router.replace("/(client)/home");
+          router.replace("/(client)/(tabs)/home");
           break;
         case "vendor":
           router.replace("/(vendor)/vendorHome");
