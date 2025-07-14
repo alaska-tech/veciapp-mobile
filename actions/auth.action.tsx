@@ -4,6 +4,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { mutateEntity } from "./action";
 import { LOGGED_USER_INFO_KEY } from "~/constants/constants";
 import { User, Response } from "~/constants/models";
+import { Alert } from "react-native";
 
 export interface UpdatePasswordBody {
   password: string;
@@ -17,7 +18,7 @@ export type LogInResponse = {
 };
 export default function useAuthAction() {
   const queryClient = useQueryClient();
-/*   const userSession = useQuery<User | null>({
+  /*   const userSession = useQuery<User | null>({
     queryKey: [LOGGED_USER_INFO_KEY],
     queryFn: () => {
       const loggedUserInfo = localStorage.getItem(LOGGED_USER_INFO_KEY);
@@ -93,7 +94,7 @@ export default function useAuthAction() {
       onMutate: (res) => res,
       onError: (error, _variables, _context) => {
         const receivedErrorMessage = error.response?.data.error.message;
-        console.error(JSON.stringify(error,null,4))
+        console.error(JSON.stringify(error, null, 4));
         /*         notification.error({
           message: "Error",
           description: receivedErrorMessage,
@@ -108,5 +109,46 @@ export default function useAuthAction() {
       },
     }
   );
-  return { logOut, logIn };
+  interface registerForm {
+    fullName: string;
+    email: string;
+    password: string;
+  }
+  const register = mutateEntity<
+    AxiosResponse<Extract<Response<unknown>, { status: "Success" }>>,
+    AxiosError<Extract<Response<null>, { status: "Error" }>>,
+    {
+      body: registerForm;
+    }
+  >(
+    () => {
+      return async function mutationFn({ body }) {
+        try {
+          if (!body) {
+            throw new Error("No body provided");
+          }
+          const response = await apiClient.post<
+            Extract<Response<unknown>, { status: "Success" }>
+          >(`/customers`, body);
+          console.log(JSON.stringify(response))
+          return response;
+        } catch (error) {
+          throw error;
+        }
+      };
+    },
+    {
+      onMutate: (res) => res,
+      onError: (error, _variables, _context) => {
+        const receivedErrorMessage =
+          error.response?.data.error.message || "Intenté de nuevo";
+        console.error(JSON.stringify(error, null, 4));
+        Alert.alert("Error", receivedErrorMessage);
+      },
+      onSuccess(response, _variables, _context) {
+        //Alert.alert("Exito");
+      },
+    }
+  );
+  return { logOut, logIn, register };
 }
