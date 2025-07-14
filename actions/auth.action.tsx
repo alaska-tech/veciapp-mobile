@@ -142,9 +142,9 @@ export default function useAuthAction() {
       onError: (error, _variables, _context) => {
         console.log("Error al crear cuenta nueva",JSON.stringify(error))
         const receivedErrorMessage =
-          error.response?.data.error.message || "Intenté de nuevo";
+          error.response?.data.error.message || "Intente de nuevo";
         console.error(JSON.stringify(error, null, 4));
-        Alert.alert("Error", receivedErrorMessage);
+        Alert.alert("Error inesperado", receivedErrorMessage);
       },
       onSuccess(response, _variables, _context) {
         //Alert.alert("Exito");
