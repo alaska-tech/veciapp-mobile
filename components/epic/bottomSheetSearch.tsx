@@ -33,7 +33,7 @@ const SearchOrderSheet = forwardRef<SearchOrderSheetRef, SearchOrderSheetProps>(
     setLocalSelected(selectedOrder);
   }, [selectedOrder]);
 
-  const snapPoints = useMemo(() => ['40%'], []);
+  const snapPoints = useMemo(() => ['50%'], []);
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
@@ -65,7 +65,7 @@ const SearchOrderSheet = forwardRef<SearchOrderSheetRef, SearchOrderSheetProps>(
         <Text className="text-xl font-bold mb-6 text-center">Resultado de busqueda</Text>
         <View style={{ borderBottomWidth: 1, borderBottomColor: '#E5E7EB', marginBottom: 16 }} />
         <Text className="text-base font-semibold mb-3">Ordenar por</Text>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginBottom: 24 }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginBottom: 24 }}>
           {orderOptions.map((order) => (
             <TouchableOpacity
               key={order}
@@ -89,7 +89,7 @@ const SearchOrderSheet = forwardRef<SearchOrderSheetRef, SearchOrderSheetProps>(
         </View>
         <Button
           onPress={handleApply}
-          className="bg-yellow-400 rounded-full py-4 mt-2 mb-4"
+          className="bg-yellow-400 rounded-full py-4 mb-4"
           size="lg"
         >
           <Text className="text-black text-center font-semibold text-lg">

@@ -19,20 +19,26 @@ export default function HeaderHome() {
       {/* Search Bar and Cart */}
       <View className="mb-4 flex-row items-center">
         <View className="flex-1 mr-3">
-          <View className="flex-row items-center rounded-lg relative">
-            <Input
-              placeholder="Busca empanadas para hoy"
-              className="flex-1 py-3 text-base pl-12 rounded-full border border-gray-400"
-              value={searchText}
-              onChangeText={setSearchText}
-              onFocus={() => router.push('/(customerscreens)/searchResultsScreen')}
-            />
-            {!searchText && (
-              <View className="absolute left-3 top-3">
-                <Search size={20} color="#666"/>
-              </View>
-            )}
-          </View>
+          <TouchableOpacity 
+            onPress={() => router.push('/(customerscreens)/searchResultsScreen')}
+            activeOpacity={0.8}
+          >
+            <View className="flex-row items-center rounded-lg relative">
+              <Input
+                placeholder="Busca empanadas para hoy"
+                className="flex-1 py-3 text-base pl-12 rounded-full border border-gray-400"
+                value={searchText}
+                onChangeText={setSearchText}
+                editable={false}
+                pointerEvents="none"
+              />
+              {!searchText && (
+                <View className="absolute left-3 top-3">
+                  <Search size={20} color="#666"/>
+                </View>
+              )}
+            </View>
+          </TouchableOpacity>
         </View>
         <TouchableOpacity 
           activeOpacity={0.3}
