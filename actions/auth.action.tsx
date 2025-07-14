@@ -140,6 +140,7 @@ export default function useAuthAction() {
     {
       onMutate: (res) => res,
       onError: (error, _variables, _context) => {
+        console.log("Error al crear cuenta nueva",JSON.stringify(error))
         const receivedErrorMessage =
           error.response?.data.error.message || "Intenté de nuevo";
         console.error(JSON.stringify(error, null, 4));
