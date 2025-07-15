@@ -11,6 +11,7 @@ export const useProductAction = () => {
     const response = await apiClient.get<
       Extract<Response<PaginatedResult<Product>>, { status: "Success" }>
     >(`/productservice/list?page=${pageParam}&limit=10`);
+    console.log("fetchProductsFunctions", JSON.stringify(response));
     return response.data;
   };
   const getProducts = queryEntity<
@@ -37,7 +38,7 @@ export const useProductAction = () => {
         const response = await apiClient.get<
           Extract<Response<Product>, { status: "Success" }>
         >(`/productservice/get-details/${id}`);
-        console.log(response)
+        console.log(response);
         return response.data.data;
       } catch (error) {
         throw error;
@@ -46,6 +47,7 @@ export const useProductAction = () => {
   });
   return {
     fetchProductsFunction,
-    getProducts,getProductById
+    getProducts,
+    getProductById,
   };
 };

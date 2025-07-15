@@ -228,6 +228,7 @@ export interface Product {
   finalPrice: string;
   currency: string;
   mainImage: string;
+  logo?: string;
   images: string[];
   tags: string[];
   state: string;

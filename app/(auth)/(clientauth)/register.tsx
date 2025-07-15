@@ -12,6 +12,7 @@ import {
 import { TouchableOpacity } from "react-native";
 import { Eye, EyeOff } from "lucide-react-native";
 import useAuthAction from "~/actions/auth.action";
+import { Loader } from "~/components/ui/loader";
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -178,8 +179,13 @@ export default function RegisterScreen() {
           <Button
             onPress={handleRegister}
             className="w-full bg-yellow-400 rounded-full"
+            disabled={register.isPending}
           >
-            <Text className="text-black font-bold text-md">Registrarse</Text>
+            {register.isPending ? (
+              <Loader />
+            ) : (
+              <Text className="text-black font-bold text-md">Registrarse</Text>
+            )}
           </Button>
 
           <Text className="text-center text-muted-foreground text-sm">
