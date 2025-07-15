@@ -80,11 +80,13 @@ export default function App() {
       return;
     }
     const newAddress: AddressLocation = {
-      address: address,
       alias: nickname,
+      address: address,
       coordinates: [markerPosition.latitude, markerPosition.longitude], // lat, lng
     };
+    const { email, state, id, ...rest } = getCustomerDetails.data;
     const newCustomer = {
+      ...rest,
       id: getCustomerDetails.data.id,
       locations: [newAddress, ...(getCustomerDetails.data.locations || [])],
     };
@@ -92,7 +94,7 @@ export default function App() {
     try {
       await updateCustomer
         .mutateAsync({
-          body: newCustomer,
+          body: newCustomer as any,
         })
         .then(
           () => {
@@ -162,13 +164,19 @@ export default function App() {
             <Button
               key={option}
               className={`flex-1 mx-1 py-4 rounded-lg ${
-          nickname === option ? "bg-[#FFD100]" : "bg-white border border-gray-300"
+                nickname === option
+                  ? "bg-[#FFD100]"
+                  : "bg-white border border-gray-300"
               }`}
               onPress={() => setNickname(option)}
               variant="ghost"
             >
-              <Text className={`text-base text-center ${nickname === option ? "text-black font-bold" : "text-gray-700"}`}>
-          {option}
+              <Text
+                className={`text-base text-center ${
+                  nickname === option ? "text-black font-bold" : "text-gray-700"
+                }`}
+              >
+                {option}
               </Text>
             </Button>
           ))}

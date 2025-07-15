@@ -34,7 +34,8 @@ export default function ProfileScreen() {
   const { user } = useAuth();
   const customerActions = useCustomerAction();
   const customer = customerActions.getCustomerDetails(user?.foreignPersonId);
-  const { fullName = "", email = "" } = customer.data ?? {};
+  const { fullName = "", email = "", address = '{"address":"Desconocido"}' } = customer.data ?? {};
+  const parsedAddress = JSON.parse(address);
   return (
     <>
       <Stack.Screen
@@ -63,7 +64,7 @@ export default function ProfileScreen() {
                 <View className="flex-row items-center gap-1 mt-0.5">
                   <MapPin size={14} color="#ef4444" />
                   <Text className="text-muted-foreground">
-                    Calle 22 #3-45, Centro Histórico
+                    {parsedAddress.address || ""}
                   </Text>
                 </View>
               </View>

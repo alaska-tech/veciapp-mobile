@@ -203,14 +203,12 @@ export default function CustomerSettingsScreen() {
                     </Text>
                     <View className="border border-gray-200 rounded-lg p-2 mb-2">
                       <TextInput
-                        value={(JSON.stringify(item, null, 6))}
+                        value={item.address || "Desconocido"}
                         className="text-base"
                       />
-                      <View className="mb-4">
-                        <View className="border border-gray-200 rounded-lg p-3 flex-row start items-center">
-                          <Text className="text-gray-500">Tipo: </Text>
-                          <Text>{item.alias}</Text>
-                        </View>
+                      <View className="flex-row start items-center">
+                        <Text className="text-gray-500">Tipo: </Text>
+                        <Text>{item.alias}</Text>
                       </View>
                     </View>
                   </View>
