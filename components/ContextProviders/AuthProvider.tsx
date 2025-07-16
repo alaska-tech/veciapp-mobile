@@ -12,6 +12,7 @@ import {
 interface AuthContextType {
   isAuthenticated: boolean;
   userRole: string | null;
+  user: User | null;
   loading: boolean;
 }
 
@@ -23,6 +24,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [userRole, setUserRole] = useState<CustomerRoleType[number] | null>(
     null
   );
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
   const currentRoute = usePathname();
   const localStorageActions = useLocalStorageAction();
@@ -59,9 +61,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         setIsAuthenticated(!!token);
         setUserRole(storedRole);
-
+        setUser(storedUser);
         if (storedRole === "customer") {
-          router.replace("/(client)/home");
+          router.replace("/(client)/(tabs)/home");
           return;
         }
         if (storedRole === "vendor") {
@@ -69,7 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return;
         }
       } catch (error) {
-        console.error("Auth check failed:", error);
+        console.error("Auth check failed:", JSON.stringify(error));
       } finally {
         setLoading(false);
       }
@@ -79,7 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, userRole, loading }}>
+    <AuthContext.Provider value={{ isAuthenticated, userRole, loading, user }}>
       {children}
     </AuthContext.Provider>
   );

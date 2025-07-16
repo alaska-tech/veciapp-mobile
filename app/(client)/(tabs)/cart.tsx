@@ -8,29 +8,41 @@ import React from "react";
 import { View } from "react-native";
 import { MapPinIcon } from "lucide-react-native";
 import { useCartStore } from "~/store/cartStore";
+import { useAuth } from "~/components/ContextProviders/AuthProvider";
+import useCustomerAction from "~/actions/customer.action";
 
 export default function CartScreen() {
   const router = useRouter();
-  
+  const { user } = useAuth();
+  const customerActions = useCustomerAction();
+  const customer = customerActions.getCustomerDetails(user?.foreignPersonId);
+  const { address = '{"address":"Desconocido"}' } = customer.data ?? {};
+  const parsedAddress = JSON.parse(address);
   // Usar el store de Zustand para gestionar el estado del carrito
-  const { 
-    cartItems, 
-    salonItems, 
-    updateCartItemQuantity, 
+  const {
+    cartItems,
+    salonItems,
+    updateCartItemQuantity,
     removeCartItem,
     updateSalonItemQuantity,
-    removeSalonItem
+    removeSalonItem,
   } = useCartStore();
 
   // Calculate totals based on current cart items
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const serviceCharge = subtotal * 0.10; // 10% service charge
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+  const serviceCharge = subtotal * 0.1; // 10% service charge
   const deliveryFee = 10000;
   const total = subtotal + serviceCharge + deliveryFee;
 
   // Calculate totals for salon items
-  const salonSubtotal = salonItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const salonServiceCharge = salonSubtotal * 0.10; // 10% service charge
+  const salonSubtotal = salonItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+  const salonServiceCharge = salonSubtotal * 0.1; // 10% service charge
   const salonDeliveryFee = 8000;
   const salonTotal = salonSubtotal + salonServiceCharge + salonDeliveryFee;
 
@@ -58,29 +70,25 @@ export default function CartScreen() {
 
   return (
     <>
-    <Stack.Screen
-      options={{
-        headerShadowVisible: false,
-        headerTitle: "Carrito de compras",
-        headerTitleAlign: "center",
-        headerShown: true,
-        headerBackVisible: true, 
-      }}
-    />
-    <ScrollView className="h-full w-full p-4">
-    <View className="flex-row items-center flex-1 ml-2 mb-4 pb-4 border-b border-gray-300">
-          <MapPinIcon size={20} color="#ffffff" fill="#666"/>
-          <Text 
-            className="text-gray-500 text-md pr-1"
-          >
-            Enviar a
-          </Text>
-          <Text 
+      <Stack.Screen
+        options={{
+          headerShadowVisible: false,
+          headerTitle: "Carrito de compras",
+          headerTitleAlign: "center",
+          headerShown: true,
+          headerBackVisible: true,
+        }}
+      />
+      <ScrollView className="h-full w-full p-4">
+        <View className="flex-row items-center flex-1 ml-2 mb-4 pb-4 border-b border-gray-300">
+          <MapPinIcon size={20} color="#ffffff" fill="#666" />
+          <Text className="text-gray-500 text-md pr-1">Enviar a</Text>
+          <Text
             className="text-black text-md font-bold flex-1"
             numberOfLines={1}
             ellipsizeMode="tail"
           >
-            Calle 123 St 45 # 65 Sta Marta, Calle256723467834...
+            {parsedAddress.address || ""}
           </Text>
         </View>
       {cartItems.length > 0 && (

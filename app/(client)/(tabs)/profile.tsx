@@ -23,12 +23,19 @@ import { TouchableOpacity } from "react-native";
 import { Switch } from "~/components/ui/switch";
 import useAuthAction from "~/actions/auth.action";
 import { clearAllInfoFromLocalStorage } from "~/actions/localStorage.actions";
+import { useAuth } from "~/components/ContextProviders/AuthProvider";
+import useCustomerAction from "~/actions/customer.action";
 
 export default function ProfileScreen() {
   const router = useRouter();
   const [pushEnabled, setPushEnabled] = useState(true);
   const authActions = useAuthAction();
   const logOut = authActions.logOut();
+  const { user } = useAuth();
+  const customerActions = useCustomerAction();
+  const customer = customerActions.getCustomerDetails(user?.foreignPersonId);
+  const { fullName = "", email = "", address = '{"address":"Desconocido"}' } = customer.data ?? {};
+  const parsedAddress = JSON.parse(address);
   return (
     <>
       <Stack.Screen
@@ -52,14 +59,12 @@ export default function ProfileScreen() {
                 </AvatarFallback>
               </Avatar>
               <View className="items-center gap-1 mt-2">
-                <Text className="text-xl font-semibold">JuanchoSM</Text>
-                <Text className="text-muted-foreground">
-                  juancho.santamarta@example.com
-                </Text>
+                <Text className="text-xl font-semibold">{fullName}</Text>
+                <Text className="text-muted-foreground">{email}</Text>
                 <View className="flex-row items-center gap-1 mt-0.5">
                   <MapPin size={14} color="#ef4444" />
                   <Text className="text-muted-foreground">
-                    Calle 22 #3-45, Centro Histórico
+                    {parsedAddress.address || ""}
                   </Text>
                 </View>
               </View>
@@ -99,11 +104,11 @@ export default function ProfileScreen() {
           <Button
             className="w-full flex-row items-center justify-between"
             variant="ghost"
-            onPress={() => router.push("/(customerscreens)/customerSettings")}
+            onPress={() => router.push("/(customerscreens)/locationSettings")}
           >
             <View className="flex-row items-center gap-2">
-              <UserCircle className="h-5 w-5 mr-3" color="#000000" />
-              <Text>Perfil</Text>
+              <MapPin className="h-5 w-5 mr-3" color="#000000" />
+              <Text>Direcciones</Text>
             </View>
             <ChevronRight className="h-5 w-5" color="#000000" />
           </Button>
