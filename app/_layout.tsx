@@ -9,18 +9,24 @@ import {
 import { Stack } from "expo-router/stack";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
-import { Platform, View } from "react-native";
+import { Platform, View, AppStateStatus } from "react-native";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { PortalHost } from "@rn-primitives/portal";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import * as SplashScreen from "expo-splash-screen";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  focusManager,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { addJWTInterceptor } from "~/services/axios.interceptor";
 import { apiClient } from "~/services/clients";
 import { useRouter } from "expo-router";
 import { AuthProvider } from "~/components/ContextProviders/AuthProvider";
 import { ParametersProvider } from "~/components/ContextProviders/ParametersProvider";
+import { useAppState } from "~/hooks/useAppState";
+import { useOnlineManager } from "~/hooks/useOnlineManager";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -44,11 +50,20 @@ export {
   ErrorBoundary,
 } from "expo-router";
 
+function onAppStateChange(status: AppStateStatus) {
+  // React Query already supports in web browser refetch on window focus by default
+  if (Platform.OS !== "web") {
+    focusManager.setFocused(status === "active");
+  }
+}
+
 export default function RootLayout() {
   const hasMounted = React.useRef(false);
   const { colorScheme, isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: 2 } },
+  });
   const router = useRouter();
   addJWTInterceptor(apiClient);
   React.useEffect(() => {
@@ -77,7 +92,8 @@ export default function RootLayout() {
       await SplashScreen.hideAsync();
     }
   }, [isColorSchemeLoaded]);
-
+  useOnlineManager();
+  useAppState(onAppStateChange);
   if (!isColorSchemeLoaded) {
     return null;
   }
