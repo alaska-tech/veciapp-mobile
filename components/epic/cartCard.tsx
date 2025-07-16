@@ -5,6 +5,7 @@ import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
 import { Trash2, Plus, Minus, MapPin, ChevronUp, ChevronDown } from 'lucide-react-native';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "~/components/ui/collapsible";
+import { useRef, useState } from "react";
 
 interface CartCardProps {
   providerName: string;
@@ -25,6 +26,9 @@ interface CartCardProps {
   onPayPress?: () => void;
 }
 
+// Add to imports
+import PaymentMethodSheet, { PaymentMethodSheetRef } from './bottomSheetPaymentMethods';
+
 export default function CartCard({
   providerName,
   providerImage,
@@ -44,6 +48,15 @@ export default function CartCard({
   };
 
   const [isOpen, setIsOpen] = React.useState(false);
+
+  // Add this ref
+  const paymentSheetRef = useRef<PaymentMethodSheetRef>(null);
+
+  // Add this handler
+  const handlePaymentMethodSelect = (method: 'online' | 'cash') => {
+    console.log('Selected payment method:', method);
+    onPayPress?.();
+  };
 
   return (
     <Card className="rounded-3xl overflow-hidden">
@@ -150,11 +163,17 @@ export default function CartCard({
         <Button
           className="w-full bg-yellow-400 rounded-full"
           size="lg"
-          onPress={onPayPress}
+          onPress={() => paymentSheetRef.current?.show()}
         >
           <Text className="text-black font-bold text-xl">Pagar ${formatPrice(total)}</Text>
         </Button>
       </View>
+
+      <PaymentMethodSheet
+        ref={paymentSheetRef}
+        total={total}
+        onSelectMethod={handlePaymentMethodSelect}
+      />
     </Card>
   );
 }

@@ -11,8 +11,8 @@ export default function ClientLayout() {
         name="product/[id]"
         options={{
           headerShown: true,
-          headerTitle: "Detalles del producto",
-          presentation: "modal"
+          headerBackTitle: "Volver",
+          headerTitle: "Detalles del producto"
         }}
       />
     </Stack>

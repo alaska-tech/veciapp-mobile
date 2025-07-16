@@ -2,10 +2,16 @@ import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Stack } from 'expo-router';
 import { Input } from '~/components/ui/input';
 import { Search, MapPin, Star } from 'lucide-react-native';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import FilterSheet, { FilterSheetRef } from '~/components/epic/bottomSheetFilter';
+import SearchOrderSheet, { SearchOrderSheetRef } from '~/components/epic/bottomSheetSearch';
 
 export default function AllVendorsScreen() {
   const [searchText, setSearchText] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('Todas las categorias');
+  const [selectedOrder, setSelectedOrder] = useState('Cerca de mi');
+  const filterSheetRef = useRef<FilterSheetRef>(null);
+  const orderSheetRef = useRef<SearchOrderSheetRef>(null);
 
   const vendors = [
     {
@@ -100,13 +106,27 @@ export default function AllVendorsScreen() {
     }
   ];
 
-  // Add filtered vendors logic
+  // Add filtered and sorted vendors logic
   const filteredVendors = vendors.filter((vendor) =>
-    vendor.name.toLowerCase().includes(searchText.toLowerCase())
+    vendor.name.toLowerCase().includes(searchText.toLowerCase()) &&
+    (selectedCategory === 'Todas las categorias' || vendor.category === selectedCategory)
   );
 
+  // Ordenar según selectedOrder
+  const sortedVendors = [...filteredVendors].sort((a, b) => {
+    if (selectedOrder === 'Cerca de mi') {
+      // Extraer el número de la distancia (ej: '0.5 km' => 0.5)
+      const distA = parseFloat(a.distance);
+      const distB = parseFloat(b.distance);
+      return distA - distB;
+    } else if (selectedOrder === 'Mejor calificado') {
+      return (b.rating || 0) - (a.rating || 0);
+    }
+    return 0;
+  });
+
   // Group vendors by category
-  const vendorsByCategory = filteredVendors.reduce((acc, vendor) => {
+  const vendorsByCategory = sortedVendors.reduce((acc, vendor) => {
     if (!acc[vendor.category]) {
       acc[vendor.category] = [];
     }
@@ -114,7 +134,7 @@ export default function AllVendorsScreen() {
     return acc;
   }, {} as Record<string, typeof vendors>);
 
-  const categories = ['Belleza', 'Confecciones', 'Gastronomía'];
+  const categories = ['Todas las categorias', 'Belleza', 'Confecciones', 'Gastronomía'];
 
   return (
     <View className="flex-1 bg-background">
@@ -144,24 +164,24 @@ export default function AllVendorsScreen() {
       {/* Filters Section */}
       <View className="flex-row justify-between items-center p-4">
         {/* "Buscar en" filter */}
-        <TouchableOpacity onPress={() => console.log('Buscar en pressed')}>
+        <TouchableOpacity onPress={() => filterSheetRef.current?.show()}>
           <View>
             <Text className="text-gray-600">Buscar en:</Text>
-            <Text className="text-base font-medium">Todas las categorias ▼</Text>
+            <Text className="text-base font-medium">{selectedCategory} ▼</Text>
           </View>
         </TouchableOpacity>
         {/* "Ordenar por" filter */}
-        <TouchableOpacity onPress={() => console.log('Ordenar por pressed')}>
+        <TouchableOpacity onPress={() => orderSheetRef.current?.show()}>
           <View>
             <Text className="text-gray-600">Ordenar por:</Text>
-            <Text className="text-base font-medium">Cerca de mi ▼</Text>
+            <Text className="text-base font-medium">{selectedOrder} ▼</Text>
           </View>
         </TouchableOpacity>
       </View>
 
       {/* Vendor List Section */}
       <ScrollView className="flex-1 p-4">
-        {categories.map((category) => (
+        {categories.filter(c => c !== 'Todas las categorias').map((category) => (
           vendorsByCategory[category]?.length > 0 && (
             <View key={category} className="mb-6">
               <Text className="text-2xl font-bold mb-4">{category}</Text>
@@ -193,6 +213,20 @@ export default function AllVendorsScreen() {
           )
         ))}
       </ScrollView>
+      <FilterSheet
+        ref={filterSheetRef}
+        categories={categories}
+        selectedCategory={selectedCategory}
+        onSelectCategory={setSelectedCategory}
+        onClear={() => setSelectedCategory('Todas las categorias')}
+        onApply={() => {}}
+      />
+      <SearchOrderSheet
+        ref={orderSheetRef}
+        selectedOrder={selectedOrder}
+        onSelectOrder={setSelectedOrder}
+        onApply={() => {}}
+      />
     </View>
   );
 }

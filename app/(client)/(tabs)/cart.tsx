@@ -63,6 +63,11 @@ export default function CartScreen() {
     removeSalonItem(index);
   };
 
+  const handlePayment = (cartType: 'regular' | 'salon') => {
+    console.log(`Processing ${cartType} payment...`);
+    // Here you can add your payment logic based on the cart type
+  };
+
   return (
     <>
       <Stack.Screen
@@ -86,61 +91,54 @@ export default function CartScreen() {
             {parsedAddress.address || ""}
           </Text>
         </View>
-        {cartItems.length > 0 && (
-          <CartCard
-            providerName="Sabores de Santa Marta"
-            providerImage="https://picsum.photos/200"
-            distance="1.2Km"
-            items={cartItems}
-            subtotal={subtotal}
-            serviceCharge={serviceCharge}
-            deliveryFee={deliveryFee}
-            total={total}
-            onQuantityChange={handleQuantityChange}
-            onDelete={handleDelete}
-            onPayPress={() => {
-              // Handle payment logic here :v
-              console.log("Processing payment...");
-            }}
-          />
-        )}
-
-        {cartItems.length > 0 && salonItems.length > 0 && (
-          <View className="h-4" />
-        )}
-
-        {salonItems.length > 0 && (
-          <CartCard
-            providerName="Estilo Caribe Salón"
-            providerImage="https://picsum.photos/201"
-            distance="0.8Km"
-            items={salonItems}
-            subtotal={salonSubtotal}
-            serviceCharge={salonServiceCharge}
-            deliveryFee={salonDeliveryFee}
-            total={salonTotal}
-            onQuantityChange={handleSalonQuantityChange}
-            onDelete={handleSalonDelete}
-            onPayPress={() => {
-              console.log("Processing salon payment...");
-            }}
-          />
-        )}
-
-        {cartItems.length === 0 && salonItems.length === 0 && (
-          <View className="items-center justify-center py-10">
-            <Text className="text-xl text-gray-500 mb-6">
-              Tu carrito está vacío
-            </Text>
-            <Button
-              className="bg-yellow-400 rounded-full px-8"
-              onPress={() => router.push("/home")}
-            >
-              <Text className="text-black font-bold">Explorar productos</Text>
-            </Button>
-          </View>
-        )}
-      </ScrollView>
+      {cartItems.length > 0 && (
+        <CartCard
+          providerName="Sabores de Santa Marta"
+          providerImage="https://picsum.photos/200"
+          distance="1.2Km"
+          items={cartItems}
+          subtotal={subtotal}
+          serviceCharge={serviceCharge}
+          deliveryFee={deliveryFee}
+          total={total}
+          onQuantityChange={handleQuantityChange}
+          onDelete={handleDelete}
+          onPayPress={() => handlePayment('regular')}
+        />
+      )}
+      
+      {cartItems.length > 0 && salonItems.length > 0 && <View className="h-4" />}
+      
+      {salonItems.length > 0 && (
+        <CartCard
+          providerName="Estilo Caribe Salón"
+          providerImage="https://picsum.photos/201"
+          distance="0.8Km"
+          items={salonItems}
+          subtotal={salonSubtotal}
+          serviceCharge={salonServiceCharge}
+          deliveryFee={salonDeliveryFee}
+          total={salonTotal}
+          onQuantityChange={handleSalonQuantityChange}
+          onDelete={handleSalonDelete}
+          onPayPress={() => {
+            console.log("Processing salon payment...");
+          }}
+        />
+      )}
+      
+      {cartItems.length === 0 && salonItems.length === 0 && (
+        <View className="items-center justify-center py-10">
+          <Text className="text-xl text-gray-500 mb-6">Tu carrito está vacío</Text>
+          <Button 
+            className="bg-yellow-400 rounded-full px-8"
+            onPress={() => router.push('/home')}
+          >
+            <Text className="text-black font-bold">Explorar productos</Text>
+          </Button>
+        </View>
+      )}
+    </ScrollView>
     </>
   );
 }

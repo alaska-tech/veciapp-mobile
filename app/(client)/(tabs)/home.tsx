@@ -120,7 +120,7 @@ export default function HomeScreen() {
     <View className="flex-1 mt-12">
       <FlatList
         ListHeaderComponent={ListHeader}
-        data={isError ? [] : [...allProducts]}
+        data={!allProducts ? [] : [...allProducts]}
         ListEmptyComponent={isError ? ErrorComponent : null}
         keyExtractor={(item) => item.id}
         numColumns={2}
@@ -143,7 +143,7 @@ export default function HomeScreen() {
               distance={item.distance || ""}
               rating={item.rating}
               category={item.categoryId}
-              imageUrl={item.mainImage || ""}
+              imageUrl={item.logo || ""}
               discount={Number.parseFloat(item.discount)}
               onPress={() => {
                 router.push({

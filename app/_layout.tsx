@@ -20,6 +20,8 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { addJWTInterceptor } from "~/services/axios.interceptor";
 import { apiClient } from "~/services/clients";
 import { useRouter } from "expo-router";
@@ -65,7 +67,9 @@ export default function RootLayout() {
     defaultOptions: { queries: { retry: 2 } },
   });
   const router = useRouter();
+  
   addJWTInterceptor(apiClient);
+  
   React.useEffect(() => {
     async function prepare() {
       try {
@@ -99,25 +103,29 @@ export default function RootLayout() {
   }
 
   return (
-    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <ParametersProvider>
-            <ThemeProvider value={LIGHT_THEME}>
-              <StatusBar style="dark" />
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen
-                  name="index"
-                  options={{
-                    headerShown: false,
-                  }}
-                />
-              </Stack>
-              <PortalHost />
-            </ThemeProvider>
-          </ParametersProvider>
-        </AuthProvider>
-      </QueryClientProvider>
-    </View>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <BottomSheetModalProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <ParametersProvider>
+              <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+                <ThemeProvider value={LIGHT_THEME}>
+                  <StatusBar style="dark" />
+                  <Stack screenOptions={{ headerShown: false }}>
+                    <Stack.Screen
+                      name="index"
+                      options={{
+                        headerShown: false,
+                      }}
+                    />
+                  </Stack>
+                  <PortalHost />
+                </ThemeProvider>
+              </View>
+            </ParametersProvider>
+          </AuthProvider>
+        </QueryClientProvider>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   );
 }
