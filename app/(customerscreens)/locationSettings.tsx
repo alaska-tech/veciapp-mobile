@@ -1,14 +1,8 @@
 import React from "react";
-import {
-  ScrollView,
-  View,
-} from "react-native";
+import { ScrollView, View } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
-import {
-  Plus,
-  Star,
-} from "lucide-react-native";
+import { Plus, Star } from "lucide-react-native";
 import { TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { Stack } from "expo-router";
@@ -71,7 +65,16 @@ export default function CustomerSettingsScreen() {
                     Dirección {index + 1}
                   </Text>
                   <View className="flex-row items-center gap-4">
-                    <View className="border border-gray-200 rounded-lg p-2 mb-2 flex-1">
+                    <TouchableOpacity
+                      className="border border-gray-200 rounded-lg p-2 mb-2 flex-1"
+                      onPress={() => {
+                        router.push(
+                          `/(customerscreens)/showLocation?location=${JSON.stringify(
+                            {...item, index}
+                          )}`
+                        );
+                      }}
+                    >
                       <Text className="text-base">
                         {item.address || "Desconocido"}
                       </Text>
@@ -79,7 +82,7 @@ export default function CustomerSettingsScreen() {
                         <Text className="text-gray-500">Tipo: </Text>
                         <Text>{item.alias}</Text>
                       </View>
-                    </View>
+                    </TouchableOpacity>
                     <Button
                       style={{ backgroundColor: "transparent" }}
                       disabled={isThisFavorite}

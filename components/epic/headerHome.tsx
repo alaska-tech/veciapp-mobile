@@ -6,9 +6,9 @@ import { Image } from "react-native";
 import { useCartItemsCount } from "~/store/cartStore";
 import useCustomerAction from "~/actions/customer.action";
 import { useAuth } from "../ContextProviders/AuthProvider";
-import { useState, useRef } from 'react';
-import { useRouter } from 'expo-router';
-import LocationSheet, { LocationSheetRef } from './bottomSheetLocation';
+import { useState, useRef } from "react";
+import { useRouter } from "expo-router";
+import LocationSheet, { LocationSheetRef } from "./bottomSheetLocation";
 
 export default function HeaderHome() {
   const [searchText, setSearchText] = useState("");
@@ -27,8 +27,10 @@ export default function HeaderHome() {
       {/* Search Bar and Cart */}
       <View className="mb-4 flex-row items-center">
         <View className="flex-1 mr-3">
-          <TouchableOpacity 
-            onPress={() => router.push('/(customerscreens)/searchResultsScreen')}
+          <TouchableOpacity
+            onPress={() =>
+              router.push("/(customerscreens)/searchResultsScreen")
+            }
             activeOpacity={0.8}
           >
             <View className="flex-row items-center rounded-lg relative">
@@ -42,7 +44,7 @@ export default function HeaderHome() {
               />
               {!searchText && (
                 <View className="absolute left-3 top-3">
-                  <Search size={20} color="#666"/>
+                  <Search size={20} color="#666" />
                 </View>
               )}
             </View>
@@ -65,17 +67,13 @@ export default function HeaderHome() {
       </View>
 
       {/* Location Section */}
-      <TouchableOpacity 
-        onPress={() => locationSheetRef.current?.show()}
+      <TouchableOpacity
+        onPress={() => router.push("/(customerscreens)/locationSettings")}
         className="flex-row items-center"
       >
-        <MapPinIcon size={20} color="#ffffff" fill="#666"/>
-        <Text 
-          className="text-gray-500 text-md pr-1"
-        >
-          Enviar a
-        </Text>
-        <Text 
+        <MapPinIcon size={20} color="#ffffff" fill="#666" />
+        <Text className="text-gray-500 text-md pr-1">Enviar a</Text>
+        <Text
           className="text-gray-500 text-md font-bold flex-1"
           numberOfLines={1}
           ellipsizeMode="tail"
@@ -83,15 +81,6 @@ export default function HeaderHome() {
           {parsedAddress.address || ""}
         </Text>
       </TouchableOpacity>
-
-      <LocationSheet 
-        ref={locationSheetRef}
-        defaultAddress="Calle 123 St 45 # 65 - 123 barrio la esmeralda donde chepito"
-        onSave={(newAddress) => {
-          console.log('New address:', newAddress);
-          // Here you can implement the logic to update the address
-        }}
-      />
     </View>
   );
 }
