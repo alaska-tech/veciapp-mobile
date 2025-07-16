@@ -24,7 +24,7 @@ export default function useCustomerAction() {
     }
   >(
     () => {
-      return async function mutationFn({body}) {
+      return async function mutationFn({ body }) {
         if (!body) {
           console.log("Customer is required");
           throw new Error("body is required");
@@ -52,10 +52,7 @@ export default function useCustomerAction() {
       },
       onSuccess(data, _variables, _context) {
         queryClient.invalidateQueries({
-          queryKey: [
-            QUERY_KEY_CUSTOMER,
-            _variables.body.id,
-          ] as QueryKey,
+          queryKey: [QUERY_KEY_CUSTOMER] as QueryKey,
         });
         /*         message.success({
           content: "Te has logueado correctamente",
@@ -67,20 +64,26 @@ export default function useCustomerAction() {
   const getCustomerDetails = queryEntityById<
     Customer,
     AxiosError<Extract<Response<null>, { status: "Error" }>>
-  >([QUERY_KEY_CUSTOMER] as QueryKey, (id) => {
-    return async function queryFn() {
-      try {
-        console.log("Fetching customer details for ID:", id);
-        const response = await apiClient.get<
-          Extract<Response<Customer>, { status: "Success" }>
-        >(`/customers/get-details/${id}`);
-        console.log(response);
-        return response.data.data;
-      } catch (error) {
-        console.log(JSON.stringify(error, null, 4));
-        throw error;
-      }
-    };
-  });
+  >(
+    [QUERY_KEY_CUSTOMER] as QueryKey,
+    (id) => {
+      return async function queryFn() {
+        try {
+          console.log("Fetching customer details for ID:", id);
+          const response = await apiClient.get<
+            Extract<Response<Customer>, { status: "Success" }>
+          >(`/customers/get-details/${id}`);
+          console.log(response);
+          return response.data.data;
+        } catch (error) {
+          console.log(JSON.stringify(error, null, 4));
+          throw error;
+        }
+      };
+    },
+    {
+      staleTime: Infinity,
+    }
+  );
   return { updateCustomer, fetchCustomerDetailsFunction, getCustomerDetails };
 }

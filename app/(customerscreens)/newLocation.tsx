@@ -98,7 +98,7 @@ export default function App() {
         })
         .then(
           () => {
-            router.dismissTo("/(customerscreens)/customerSettings");
+            router.dismissTo("/(customerscreens)/locationSettings");
           },
           () => {}
         );

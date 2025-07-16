@@ -104,11 +104,11 @@ export default function ProfileScreen() {
           <Button
             className="w-full flex-row items-center justify-between"
             variant="ghost"
-            onPress={() => router.push("/(customerscreens)/customerSettings")}
+            onPress={() => router.push("/(customerscreens)/locationSettings")}
           >
             <View className="flex-row items-center gap-2">
-              <UserCircle className="h-5 w-5 mr-3" color="#000000" />
-              <Text>Perfil</Text>
+              <MapPin className="h-5 w-5 mr-3" color="#000000" />
+              <Text>Direcciones</Text>
             </View>
             <ChevronRight className="h-5 w-5" color="#000000" />
           </Button>
