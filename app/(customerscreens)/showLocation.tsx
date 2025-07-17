@@ -46,6 +46,13 @@ export default function App() {
     if (updateCustomer.isPending) {
       return;
     }
+    if(parsedLocation.isFavorite){
+      Alert.alert(
+        "Error",
+        "No se puede eliminar una dirección favorita."
+      );
+      return
+    }
     if (!getCustomerDetails.data) {
       Alert.alert(
         "Error",
