@@ -6,7 +6,7 @@ export interface FavoriteItem {
   price: number;
   image: string;
   discount?: number;
-  veciproveedor: string;
+  branchId: string;
 }
 
 interface FavoriteState {

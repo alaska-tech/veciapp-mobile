@@ -36,10 +36,10 @@ export const useProductAction = () => {
     return async function queryFn() {
       try {
         const response = await apiClient.get<
-          Extract<Response<Product>, { status: "Success" }>
+          Extract<Response<{ data: Product }>, { status: "Success" }>
         >(`/productservice/get-details/${id}`);
         console.log(response);
-        return response.data.data;
+        return response.data.data.data;
       } catch (error) {
         throw error;
       }
