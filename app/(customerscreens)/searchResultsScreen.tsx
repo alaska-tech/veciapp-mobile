@@ -3,7 +3,7 @@ import { View, TouchableOpacity, FlatList, ActivityIndicator, Keyboard } from 'r
 import { Text } from '~/components/ui/text';
 import { Input } from '~/components/ui/input';
 import { Search } from 'lucide-react-native';
-import { useRouter, Stack } from 'expo-router';
+import { useRouter, Stack, useLocalSearchParams } from 'expo-router';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '~/components/ui/tabs';
 import FilterSheet, { FilterSheetRef } from '~/components/epic/bottomSheetFilter';
 import SearchOrderSheet, { SearchOrderSheetRef } from '~/components/epic/bottomSheetSearch';
@@ -82,11 +82,22 @@ export default function SearchResultsScreen() {
   const filterSheetRef = useRef<FilterSheetRef>(null);
   const orderSheetRef = useRef<SearchOrderSheetRef>(null);
 
+  // Recibir parámetro de categoría
+  const params = useLocalSearchParams();
+  const initialCategory = typeof params.category === 'string' ? params.category : 'Todas las categorias';
+
   // Estados de filtros y búsqueda
   const [searchText, setSearchText] = useState('');
   const [selectedTab, setSelectedTab] = useState('productos');
-  const [selectedCategory, setSelectedCategory] = useState('Todas las categorias');
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [selectedOrder, setSelectedOrder] = useState('Cerca de mi');
+
+  // Sincronizar si el usuario navega varias veces desde diferentes categorías
+  React.useEffect(() => {
+    if (typeof params.category === 'string') {
+      setSelectedCategory(params.category);
+    }
+  }, [params.category]);
 
   // Lógica de productos (puedes adaptar para servicios si tienes endpoint)
   const actions = useProductAction();
