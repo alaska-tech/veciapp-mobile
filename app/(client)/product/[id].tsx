@@ -49,20 +49,24 @@ function QuantityControl({
 }
 
 const Index = () => {
+  // TODOS los hooks deben ir aquí arriba
   const { id } = useLocalSearchParams();
   const actions = useProductAction();
   const productQuery = actions.getProductById(id as string);
   const [quantity, setQuantity] = useState(1);
   const [showFavoriteDialog, setShowFavoriteDialog] = useState(false);
+  const [favoriteAction, setFavoriteAction] = useState<'add' | 'remove'>('add');
   const addCartItem = useCartStore((state) => state.addCartItem);
   const cartItems = useCartStore((state) => state.cartItems);
   const router = useRouter();
   const addFavorite = useFavoriteStore((state) => state.addFavorite);
+  const removeFavorite = useFavoriteStore((state) => state.removeFavorite);
   const favorites = useFavoriteStore((state) => state.favorites);
   const branchActions = useBranchAction();
   const { data: branchData } = branchActions.getBranchById(
     productQuery.data?.branchId
   );
+
   if (productQuery.isLoading) {
     return <Text>Loading...</Text>;
   }
@@ -109,21 +113,26 @@ const Index = () => {
     router.push("/(client)/(tabs)/cart");
   };
 
-  // Handler para agregar a favoritos
+  // Handler para alternar favorito
   const handleAddFavorite = () => {
-    console.log("Intentando agregar a favoritos:");
     if (!productQuery.data || (!productId && !name)) return;
-    const newItem = {
-      id: productId,
-      name: name,
-      price: Number.parseFloat(finalPrice),
-      image: logo,
-      discount: Number.parseFloat(discount),
-      branchId: branchData?.id,
-    } as FavoriteItem;
-    console.log("Agregando a favoritos:", newItem);
-    addFavorite(newItem);
-    setShowFavoriteDialog(true);
+    if (isFavorite) {
+      removeFavorite(productId || name);
+      setFavoriteAction('remove');
+      setShowFavoriteDialog(true);
+    } else {
+      const newItem = {
+        id: productId,
+        name: name,
+        price: Number.parseFloat(finalPrice),
+        image: logo,
+        discount: Number.parseFloat(discount),
+        branchId: branchData?.id,
+      } as FavoriteItem;
+      addFavorite(newItem);
+      setFavoriteAction('add');
+      setShowFavoriteDialog(true);
+    }
   };
 
   return (
@@ -145,7 +154,7 @@ const Index = () => {
                 className="bg-white/80 rounded-full p-2 mr-2"
                 onPress={handleAddFavorite}
               >
-                <Heart size={22} color={isFavorite ? "red" : "#222"} />
+                <Heart size={22} color={isFavorite ? "red" : "#222"} fill={isFavorite ? "red" : "none"} />
               </TouchableOpacity>
               <TouchableOpacity className="bg-white/80 rounded-full p-2 mr-2">
                 <Share2 size={22} color="#222" />
@@ -235,6 +244,7 @@ const Index = () => {
           open={showFavoriteDialog}
           onOpenChange={setShowFavoriteDialog}
           productName={name}
+          action={favoriteAction}
         />
       </View>
     </SafeAreaView>
