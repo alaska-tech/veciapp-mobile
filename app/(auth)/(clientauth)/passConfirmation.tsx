@@ -24,7 +24,7 @@ export default function PassConfirmationScreen() {
         </Text>
 
         <View className="w-full gap-6">
-          <View>
+          {/* <View>
             <Text className="text-sm text-muted-foreground text-center mb-4">
               ¿No te ha llegado aún?
             </Text>
@@ -35,7 +35,7 @@ export default function PassConfirmationScreen() {
               Reenviar correo
             </Text>
           </View>
-
+ */}
           <Text 
             className="text-muted-foreground text-center"
           >

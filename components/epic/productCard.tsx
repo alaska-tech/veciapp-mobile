@@ -54,22 +54,26 @@ export default function ProductCard({
               {title}
             </Text>
 
-            {rating !== undefined && (
+            {!!rating ? (
               <View className="flex-row items-center justify-center gap-1">
                 <Star size={18} color="#666666" fill="#FFFF00" />
                 <Text className="text-md text-gray-500" numberOfLines={1}>
                   {rating}
                 </Text>
               </View>
+            ) : (
+              <View></View>
             )}
 
-            {distance && (
+            {!!distance ? (
               <View className="flex-row items-center gap-1">
                 <MapPin size={18} color="#ffffff" fill="#666" />
                 <Text className="text-md text-gray-500" numberOfLines={1}>
                   {distance} de distancia
                 </Text>
               </View>
+            ) : (
+              <View></View>
             )}
 
             <Text
@@ -83,12 +87,14 @@ export default function ProductCard({
               <Text className="text-2xl font-bold">
                 ${price.toLocaleString()}
               </Text>
-              {discount && (
+              {!!discount ? (
                 <Badge variant="destructive" className="px-1 py-0.5">
                   <Text className="text-xs text-yellow-200">
                     {discount}% off
                   </Text>
                 </Badge>
+              ) : (
+                <View></View>
               )}
             </View>
           </View>

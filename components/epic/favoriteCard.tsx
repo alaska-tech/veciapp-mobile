@@ -1,9 +1,9 @@
-import { View, Image, ImageSourcePropType } from 'react-native';
-import React from 'react';
+import { View, Image, ImageSourcePropType } from "react-native";
+import React from "react";
 import { Card } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
-import { Trash2 } from 'lucide-react-native';
+import { Trash2 } from "lucide-react-native";
 
 interface FavoriteCardProps {
   name: string;
@@ -11,7 +11,7 @@ interface FavoriteCardProps {
   image: string | ImageSourcePropType;
   discount?: number;
   onDelete?: () => void;
-  onWantIt?: () => void;  // Add new prop for the "Lo quiero" button
+  onWantIt?: () => void; // Add new prop for the "Lo quiero" button
   veciproveedor: string; // Nueva prop para el nombre del veciproveedor
 }
 
@@ -22,7 +22,7 @@ export default function FavoriteCard({
   discount,
   onDelete,
   onWantIt,
-  veciproveedor
+  veciproveedor,
 }: FavoriteCardProps) {
   const formatPrice = (price: number) => {
     return price.toLocaleString();
@@ -35,26 +35,34 @@ export default function FavoriteCard({
       <View className="p-4">
         <View className="flex-row items-center">
           <Image
-            source={typeof image === 'string' ? { uri: image } : image}
+            source={typeof image === "string" ? { uri: image } : image}
             className="w-20 h-20 rounded-full"
           />
           <View className="flex-1 ml-4 gap-2">
-            <Text className="text-lg font-semibold" numberOfLines={2}>{name}</Text>
+            <Text className="text-lg font-semibold" numberOfLines={2}>
+              {name}
+            </Text>
             <View className="flex-row items-center mt-1">
               <Text className="text-gray-500 font-semibold">Veci: </Text>
-              <Text className="text-base text-black font-medium">{veciproveedor}</Text>
+              <Text className="text-base text-black font-medium">
+                {veciproveedor}
+              </Text>
             </View>
             <View className="flex-row items-center mt-2">
-              <Text className="text-xl font-bold">${formatPrice(discountedPrice)}</Text>
-              {discount && (
+              <Text className="text-xl font-bold">
+                ${formatPrice(discountedPrice)}
+              </Text>
+              {discount ? (
                 <Text className="ml-2 text-gray-500">
                   Descuento {discount}%
                 </Text>
+              ) : (
+                <></>
               )}
             </View>
           </View>
         </View>
-        
+
         {/* Buttons row */}
         <View className="flex-row items-center justify-between mt-4">
           <Button
@@ -64,7 +72,7 @@ export default function FavoriteCard({
           >
             <Text className="text-black font-bold text-xl">¡Lo quiero!</Text>
           </Button>
-          
+
           <Button
             variant="ghost"
             size="icon"

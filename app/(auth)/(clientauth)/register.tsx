@@ -1,71 +1,94 @@
-import { View, Image, ScrollView, Linking } from 'react-native';
-import { Button } from '~/components/ui/button';
-import { Text } from '~/components/ui/text';
-import { Input } from '~/components/ui/input';
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { validateEmail, validateName, validatePassword } from '~/lib/validations';
-import { TouchableOpacity } from 'react-native';
-import { Eye, EyeOff } from 'lucide-react-native';
+import { View, Image, ScrollView, Linking } from "react-native";
+import { Button } from "~/components/ui/button";
+import { Text } from "~/components/ui/text";
+import { Input } from "~/components/ui/input";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import {
+  validateEmail,
+  validateName,
+  validatePassword,
+} from "~/lib/validations";
+import { TouchableOpacity } from "react-native";
+import { Eye, EyeOff } from "lucide-react-native";
+import useAuthAction from "~/actions/auth.action";
+import { Loader } from "~/components/ui/loader";
 
 export default function RegisterScreen() {
   const router = useRouter();
+  const actions = useAuthAction();
+  const register = actions.register();
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const [errors, setErrors] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   // Add state for password visibility
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
+    useState(false);
 
   const validateForm = (): boolean => {
     const newErrors = {
-      name: validateName(formData.name) || '',
-      email: validateEmail(formData.email) || '',
-      password: validatePassword(formData.password) || '',
-      confirmPassword: formData.password !== formData.confirmPassword 
-        ? 'Las contraseñas no coinciden' 
-        : '',
+      name: validateName(formData.name) || "",
+      email: validateEmail(formData.email) || "",
+      password: validatePassword(formData.password) || "",
+      confirmPassword:
+        formData.password !== formData.confirmPassword
+          ? "Las contraseñas no coinciden"
+          : "",
     };
 
     setErrors(newErrors);
-    return !Object.values(newErrors).some(error => error !== '');
+    return !Object.values(newErrors).some((error) => error !== "");
   };
 
   const handleRegister = () => {
     if (validateForm()) {
       // TODO: Implement registration logic
-      router.push('/passConfirmation');
+      register
+        .mutateAsync({
+          body: {
+            fullName: formData.name,
+            email: formData.email,
+            password: formData.password,
+          },
+        })
+        .then(
+          () => {
+            router.push("/passConfirmation");
+          },
+          () => {}
+        );
     }
   };
 
   const openTerms = () => {
-    Linking.openURL('https://google.com');
+    Linking.openURL("https://google.com");
   };
 
   const openPrivacy = () => {
-    Linking.openURL('https://google.com');
+    Linking.openURL("https://google.com");
   };
 
   return (
     <ScrollView className="flex-1 bg-background">
       <View className="flex-1 items-center justify-center p-4 px-12 min-h-screen">
         <Image
-          source={require('../../../assets/images/register.png')}
+          source={require("../../../assets/images/register.png")}
           className="w-80 h-80"
           resizeMode="contain"
         />
-        
+
         <Text className="text-2xl font-bold mb-2 text-center">
           Crear una nueva cuenta
         </Text>
@@ -76,7 +99,7 @@ export default function RegisterScreen() {
             value={formData.name}
             onChangeText={(text) => {
               setFormData({ ...formData, name: text });
-              setErrors({ ...errors, name: '' });
+              setErrors({ ...errors, name: "" });
             }}
           />
           {errors.name ? (
@@ -88,7 +111,7 @@ export default function RegisterScreen() {
             value={formData.email}
             onChangeText={(text) => {
               setFormData({ ...formData, email: text });
-              setErrors({ ...errors, email: '' });
+              setErrors({ ...errors, email: "" });
             }}
             keyboardType="email-address"
             autoCapitalize="none"
@@ -104,7 +127,7 @@ export default function RegisterScreen() {
               value={formData.password}
               onChangeText={(text) => {
                 setFormData({ ...formData, password: text });
-                setErrors({ ...errors, password: '' });
+                setErrors({ ...errors, password: "" });
               }}
               secureTextEntry={!isPasswordVisible}
             />
@@ -130,13 +153,15 @@ export default function RegisterScreen() {
               value={formData.confirmPassword}
               onChangeText={(text) => {
                 setFormData({ ...formData, confirmPassword: text });
-                setErrors({ ...errors, confirmPassword: '' });
+                setErrors({ ...errors, confirmPassword: "" });
               }}
               secureTextEntry={!isConfirmPasswordVisible}
             />
             <TouchableOpacity
               className="absolute right-3 top-0 bottom-0 justify-center"
-              onPress={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
+              onPress={() =>
+                setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
+              }
             >
               {isConfirmPasswordVisible ? (
                 <EyeOff size={20} color="#666" />
@@ -146,35 +171,49 @@ export default function RegisterScreen() {
             </TouchableOpacity>
           </View>
           {errors.confirmPassword ? (
-            <Text className="text-red-500 text-xs">{errors.confirmPassword}</Text>
+            <Text className="text-red-500 text-xs">
+              {errors.confirmPassword}
+            </Text>
           ) : null}
 
           <Button
             onPress={handleRegister}
             className="w-full bg-yellow-400 rounded-full"
+            disabled={register.isPending}
           >
-            <Text className="text-black font-bold text-md">Registrarse</Text>
+            {register.isPending ? (
+              <Loader />
+            ) : (
+              <Text className="text-black font-bold text-md">Registrarse</Text>
+            )}
           </Button>
 
           <Text className="text-center text-muted-foreground text-sm">
-            ¿Ya tienes una cuenta?{' '}
-            <Text 
+            ¿Ya tienes una cuenta?{" "}
+            <Text
               className="text-primary underline font-bold"
-              onPress={() => router.push('/')}
+              onPress={() => router.push("/")}
             >
               Iniciar sesión
             </Text>
           </Text>
 
           <Text className="text-xs text-center text-muted-foreground mt-16">
-          Al seguir, aceptas nuestros{'\n'}
-          <Text className="text-primary font-semibold py-1 leading-6" onPress={openTerms}>
-            Términos de Servicio
-          </Text> y{' '}
-          <Text className="text-primary font-semibold py-1 leading-6" onPress={openPrivacy}>
-            Política de Privacidad
+            Al seguir, aceptas nuestros{"\n"}
+            <Text
+              className="text-primary font-semibold py-1 leading-6"
+              onPress={openTerms}
+            >
+              Términos de Servicio
+            </Text>{" "}
+            y{" "}
+            <Text
+              className="text-primary font-semibold py-1 leading-6"
+              onPress={openPrivacy}
+            >
+              Política de Privacidad
+            </Text>
           </Text>
-        </Text>
         </View>
       </View>
     </ScrollView>

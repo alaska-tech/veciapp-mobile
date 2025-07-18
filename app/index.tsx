@@ -62,8 +62,8 @@ export default function LoginScreen() {
           password: password,
         },
         /* body: {
-          email: "eldersarmiento1@gmail.com",
-          password: "123456",
+          email: "jangulo.dev@gmail.com",
+          password: "Qa151523",
         }, */
       });
 
@@ -102,7 +102,7 @@ export default function LoginScreen() {
       console.error("Login error:", error);
       Alert.alert(
         "Error",
-        "Ha ocurrido un error al iniciar sesión. Por favor intenta nuevamente."
+        "El correo o contraseña son incorrectos. Por favor intenta nuevamente."
       );
     } finally {
       setIsLoading(false);

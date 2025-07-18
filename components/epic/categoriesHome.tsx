@@ -6,7 +6,7 @@ import { ChevronRight } from 'lucide-react-native';
 const categories = [
   {
     id: 1,
-    title: 'Belleza y\nEstética',
+    title: 'Belleza',
     image: require('../../assets/images/beauty.png'),
     bgColor: 'bg-pink-100',
     textColor: 'text-pink-600'
@@ -24,13 +24,6 @@ const categories = [
     image: require('../../assets/images/food.png'),
     bgColor: 'bg-gray-100',
     textColor: 'text-gray-600'
-  },
-  {
-    id: 4,
-    title: 'Servicios y\nMantenimiento',
-    image: require('../../assets/images/services.png'),
-    bgColor: 'bg-green-50',
-    textColor: 'text-green-600'
   },
 ];
 
@@ -51,6 +44,7 @@ export default function CategoriesHome() {
         {categories.map((category, index) => (
           <TouchableOpacity
             key={category.id}
+            onPress={() => router.push({ pathname: '/(customerscreens)/searchResultsScreen', params: { category: category.title } })}
             className={`${category.bgColor} rounded-3xl p-3 w-36 h-36 shadow relative mt-8 ${
               index !== categories.length - 1 ? 'mr-4' : ''
             }`}

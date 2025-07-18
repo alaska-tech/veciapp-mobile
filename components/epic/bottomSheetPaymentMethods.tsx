@@ -4,6 +4,7 @@ import { BottomSheetModal, BottomSheetView, BottomSheetBackdrop, BottomSheetBack
 import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
 import { CreditCard, HandshakeIcon } from "lucide-react-native";
+import { useRouter } from 'expo-router';
 
 export type PaymentMethodSheetRef = {
   show: () => void;
@@ -18,6 +19,7 @@ type PaymentMethodSheetProps = {
 const PaymentMethodSheet = forwardRef<PaymentMethodSheetRef, PaymentMethodSheetProps>(({ onSelectMethod, total }, ref) => {
   const sheetRef = useRef<BottomSheetModal>(null);
   const [selectedMethod, setSelectedMethod] = React.useState<'online' | 'cash' | null>(null);
+  const router = useRouter();
 
   useImperativeHandle(ref, () => ({
     show: () => sheetRef.current?.present(),
@@ -37,10 +39,14 @@ const PaymentMethodSheet = forwardRef<PaymentMethodSheetRef, PaymentMethodSheetP
     setSelectedMethod(method);
   };
 
-  const handleApply = () => {
+  const handleApply = async () => {
     if (selectedMethod) {
       onSelectMethod?.(selectedMethod);
       sheetRef.current?.forceClose();
+      router.push('/(customerscreens)/loadingScreen');
+      setTimeout(() => {
+        router.replace('/(customerscreens)/paymentResultScreen');
+      }, 2000);
     }
   };
 
@@ -83,7 +89,7 @@ const PaymentMethodSheet = forwardRef<PaymentMethodSheetRef, PaymentMethodSheetP
           size="lg"
         >
           <Text className="text-black text-center font-semibold text-lg">
-            Aplicar
+            Pagar
           </Text>
         </Button>
       </BottomSheetView>
