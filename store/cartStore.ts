@@ -29,35 +29,9 @@ interface CartState {
 
 export const useCartStore = create<CartState>((set, get) => ({
   // Estado inicial
-  cartItems: [
-    {
-      name: "Arroz con Coco Tradicional (Porción)",
-      price: 15000,
-      image: "https://picsum.photos/200",
-      quantity: 1,
-    },
-    {
-      name: "Tostadas de Pescado Frito",
-      price: 22000,
-      image: "https://picsum.photos/200",
-      quantity: 1,
-    },
-    {
-      name: "Ensalada de Frutas",
-      price: 18000,
-      image: "https://picsum.photos/200",
-      quantity: 1,
-    },
-  ],
+  cartItems: [],
   
-  salonItems: [
-    {
-      name: "Corte y Peinado Profesional",
-      price: 45000,
-      image: "https://picsum.photos/200",
-      quantity: 1,
-    },
-  ],
+  salonItems: [],
   
   // Acciones para comidas
   addCartItem: (item) => set((state) => ({

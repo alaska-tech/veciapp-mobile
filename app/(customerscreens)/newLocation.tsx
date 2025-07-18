@@ -17,6 +17,7 @@ import { Loader } from "~/components/ui/loader";
 import { useAuth } from "~/components/ContextProviders/AuthProvider";
 import { Alert } from "react-native";
 import { useRouter } from "expo-router";
+import { Stack } from "expo-router";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -128,84 +129,96 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.markerFixed}>
-        <Image
-          source={require("../../assets/images/location-marker.png")}
-          style={styles.marker}
-        />
-      </View>
-      <View
-        style={{
-          position: "absolute",
-          bottom: 10,
-          left: 10,
-          zIndex: 1000,
-          width: "95%",
+    <>
+      <Stack.Screen
+        options={{
+          headerShadowVisible: false,
+          headerTitle: "Nueva dirección",
+          headerTitleAlign: "center",
+          headerShown: true,
+          headerBackTitle: "Volver",
+          headerBackVisible: true,
         }}
-      >
-        <View className="border border-gray-200 rounded-lg p-1 mb-2 bg-white w-full">
-          <Textarea
-            value={address}
-            onChangeText={(text) => {
-              setAdrressError(false);
-              setAddress(text);
-            }}
-            className={
-              adrressError
-                ? "text-base w-full border border-red-500"
-                : "text-base w-full"
-            }
-            placeholder="Dirección"
+      />
+      <View style={styles.container}>
+        <View style={styles.markerFixed}>
+          <Image
+            source={require("../../assets/images/location-marker.png")}
+            style={styles.marker}
           />
         </View>
-        <View className="flex-row justify-between border border-gray-200 rounded-lg p-1 mb-2 bg-white w-full">
-          {["Casa", "Trabajo", "Pareja"].map((option) => (
-            <Button
-              key={option}
-              className={`flex-1 mx-1 py-4 rounded-lg ${
-                nickname === option
-                  ? "bg-[#FFD100]"
-                  : "bg-white border border-gray-300"
-              }`}
-              onPress={() => setNickname(option)}
-              variant="ghost"
-            >
-              <Text
-                className={`text-base text-center ${
-                  nickname === option ? "text-black font-bold" : "text-gray-700"
-                }`}
-              >
-                {option}
-              </Text>
-            </Button>
-          ))}
-        </View>
-        <Button
-          className="w-full bg-[#FFD100] rounded-full py-6 mb-6"
-          onPress={handleSubmit}
+        <View
+          style={{
+            position: "absolute",
+            bottom: 10,
+            left: 10,
+            zIndex: 1000,
+            width: "95%",
+          }}
         >
-          {updateCustomer.isPending ? (
-            <Loader />
-          ) : (
-            <Text className="text-black text-base font-medium">
-              Guardar Cambios
-            </Text>
-          )}
-        </Button>
+          <View className="border border-gray-200 rounded-lg p-1 mb-2 bg-white w-full">
+            <Textarea
+              value={address}
+              onChangeText={(text) => {
+                setAdrressError(false);
+                setAddress(text);
+              }}
+              className={
+                adrressError
+                  ? "text-base w-full border border-red-500"
+                  : "text-base w-full"
+              }
+              placeholder="Dirección"
+            />
+          </View>
+          <View className="flex-row justify-between border border-gray-200 rounded-lg p-1 mb-2 bg-white w-full">
+            {["Casa", "Trabajo", "Pareja"].map((option) => (
+              <Button
+                key={option}
+                className={`flex-1 mx-1 py-4 rounded-lg ${
+                  nickname === option
+                    ? "bg-[#FFD100]"
+                    : "bg-white border border-gray-300"
+                }`}
+                onPress={() => setNickname(option)}
+                variant="ghost"
+              >
+                <Text
+                  className={`text-base text-center ${
+                    nickname === option ? "text-black font-bold" : "text-gray-700"
+                  }`}
+                >
+                  {option}
+                </Text>
+              </Button>
+            ))}
+          </View>
+          <Button
+            className="w-full bg-[#FFD100] rounded-full py-6 mb-6"
+            onPress={handleSubmit}
+          >
+            {updateCustomer.isPending ? (
+              <Loader />
+            ) : (
+              <Text className="text-black text-base font-medium">
+                Guardar Cambios
+              </Text>
+            )}
+          </Button>
+        </View>
+        <MapView
+          initialRegion={region}
+          style={styles.map}
+          onRegionChange={(newRegion) => {
+            console.log("Region changed:", newRegion);
+            setMarkerPosition({
+              latitude: newRegion.latitude,
+              longitude: newRegion.longitude,
+            });
+          }}
+        ></MapView>
       </View>
-      <MapView
-        initialRegion={region}
-        style={styles.map}
-        onRegionChange={(newRegion) => {
-          console.log("Region changed:", newRegion);
-          setMarkerPosition({
-            latitude: newRegion.latitude,
-            longitude: newRegion.longitude,
-          });
-        }}
-      ></MapView>
-    </View>
+    </>
   );
 }
 
