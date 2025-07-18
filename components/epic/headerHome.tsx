@@ -78,7 +78,7 @@ export default function HeaderHome() {
           numberOfLines={1}
           ellipsizeMode="tail"
         >
-          {parsedAddress.address || ""}
+          {parsedAddress?.address || ""}
         </Text>
       </TouchableOpacity>
     </View>

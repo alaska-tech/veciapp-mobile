@@ -88,7 +88,7 @@ export default function CartScreen() {
             numberOfLines={1}
             ellipsizeMode="tail"
           >
-            {parsedAddress.address || ""}
+            {parsedAddress?.address || ""}
           </Text>
         </View>
       {cartItems.length > 0 && (

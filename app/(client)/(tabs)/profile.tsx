@@ -64,7 +64,7 @@ export default function ProfileScreen() {
                 <View className="flex-row items-center gap-1 mt-0.5">
                   <MapPin size={14} color="#ef4444" />
                   <Text className="text-muted-foreground">
-                    {parsedAddress.address || ""}
+                    {parsedAddress?.address || ""}
                   </Text>
                 </View>
               </View>
