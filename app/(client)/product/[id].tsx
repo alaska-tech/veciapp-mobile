@@ -13,6 +13,7 @@ import { FavoriteItem, useFavoriteStore } from "~/store/favoriteStore";
 import { Product } from "~/constants/models";
 import { useVendorAction } from "~/actions/vendor.action";
 import { useBranchAction } from "~/actions/branch.action";
+import { FavoriteConfirmationDialog } from "~/components/epic/favoriteConfirmationDialog";
 
 // Componente reutilizable para sumar/restar cantidad
 function QuantityControl({
@@ -52,6 +53,7 @@ const Index = () => {
   const actions = useProductAction();
   const productQuery = actions.getProductById(id as string);
   const [quantity, setQuantity] = useState(1);
+  const [showFavoriteDialog, setShowFavoriteDialog] = useState(false);
   const addCartItem = useCartStore((state) => state.addCartItem);
   const cartItems = useCartStore((state) => state.cartItems);
   const router = useRouter();
@@ -121,6 +123,7 @@ const Index = () => {
     } as FavoriteItem;
     console.log("Agregando a favoritos:", newItem);
     addFavorite(newItem);
+    setShowFavoriteDialog(true);
   };
 
   return (
@@ -228,6 +231,11 @@ const Index = () => {
             <Text className="text-black font-bold text-xl">¡Lo quiero!</Text>
           </Button>
         </View>
+        <FavoriteConfirmationDialog
+          open={showFavoriteDialog}
+          onOpenChange={setShowFavoriteDialog}
+          productName={name}
+        />
       </View>
     </SafeAreaView>
   );
