@@ -96,8 +96,8 @@ export default function RootLayout() {
       await SplashScreen.hideAsync();
     }
   }, [isColorSchemeLoaded]);
-  useOnlineManager();
-  useAppState(onAppStateChange);
+  //useOnlineManager();
+  //useAppState(onAppStateChange);
   if (!isColorSchemeLoaded) {
     return null;
   }
