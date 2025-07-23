@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Image, Linking, TouchableOpacity, Alert } from "react-native";
 import { Eye, EyeOff } from "lucide-react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
@@ -16,6 +16,7 @@ import {
   setUserInfo,
 } from "~/actions/localStorage.actions";
 import { refreshParameters } from "~/actions/parameter.action";
+import { useAuth } from "~/components/ContextProviders/AuthProvider";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -30,6 +31,8 @@ export default function LoginScreen() {
     password: "",
   });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const { refreshAuthInfo } = useAuth();
 
   const validateLogin = (): boolean => {
     if (!showPassword) {
@@ -76,28 +79,7 @@ export default function LoginScreen() {
       await setUserInfo(user);
       await setToken(token);
       await refreshParameters();
-      switch (user.role) {
-        case "customer":
-          router.replace("/(client)/(tabs)/home");
-          break;
-        case "vendor":
-          router.replace("/(vendor)/vendorHome");
-          break;
-        default:
-          Alert.alert(
-            "Error",
-            "No tienes permisos para acceder a esta sección",
-            [
-              {
-                text: "OK",
-                onPress: async () => {
-                  await clearAllInfoFromLocalStorage();
-                  router.replace("/");
-                },
-              },
-            ]
-          );
-      }
+      await refreshAuthInfo();
     } catch (error) {
       console.error("Login error:", error);
       Alert.alert(

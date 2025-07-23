@@ -29,6 +29,9 @@ import { AuthProvider } from "~/components/ContextProviders/AuthProvider";
 import { ParametersProvider } from "~/components/ContextProviders/ParametersProvider";
 import { useAppState } from "~/hooks/useAppState";
 import { useOnlineManager } from "~/hooks/useOnlineManager";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -59,17 +62,18 @@ function onAppStateChange(status: AppStateStatus) {
   }
 }
 
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: 2, gcTime: 1000 * 60 * 60 * 24 } },
+});
+const asyncStoragePersister = createAsyncStoragePersister({
+  storage: AsyncStorage,
+});
 export default function RootLayout() {
-  const hasMounted = React.useRef(false);
   const { colorScheme, isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
-  const queryClient = new QueryClient({
-    defaultOptions: { queries: { retry: 2 } },
-  });
-  const router = useRouter();
-  
+
   addJWTInterceptor(apiClient);
-  
+
   React.useEffect(() => {
     async function prepare() {
       try {
@@ -103,9 +107,12 @@ export default function RootLayout() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <BottomSheetModalProvider>
-        <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{ persister: asyncStoragePersister }}
+    >
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <BottomSheetModalProvider>
           <AuthProvider>
             <ParametersProvider>
               <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
@@ -124,8 +131,8 @@ export default function RootLayout() {
               </View>
             </ParametersProvider>
           </AuthProvider>
-        </QueryClientProvider>
-      </BottomSheetModalProvider>
-    </GestureHandlerRootView>
+        </BottomSheetModalProvider>
+      </GestureHandlerRootView>
+    </PersistQueryClientProvider>
   );
 }
