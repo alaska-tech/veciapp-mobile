@@ -52,8 +52,8 @@ export default function App() {
         setRegion({
           latitude,
           longitude,
-          latitudeDelta: 0.005, // Más zoom que antes
-          longitudeDelta: 0.005,
+          latitudeDelta: 0.006991628812640371, // Más zoom que antes
+          longitudeDelta: 0.0033819302916526794,
         });
       } catch (error) {
         setErrorMsg("Error getting location");
@@ -87,7 +87,6 @@ export default function App() {
     };
     const { email, state, id, ...rest } = getCustomerDetails.data;
     const newCustomer = {
-      ...rest,
       id: getCustomerDetails.data.id,
       locations: [newAddress, ...(getCustomerDetails.data.locations || [])],
     };
@@ -141,16 +140,10 @@ export default function App() {
         }}
       />
       <View style={styles.container}>
-        <View style={styles.markerFixed}>
-          <Image
-            source={require("../../assets/images/location-marker.png")}
-            style={styles.marker}
-          />
-        </View>
         <View
           style={{
             position: "absolute",
-            bottom: 10,
+            bottom: 80,
             left: 10,
             zIndex: 1000,
             width: "95%",
@@ -185,7 +178,9 @@ export default function App() {
               >
                 <Text
                   className={`text-base text-center ${
-                    nickname === option ? "text-black font-bold" : "text-gray-700"
+                    nickname === option
+                      ? "text-black font-bold"
+                      : "text-gray-700"
                   }`}
                 >
                   {option}
@@ -206,17 +201,25 @@ export default function App() {
             )}
           </Button>
         </View>
-        <MapView
-          initialRegion={region}
-          style={styles.map}
-          onRegionChange={(newRegion) => {
-            console.log("Region changed:", newRegion);
-            setMarkerPosition({
-              latitude: newRegion.latitude,
-              longitude: newRegion.longitude,
-            });
-          }}
-        ></MapView>
+        <View>
+          <MapView
+            initialRegion={region}
+            style={styles.map}
+            onRegionChange={(newRegion) => {
+              console.log("Region changed:", newRegion);
+              setMarkerPosition({
+                latitude: newRegion.latitude,
+                longitude: newRegion.longitude,
+              });
+            }}
+          ></MapView>
+          <View style={styles.markerFixed}>
+            <Image
+              source={require("../../assets/images/location-marker.png")}
+              style={styles.marker}
+            />
+          </View>
+        </View>
       </View>
     </>
   );
@@ -225,8 +228,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
   map: {
     width: "100%",

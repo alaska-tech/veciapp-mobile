@@ -30,9 +30,10 @@ export default function useCustomerAction() {
           throw new Error("body is required");
         }
         try {
+          const { id, ...rest } = body;
           const response = await apiClient.put<
             Extract<Response<Customer>, { status: "Success" }>
-          >(`/customers/edit/${body.id}`, body);
+          >(`/customers/edit/${id}`, rest);
           return response;
         } catch (error) {
           console.error("Error adding address:", error);

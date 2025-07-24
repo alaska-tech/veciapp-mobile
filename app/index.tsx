@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { View, Image, Linking, TouchableOpacity, Alert } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { View, Image, Linking, TouchableOpacity, Alert, TextInput } from "react-native";
 import { Eye, EyeOff } from "lucide-react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { Button } from "~/components/ui/button";
@@ -31,8 +31,14 @@ export default function LoginScreen() {
     password: "",
   });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
+  const passwordRef = useRef<TextInput>(null);
   const { refreshAuthInfo } = useAuth();
+
+  useEffect(() => {
+    if (showPassword) {
+      passwordRef.current?.focus();
+    }
+  }, [showPassword]);
 
   const validateLogin = (): boolean => {
     if (!showPassword) {
@@ -64,10 +70,6 @@ export default function LoginScreen() {
           email: email.trim(),
           password: password,
         },
-        /* body: {
-          email: "jangulo.dev@gmail.com",
-          password: "Qa151523",
-        }, */
       });
 
       if (!response?.data?.data) {
@@ -150,6 +152,7 @@ export default function LoginScreen() {
                 secureTextEntry={!isPasswordVisible}
                 className="rounded-xl pr-12"
                 editable={!isLoading}
+                ref={passwordRef}
               />
               <TouchableOpacity
                 className="absolute right-3 top-0 bottom-0 justify-center"
