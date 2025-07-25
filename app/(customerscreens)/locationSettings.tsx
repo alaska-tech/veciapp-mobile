@@ -70,7 +70,7 @@ export default function CustomerSettingsScreen() {
                       onPress={() => {
                         router.push(
                           `/(customerscreens)/showLocation?location=${JSON.stringify(
-                            {...item, index, isFavorite:isThisFavorite}
+                            { ...item, index, isFavorite: isThisFavorite }
                           )}`
                         );
                       }}

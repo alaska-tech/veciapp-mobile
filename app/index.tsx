@@ -1,5 +1,12 @@
 import React, { useEffect, useRef } from "react";
-import { View, Image, Linking, TouchableOpacity, Alert, TextInput } from "react-native";
+import {
+  View,
+  Image,
+  Linking,
+  TouchableOpacity,
+  Alert,
+  TextInput,
+} from "react-native";
 import { Eye, EyeOff } from "lucide-react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { Button } from "~/components/ui/button";
@@ -186,7 +193,24 @@ export default function LoginScreen() {
             </Text>
           )}
         </Button>
-
+        {process.env.EXPO_PUBLIC_DEV_PURPOSES_CUSTOMER_USER &&
+        process.env.EXPO_PUBLIC_DEV_PURPOSES_CUSTOMER_PSW ? (
+          <Button
+            onPress={async () => {
+              setShowPassword(true);
+              setEmail(process.env.EXPO_PUBLIC_DEV_PURPOSES_CUSTOMER_USER || "");
+              setPassword(process.env.EXPO_PUBLIC_DEV_PURPOSES_CUSTOMER_PSW || "");
+              await handleSignIn();
+            }}
+            variant="outline"
+          >
+            <Text className="text-black font-bold text-md">
+              Customer jangulo.dev@gmail.com
+            </Text>
+          </Button>
+        ) : (
+          <></>
+        )}
         {!isLoading && (
           <>
             <Text

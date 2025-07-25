@@ -32,6 +32,7 @@ import { useOnlineManager } from "~/hooks/useOnlineManager";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -115,20 +116,22 @@ export default function RootLayout() {
         <BottomSheetModalProvider>
           <AuthProvider>
             <ParametersProvider>
-              <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-                <ThemeProvider value={LIGHT_THEME}>
-                  <StatusBar style="dark" />
-                  <Stack screenOptions={{ headerShown: false }}>
-                    <Stack.Screen
-                      name="index"
-                      options={{
-                        headerShown: false,
-                      }}
-                    />
-                  </Stack>
-                  <PortalHost />
-                </ThemeProvider>
-              </View>
+              <SafeAreaProvider>
+                <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+                  <ThemeProvider value={LIGHT_THEME}>
+                    <StatusBar style="dark" />
+                    <Stack screenOptions={{ headerShown: false }}>
+                      <Stack.Screen
+                        name="index"
+                        options={{
+                          headerShown: false,
+                        }}
+                      />
+                    </Stack>
+                    <PortalHost />
+                  </ThemeProvider>
+                </View>
+              </SafeAreaProvider>
             </ParametersProvider>
           </AuthProvider>
         </BottomSheetModalProvider>

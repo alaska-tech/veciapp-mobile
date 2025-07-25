@@ -82,9 +82,6 @@ export default function useCustomerAction() {
         }
       };
     },
-    {
-      staleTime: Infinity,
-    }
   );
   return { updateCustomer, fetchCustomerDetailsFunction, getCustomerDetails };
 }

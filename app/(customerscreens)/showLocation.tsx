@@ -6,7 +6,7 @@ import useCustomerAction from "~/actions/customer.action";
 import { Loader } from "~/components/ui/loader";
 import { useAuth } from "~/components/ContextProviders/AuthProvider";
 import { Alert } from "react-native";
-import { useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { useLocalSearchParams } from "expo-router";
 import { Trash2 } from "lucide-react-native";
 
@@ -29,8 +29,8 @@ export default function App() {
         setRegion({
           latitude: parsedLocation.coordinates[0],
           longitude: parsedLocation.coordinates[1],
-          latitudeDelta: 0.005,
-          longitudeDelta: 0.005,
+          latitudeDelta: 0.006991628812640371, // Más zoom que antes
+          longitudeDelta: 0.0033819302916526794,
         });
       } catch (error) {
         setErrorMsg("Error getting location");
@@ -46,12 +46,9 @@ export default function App() {
     if (updateCustomer.isPending) {
       return;
     }
-    if(parsedLocation.isFavorite){
-      Alert.alert(
-        "Error",
-        "No se puede eliminar una dirección favorita."
-      );
-      return
+    if (parsedLocation.isFavorite) {
+      Alert.alert("Error", "No se puede eliminar una dirección favorita.");
+      return;
     }
     if (!getCustomerDetails.data) {
       Alert.alert(
@@ -107,38 +104,50 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
-      <View
-        style={{
-          position: "absolute",
-          bottom: 10,
-          left: 10,
-          zIndex: 1000,
-          width: "95%",
+    <>
+      <Stack.Screen
+        options={{
+          headerShadowVisible: false,
+          headerTitle: "Dirección",
+          headerTitleAlign: "center",
+          headerShown: true,
+          headerBackTitle: "Volver",
+          headerBackVisible: true,
         }}
-      >
-        <View className="flex-row items-center gap-4">
-          <View className="bg-white border border-gray-200 rounded-lg p-2 mb-2 flex-1">
-            <Text className="text-base">
-              {parsedLocation.address || "Desconocido"}
-            </Text>
-            <View className="flex-row items-center">
-              <Text className="text-gray-500">Tipo: </Text>
-              <Text>{parsedLocation.alias}</Text>
+      />
+      <View style={styles.container}>
+        <View
+          style={{
+            position: "absolute",
+            bottom: 120,
+            left: 10,
+            zIndex: 1000,
+            width: "95%",
+          }}
+        >
+          <View className="flex-row items-center gap-4">
+            <View className="bg-white border border-gray-200 rounded-lg p-2 mb-2 flex-1">
+              <Text className="text-base">
+                {parsedLocation.address || "Desconocido"}
+              </Text>
+              <View className="flex-row items-center">
+                <Text className="text-gray-500">Tipo: </Text>
+                <Text>{parsedLocation.alias}</Text>
+              </View>
             </View>
+            <Button
+              className="bg-[#FFD100] rounded-full mb-6"
+              onPress={handleSubmit}
+            >
+              {updateCustomer.isPending ? <Loader /> : <Trash2 color="black" />}
+            </Button>
           </View>
-          <Button
-            className="bg-[#FFD100] rounded-full mb-6"
-            onPress={handleSubmit}
-          >
-            {updateCustomer.isPending ? <Loader /> : <Trash2 color="black" />}
-          </Button>
         </View>
+        <MapView initialRegion={region} style={styles.map}>
+          <Marker coordinate={region} />
+        </MapView>
       </View>
-      <MapView initialRegion={region} style={styles.map}>
-        <Marker coordinate={region} />
-      </MapView>
-    </View>
+    </>
   );
 }
 

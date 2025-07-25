@@ -143,7 +143,7 @@ export default function App() {
         <View
           style={{
             position: "absolute",
-            bottom: 80,
+            bottom: 100,
             left: 10,
             zIndex: 1000,
             width: "95%",
