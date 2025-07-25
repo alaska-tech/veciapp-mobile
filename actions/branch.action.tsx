@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
-import { queryEntityById } from "./action";
+import { queryEntityById, queryEntityWithParameters } from "./action";
 import { QueryKey } from "@tanstack/react-query";
-import { Branch, Response } from "~/constants/models";
+import { Branch, PaginatedResult, Response } from "~/constants/models";
 import { apiClient } from "~/services/clients";
 
 export const QUERY_KEY_BRANCH = "branch" as const;
@@ -23,7 +23,31 @@ export const useBranchAction = () => {
       }
     };
   });
+  const getVendorByLocation = queryEntityWithParameters<
+    Extract<Response<PaginatedResult<Branch>>, { status: "Success" }>,
+    AxiosError<Extract<Response<null>, { status: "Error" }>>
+  >(
+    [QUERY_KEY_BRANCH] as QueryKey,
+    ({ latitude, longitude, limit, page, radius }) => {
+      return async function queryFn() {
+        const limitParam = limit ? `&limit=${limit}` : "";
+        const pageParam = page ? `&page=${page}` : "";
+        try {
+          const response = await apiClient.get<
+            Extract<Response<PaginatedResult<Branch>>, { status: "Success" }>
+          >(
+            `/branches/get-nearby-branches?latitude=${latitude}&longitude=${longitude}&radius=${radius}${limitParam}${pageParam}`
+          );
+          console.log(response);
+          return response.data;
+        } catch (error) {
+          throw error;
+        }
+      };
+    }
+  );
   return {
     getBranchById,
+    getVendorByLocation,
   };
 };

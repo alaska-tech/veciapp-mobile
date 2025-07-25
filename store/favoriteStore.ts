@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 export interface FavoriteItem {
   id: string | number;
@@ -15,14 +15,18 @@ interface FavoriteState {
   removeFavorite: (id: string | number) => void;
 }
 
-export const useFavoriteStore = create<FavoriteState>((set) => ({
-  favorites: [],
-  addFavorite: (item) => set((state) => {
-    // Evitar duplicados por id
-    if (state.favorites.some(fav => fav.id === item.id)) return state;
-    return { favorites: [...state.favorites, item] };
-  }),
-  removeFavorite: (id) => set((state) => ({
-    favorites: state.favorites.filter(fav => fav.id !== id)
-  })),
-})); 
+export const useFavoriteStore = create<FavoriteState>((set) => {
+  return {
+    favorites: [],
+    addFavorite: (item) =>
+      set((state) => {
+        // Evitar duplicados por id
+        if (state.favorites.some((fav) => fav.id === item.id)) return state;
+        return { favorites: [...state.favorites, item] };
+      }),
+    removeFavorite: (id) =>
+      set((state) => ({
+        favorites: state.favorites.filter((fav) => fav.id !== id),
+      })),
+  };
+});

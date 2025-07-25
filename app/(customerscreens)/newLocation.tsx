@@ -8,20 +8,18 @@ import {
   Image,
   TextInput,
 } from "react-native";
-import * as Location from "expo-location";
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
 import useCustomerAction from "~/actions/customer.action";
 import { AddressLocation, Customer } from "~/constants/models";
 import { Loader } from "~/components/ui/loader";
 import { useAuth } from "~/components/ContextProviders/AuthProvider";
+import { useLocation } from "~/components/ContextProviders/LocationProvider";
 import { Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { Stack } from "expo-router";
 
 export default function App() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [region, setRegion] = useState<Region | null>(null);
   const [markerPosition, setMarkerPosition] = useState({
     latitude: 0,
@@ -32,38 +30,27 @@ export default function App() {
   const [nickname, setNickname] = useState("Casa");
   const router = useRouter();
   const { user } = useAuth();
+  const { location, isLoading, error: errorMsg, tryGetCurrentLocation } = useLocation();
   const customerActions = useCustomerAction();
   const getCustomerDetails = customerActions.getCustomerDetails(
     user?.foreignPersonId
   );
   const updateCustomer = customerActions.updateCustomer();
+
   useEffect(() => {
-    async function getCurrentLocation() {
-      try {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          setErrorMsg("Permission to access location was denied");
-          return;
-        }
-
-        let location = await Location.getCurrentPositionAsync({});
-        const { latitude, longitude } = location.coords;
-        console.log("Current location:", latitude, longitude);
-        setRegion({
-          latitude,
-          longitude,
-          latitudeDelta: 0.006991628812640371, // Más zoom que antes
-          longitudeDelta: 0.0033819302916526794,
-        });
-      } catch (error) {
-        setErrorMsg("Error getting location");
-      } finally {
-        setIsLoading(false);
-      }
+    if (location) {
+      setRegion({
+        latitude: location.latitude,
+        longitude: location.longitude,
+        latitudeDelta: 0.006991628812640371,
+        longitudeDelta: 0.0033819302916526794,
+      });
+      setMarkerPosition({
+        latitude: location.latitude,
+        longitude: location.longitude,
+      });
     }
-
-    getCurrentLocation();
-  }, []);
+  }, [location]);
 
   async function handleSubmit() {
     if (updateCustomer.isPending) {
@@ -119,12 +106,22 @@ export default function App() {
     return (
       <View style={styles.container}>
         <Text>{errorMsg}</Text>
+        <Button onPress={tryGetCurrentLocation} className="mt-4">
+          <Text>Reintentar</Text>
+        </Button>
       </View>
     );
   }
 
   if (!region) {
-    return null;
+    return (
+      <View style={styles.container}>
+        <Text>No se pudo obtener la ubicación</Text>
+        <Button onPress={tryGetCurrentLocation} className="mt-4">
+          <Text>Obtener ubicación</Text>
+        </Button>
+      </View>
+    );
   }
 
   return (

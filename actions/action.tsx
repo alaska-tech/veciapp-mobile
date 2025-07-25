@@ -116,3 +116,30 @@ export const mutateEntity = <
     })
   }
 }
+
+export const queryEntityWithParameters = <TData, TError>(
+  queryKey: QueryKey,
+  getQueryFn: (params: Record<string, any>) => QueryFunction<TData, QueryKey>,
+  defaultConfig?: Omit<
+    UseQueryOptions<TData, TError, TData, QueryKey>,
+    "queryKey" | "queryFn"
+  >
+): ((
+  params: Record<string, any> | undefined,
+  config?: Omit<
+    UseQueryOptions<TData, TError, TData, QueryKey>,
+    "queryKey" | "queryFn"
+  >
+) => UseQueryResult<TData, TError>) => {
+  return function useQueryWithConfig(params, config?) {
+    const { enabled, ...restConfig } = config || {};
+    const enabledByProps = enabled ?? !!params;
+    return useQuery<TData, TError>({
+      queryKey: [...queryKey, params] as QueryKey,
+      queryFn: params ? getQueryFn(params) : () => Promise.resolve({} as TData),
+      enabled: enabledByProps,
+      ...defaultConfig,
+      ...restConfig,
+    });
+  };
+};

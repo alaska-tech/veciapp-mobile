@@ -2,6 +2,7 @@ import { View, ScrollView, Image, TouchableOpacity } from "react-native";
 import { Text } from "~/components/ui/text";
 import { useRouter } from "expo-router";
 import { ChevronRight } from "lucide-react-native";
+import { Branch } from "~/constants/models";
 
 type Veciproveedor = {
   id: string;
@@ -10,7 +11,7 @@ type Veciproveedor = {
 };
 
 type VeciproveedoresProps = {
-  proveedores: Veciproveedor[];
+  proveedores: Branch[];
   onSeeAllPress: () => void;
 };
 
@@ -40,13 +41,13 @@ export default function Veciproveedores({
             key={proveedor.id}
             className={`items-center justify-center mr-4`}
             onPress={() => {
-              console.log(`Selected proveedor: ${proveedor.name}`);
+              console.log(`Selected proveedor: ${proveedor.name}`); //TODO: Navigate to provider detail by Elder.
               // Navigate to provider detail or handle as needed
             }}
           >
             <View className="w-24 h-24 rounded-full overflow-hidden mb-2">
               <Image
-                source={{ uri: proveedor.imageUrl }}
+                source={{ uri: proveedor.logo }}
                 className="w-full h-full"
                 resizeMode="cover"
               />
