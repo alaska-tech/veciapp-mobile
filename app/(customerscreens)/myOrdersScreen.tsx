@@ -1,9 +1,12 @@
 import React from "react";
 import { View, ScrollView } from "react-native";
 import { Stack } from "expo-router";
+import { useRouter } from "expo-router";
 import OrderDetailCard from "~/components/epic/orderDetailCard";
 
 export default function MyOrdersScreen() {
+  const router = useRouter();
+
   // Datos de ejemplo del pedido activo
   const activeOrder = {
     date: "12/03/2025",
@@ -33,8 +36,9 @@ export default function MyOrdersScreen() {
   };
 
   const handleCoordinateDelivery = () => {
-    // Aquí puedes implementar la lógica para coordinar la entrega
-    console.log("Coordinando entrega...");
+    // Navegar a la vista de chats
+    router.push("/(customerscreens)/chats");
+    console.log("Navegando a chats...");
   };
 
   const handleCancelOrder = () => {

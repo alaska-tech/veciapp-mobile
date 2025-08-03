@@ -4,6 +4,7 @@ import HeaderHome from "../../../components/epic/headerHome";
 import CategoriesHome from "~/components/epic/categoriesHome";
 import ImageCarousel from "~/components/epic/imageCarousel";
 import Veciproveedores from "~/components/epic/veciproveedores";
+import ActiveOrderBanner from "~/components/epic/activeOrderBanner";
 import { useRouter } from "expo-router";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import ProductCard from "~/components/epic/productCard";
@@ -42,6 +43,10 @@ export default function HomeScreen() {
     longitude: location?.longitude || 0,
     radius: 300,
   });
+
+  // Simular que hay un pedido activo (aquí puedes conectar con tu estado real)
+  const hasActiveOrder = true; // Cambiar a false para ocultar el banner
+
   if (status === "pending") {
     return <ActivityIndicator />;
   }
@@ -68,6 +73,14 @@ export default function HomeScreen() {
   const ListHeader = () => (
     <View className="p-4">
       <HeaderHome />
+      {hasActiveOrder && (
+        <ActiveOrderBanner
+          onPress={() => {
+            router.push("/(customerscreens)/myOrdersScreen");
+          }}
+          orderCount={1}
+        />
+      )}
       <ImageCarousel />
       <Veciproveedores
         proveedores={vendors?.data.data || []}
