@@ -31,11 +31,8 @@ export default function CategoriesHome() {
   const router = useRouter();
   return (
     <View className="">
-      <TouchableOpacity onPress={() => router.push('/(customerscreens)/customerCategories')} className="flex-row items-center">
         <Text className="text-2xl font-bold mb-2">Categorías</Text>
-        <ChevronRight size={24} color={'#000'} className="mb-1" />
-      </TouchableOpacity>
-      
+        
       <ScrollView 
         horizontal 
         showsHorizontalScrollIndicator={false}
