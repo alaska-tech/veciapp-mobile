@@ -16,6 +16,10 @@ export default function PaymentResultScreen() {
     }
   }, [counter]);
 
+  const handleCoordinateDelivery = () => {
+    router.push('/(customerscreens)/myOrdersScreen');
+  };
+
   return (
     <ScrollView className="flex-1 bg-white" contentContainerStyle={{ flexGrow: 1 }}>
       <View className="flex-1 min-h-screen items-center justify-center px-4">
@@ -57,7 +61,7 @@ export default function PaymentResultScreen() {
           </View>
           <Button
             className="w-full bg-yellow-400 rounded-full py-4"
-            onPress={() => router.replace('/(client)/(tabs)/home')}
+            onPress={handleCoordinateDelivery}
           >
             <Text className="text-black text-center font-semibold text-lg">Coordinar entrega ahora</Text>
           </Button>
