@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, ScrollView, TextInput, TouchableOpacity, Keyboard, TouchableWithoutFeedback, Image, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, ScrollView, TextInput, TouchableOpacity, Keyboard, TouchableWithoutFeedback, Image, Platform, SafeAreaView, Animated } from 'react-native';
 import { Text } from '~/components/ui/text';
 import { Card } from '~/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '~/components/ui/avatar';
@@ -9,6 +9,7 @@ import { Stack, useRouter } from 'expo-router';
 export default function ChatsScreen() {
   const router = useRouter();
   const [message, setMessage] = useState('');
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [messages, setMessages] = useState([
     {
       id: '1',
@@ -143,112 +144,138 @@ export default function ChatsScreen() {
     }
   }, []);
 
+  // Keyboard listeners for iOS
+  useEffect(() => {
+    const keyboardWillShow = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      (e) => {
+        setKeyboardHeight(e.endCoordinates.height);
+      }
+    );
+
+    const keyboardWillHide = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => {
+        setKeyboardHeight(0);
+      }
+    );
+
+    return () => {
+      keyboardWillShow.remove();
+      keyboardWillHide.remove();
+    };
+  }, []);
+
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
   return (
-    <KeyboardAvoidingView 
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
-      className="flex-1 bg-background"
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
-    >
-      <View className="flex-1">
-        <Stack.Screen 
-          options={{
-            headerShown: true,
-            headerTitle: "",
-            headerLeft: () => (
-              <TouchableOpacity 
-                onPress={() => router.back()}
-                className="ml-2 flex-row items-center"
-              >
-                <ArrowLeft size={20} color="#000" />
-              </TouchableOpacity>
-            ),
-          }} 
-        />
-        
-        {/* Order Info Card */}
-        <Card className="mx-4 mt-4 mb-2 bg-card">
-          <View className="p-4 flex-row">
-            <Image 
-              source={{ uri: 'https://picsum.photos/id/292/200' }} 
-              className="w-16 h-16 rounded-full mr-4"
-              style={{ borderRadius: 8 }}
-            />
-            <View className="flex-1">
-              <Text className="text-lg font-bold">{order.product}</Text>
-              <Text className="text-base font-semibold">{order.price}</Text>
-              <View className="flex-row mt-2 items-center">
-                <Avatar alt={order.customer.name} className="h-6 w-6 mr-2">
-                  <AvatarImage source={{ uri: order.customer.avatar }} />
-                  <AvatarFallback>
-                    <Text>{order.customer.name.charAt(0)}</Text>
-                  </AvatarFallback>
-                </Avatar>
-                <Text className="text-sm text-muted-foreground">{order.customer.name}</Text>
-              </View>
+    <View className="flex-1 bg-background">
+      <Stack.Screen 
+        options={{
+          headerShown: true,
+          headerTitle: "",
+          headerLeft: () => (
+            <TouchableOpacity 
+              onPress={() => router.back()}
+              className="ml-2 flex-row items-center"
+            >
+              <ArrowLeft size={20} color="#000" />
+            </TouchableOpacity>
+          ),
+        }} 
+      />
+      
+      {/* Order Info Card */}
+      <Card className="mx-4 mt-4 mb-2 bg-card">
+        <View className="p-4 flex-row">
+          <Image 
+            source={{ uri: 'https://picsum.photos/id/292/200' }} 
+            className="w-16 h-16 rounded-full mr-4"
+            style={{ borderRadius: 8 }}
+          />
+          <View className="flex-1">
+            <Text className="text-lg font-bold">{order.product}</Text>
+            <Text className="text-base font-semibold">{order.price}</Text>
+            <View className="flex-row mt-2 items-center">
+              <Avatar alt={order.customer.name} className="h-6 w-6 mr-2">
+                <AvatarImage source={{ uri: order.customer.avatar }} />
+                <AvatarFallback>
+                  <Text>{order.customer.name.charAt(0)}</Text>
+                </AvatarFallback>
+              </Avatar>
+              <Text className="text-sm text-muted-foreground">{order.customer.name}</Text>
             </View>
           </View>
-        </Card>
+        </View>
+      </Card>
 
-        {/* Chat Messages */}
-        <ScrollView 
-          ref={scrollViewRef}
-          className="flex-1 px-4"
-          contentContainerStyle={{ paddingVertical: 10 }}
-          showsVerticalScrollIndicator={true}
-          keyboardShouldPersistTaps="handled"
-          scrollEventThrottle={16}
-          onLayout={() => scrollViewRef.current?.scrollToEnd({ animated: false })}
-        >
-          {messages.map((msg) => (
+      {/* Chat Messages */}
+      <ScrollView 
+        ref={scrollViewRef}
+        className="flex-1 px-4"
+        contentContainerStyle={{ paddingVertical: 10 }}
+        showsVerticalScrollIndicator={true}
+        keyboardShouldPersistTaps="handled"
+        scrollEventThrottle={16}
+        onLayout={() => scrollViewRef.current?.scrollToEnd({ animated: false })}
+      >
+        {messages.map((msg) => (
+          <View 
+            key={msg.id} 
+            className={`my-1 max-w-[80%] ${msg.sender === 'customer' ? 'self-end ml-auto' : 'self-start mr-auto'}`}
+          >
             <View 
-              key={msg.id} 
-              className={`my-1 max-w-[80%] ${msg.sender === 'customer' ? 'self-end ml-auto' : 'self-start mr-auto'}`}
+              className={`p-3 rounded-2xl ${
+                msg.sender === 'customer' 
+                  ? 'bg-[#00563B] rounded-tr-none' 
+                  : 'bg-[#FFD100] rounded-tl-none'
+              }`}
             >
-              <View 
-                className={`p-3 rounded-2xl ${
-                  msg.sender === 'customer' 
-                    ? 'bg-[#00563B] rounded-tr-none' 
-                    : 'bg-[#FFD100] rounded-tl-none'
-                }`}
+              <Text 
+                className={`${msg.sender === 'customer' ? 'text-primary-foreground' : 'text-foreground'}`}
               >
-                <Text 
-                  className={`${msg.sender === 'customer' ? 'text-primary-foreground' : 'text-foreground'}`}
-                >
-                  {msg.text}
-                </Text>
-              </View>
-              <Text className={`text-xs text-muted-foreground mt-1 ${
-                msg.sender === 'customer' ? 'text-right' : 'text-left'
-              }`}>
-                {formatTime(msg.timestamp)}
+                {msg.text}
               </Text>
             </View>
-          ))}
-        </ScrollView>
+            <Text className={`text-xs text-muted-foreground mt-1 ${
+              msg.sender === 'customer' ? 'text-right' : 'text-left'
+            }`}>
+              {formatTime(msg.timestamp)}
+            </Text>
+          </View>
+        ))}
+      </ScrollView>
 
-        {/* Message Input */}
-        <View className="p-4 mb-4 border-t border-border flex-row items-center">
+      {/* Message Input - Fixed positioning */}
+      <View 
+        className="border-t border-border bg-white"
+        style={{
+          minHeight: 80,
+          paddingBottom: Platform.OS === 'ios' ? keyboardHeight : 0,
+        }}
+      >
+        <View className="p-4 flex-row items-center">
           <TextInput
-            className="flex-1 bg-muted p-3 rounded-full mr-2 text-foreground"
+            className="flex-1 bg-gray-100 p-3 rounded-full mr-2 text-black"
             placeholder="Escribe un mensaje..."
             placeholderTextColor="#666"
             value={message}
             onChangeText={setMessage}
             multiline
+            maxLength={500}
+            style={{ maxHeight: 100 }}
           />
           <TouchableOpacity 
             onPress={sendMessage}
-            className={`w-12 h-12 rounded-full items-center justify-center ${message.trim() === '' ? 'bg-primary/50' : 'bg-primary'}`}
+            className={`w-12 h-12 rounded-full items-center justify-center ${message.trim() === '' ? 'bg-green-300' : 'bg-green-600'}`}
             disabled={message.trim() === ''}
           >
             <Send size={20} color="#FFF" />
           </TouchableOpacity>
         </View>
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 } 
