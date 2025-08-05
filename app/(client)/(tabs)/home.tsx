@@ -106,14 +106,10 @@ export default function HomeScreen() {
         ListEmptyComponent={isError ? ErrorComponent : null}
         keyExtractor={(item) => item.id}
         numColumns={2}
-        columnWrapperStyle={
-          isError
-            ? undefined
-            : {
-                justifyContent: "space-between",
-                paddingHorizontal: 16,
-              }
-        }
+        columnWrapperStyle={{
+          justifyContent: "space-between",
+          paddingHorizontal: 16,
+        }}
         renderItem={({ item, index }) => (
           <View
             className="mb-4 w-[48%]"
