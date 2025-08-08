@@ -104,6 +104,9 @@ export interface Parameter extends BaseAttributes {
 
 export const BranchState = [
   "active",
+  "created",
+  "verified",
+  "suspended",
   "temporarily_closed",
   "maintenance",
   "inactive",
@@ -151,16 +154,14 @@ export interface Branch extends BaseAttributes {
   phone: string; //max 20
   email: string; //max 150
   rank: number; //default 0
-  state: LocationTypeType[number]; //default active
+  state: BranchStateType[number]; //default active
+  stateHistory: Array<{
+    state: BranchStateType[number];
+    changedAt: Date;
+    reason: string;
+  }>; //default []
   businessType: BranchBusinessType[number]; //default individual
-  operatingHours?: Record<
-    weekDayType[number],
-    {
-      open: string; //hora en formato hh:mm, como 19:00 o 14:30
-      close: string;
-      isOpen: boolean;
-    }
-  >;
+  operatingHours?: Record<weekDayType[number], [string, string]>;
   logo?: string; //max 255
   deliveryRadius: number; //default 0 min 0
   deliveryFee: string; // default 0 min 0
@@ -172,6 +173,7 @@ export interface Branch extends BaseAttributes {
   isDeliveryAvailable: boolean; //default false
   availablePaymentMethods: string[]; //default []
   description?: string;
+  isActive: boolean;
 }
 
 export const productServiceState = ["available", "unavailable"] as const;
@@ -260,4 +262,44 @@ export interface Vendor extends BaseAttributes {
   commercialRegistry?: string; // max length 255
   rut?: string; // max length 255
   bio?: string;
+}
+export const ServiceOrderDeliveryType = ["pickup", "delivery"] as const;
+export type ServiceOrderDeliveryTypeType = typeof ServiceOrderDeliveryType;
+export const ServiceOrderPaymentMethod = ["cash", "card", "transfer"] as const;
+export type ServiceOrderPaymentMethodType = typeof ServiceOrderPaymentMethod;
+export const ServiceOrderOrderStatus = [
+  "pending",
+  "confirmed",
+  "in_progress",
+  "completed",
+  "cancelled",
+] as const;
+export type ServiceOrderOrderStatusType = typeof ServiceOrderOrderStatus;
+export const ServiceOrderPaymentStatus = [
+  "pending",
+  "paid",
+  "failed",
+  "refunded",
+] as const;
+export type ServiceOrderPaymentStatusType = typeof ServiceOrderPaymentStatus;
+export interface ServiceOrder extends BaseAttributes {
+  id: string;
+  orderNumber: string;
+  customerId: string;
+  vendorId: string;
+  branchId: string;
+  items: Array<{
+    productServiceId: string;
+    quantity: number;
+    price: number;
+  }>;
+  deliveryAddress?: string;
+  deliveryType: ServiceOrderDeliveryTypeType[number];
+  paymentMethod: ServiceOrderPaymentMethodType[number];
+  totalAmount: number;
+  notes?: string;
+  orderStatus: ServiceOrderOrderStatusType[number];
+  paymentStatus: ServiceOrderPaymentStatusType[number];
+  rating?: number;
+  comment?: string;
 }

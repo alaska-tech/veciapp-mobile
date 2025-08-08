@@ -108,6 +108,48 @@ export default function LoginScreen() {
     Linking.openURL("https://google.com");
   };
 
+  const devButton = (
+    <>
+      {process.env.EXPO_PUBLIC_DEV_PURPOSES_CUSTOMER_USER &&
+      process.env.EXPO_PUBLIC_DEV_PURPOSES_CUSTOMER_PSW ? (
+        <Button
+          onPress={async () => {
+            setShowPassword(true);
+            setEmail(process.env.EXPO_PUBLIC_DEV_PURPOSES_CUSTOMER_USER || "");
+            setPassword(
+              process.env.EXPO_PUBLIC_DEV_PURPOSES_CUSTOMER_PSW || ""
+            );
+            await handleSignIn();
+          }}
+          variant="outline"
+        >
+          <Text className="text-black font-bold text-md">
+            Customer jangulo.dev@gmail.com
+          </Text>
+        </Button>
+      ) : (
+        <></>
+      )}
+      {process.env.EXPO_PUBLIC_DEV_PURPOSES_VENDOR_USER &&
+      process.env.EXPO_PUBLIC_DEV_PURPOSES_VENDOR_PSW ? (
+        <Button
+          onPress={async () => {
+            setShowPassword(true);
+            setEmail(process.env.EXPO_PUBLIC_DEV_PURPOSES_VENDOR_USER || "");
+            setPassword(process.env.EXPO_PUBLIC_DEV_PURPOSES_VENDOR_PSW || "");
+            await handleSignIn();
+          }}
+          variant="outline"
+        >
+          <Text className="text-black font-bold text-md">
+            VENDOR jangulo.dev@gmail.com
+          </Text>
+        </Button>
+      ) : (
+        <></>
+      )}
+    </>
+  );
   return (
     <View className="flex-1 items-center justify-center p-4 px-12 bg-background">
       <Image
@@ -193,24 +235,7 @@ export default function LoginScreen() {
             </Text>
           )}
         </Button>
-        {process.env.EXPO_PUBLIC_DEV_PURPOSES_CUSTOMER_USER &&
-        process.env.EXPO_PUBLIC_DEV_PURPOSES_CUSTOMER_PSW ? (
-          <Button
-            onPress={async () => {
-              setShowPassword(true);
-              setEmail(process.env.EXPO_PUBLIC_DEV_PURPOSES_CUSTOMER_USER || "");
-              setPassword(process.env.EXPO_PUBLIC_DEV_PURPOSES_CUSTOMER_PSW || "");
-              await handleSignIn();
-            }}
-            variant="outline"
-          >
-            <Text className="text-black font-bold text-md">
-              Customer jangulo.dev@gmail.com
-            </Text>
-          </Button>
-        ) : (
-          <></>
-        )}
+        {devButton}
         {!isLoading && (
           <>
             <Text
