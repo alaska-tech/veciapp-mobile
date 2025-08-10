@@ -23,24 +23,23 @@ export default function OrderHistoryScreen() {
   const yesterdayOrders = [
     {
       id: 2,
-      productName: "Arepas Rellenas de Carne y Queso",
+      productName: "Sopa de pollo",
       productImage: "https://picsum.photos/208",
-      vendorName: "Erica Madeleine Soto",
+      vendorName: "Marcos Solis",
       total: 20000,
     },
     {
       id: 3,
-      productName: "Arepas Rellenas de Carne y Queso",
+      productName: "Camiseta de la selección",
       productImage: "https://picsum.photos/209",
-      vendorName: "Erica Madeleine Soto",
+      vendorName: "Juan Pablo",
       total: 20000,
     },
   ];
 
   const handleViewDetails = (orderId: number) => {
-    // Navigate to order details or implement your logic
-    console.log("View details for order:", orderId);
-    // router.push(`/(customerscreens)/orderDetails/${orderId}`);
+    // Navigate to order details screen
+    router.push(`/(customerscreens)/orderDetailsScreen?orderId=${orderId}`);
   };
 
   return (
