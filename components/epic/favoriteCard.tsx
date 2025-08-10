@@ -31,7 +31,7 @@ export default function FavoriteCard({
   const discountedPrice = discount ? price * (1 - discount / 100) : price;
 
   return (
-    <Card className="rounded-3xl overflow-hidden mb-4">
+    <Card className="rounded-3xl shadow mb-4">
       <View className="p-4">
         <View className="flex-row items-center">
           <Image

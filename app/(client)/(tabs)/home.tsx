@@ -37,8 +37,8 @@ export default function HomeScreen() {
     initialPageParam: 0,
   });
   const { location } = useLocation();
-  const { getVendorByLocation } = useBranchAction();
-  const { data: vendors } = getVendorByLocation({
+  const { getBranchesByLocation } = useBranchAction();
+  const { data: vendors } = getBranchesByLocation({
     latitude: location?.latitude || 0,
     longitude: location?.longitude || 0,
     radius: 300,
