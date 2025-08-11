@@ -9,11 +9,11 @@ import { Badge } from "~/components/ui/badge";
 import { Star, MapPin, Plus, Minus, Heart, Share2 } from "lucide-react-native";
 import { useCartStore } from "~/store/cartStore";
 import { useRouter } from "expo-router";
-import { FavoriteItem, useFavoriteStore } from "~/store/favoriteStore";
-import { Product } from "~/constants/models";
-import { useVendorAction } from "~/actions/vendor.action";
+import { useFavoriteStore } from "~/store/favoriteStore";
+import { FavoriteItem, Product } from "~/constants/models";
 import { useBranchAction } from "~/actions/branch.action";
 import { FavoriteConfirmationDialog } from "~/components/epic/favoriteConfirmationDialog";
+import { useAuth } from "~/components/ContextProviders/AuthProvider";
 
 // Componente reutilizable para sumar/restar cantidad
 function QuantityControl({
@@ -51,22 +51,23 @@ function QuantityControl({
 const Index = () => {
   // TODOS los hooks deben ir aquí arriba
   const { id } = useLocalSearchParams();
+  const { user } = useAuth()
   const actions = useProductAction();
   const productQuery = actions.getProductById(id as string);
   const [quantity, setQuantity] = useState(1);
   const [showFavoriteDialog, setShowFavoriteDialog] = useState(false);
-  const [favoriteAction, setFavoriteAction] = useState<'add' | 'remove'>('add');
+  const [favoriteAction, setFavoriteAction] = useState<"add" | "remove">("add");
   const addCartItem = useCartStore((state) => state.addCartItem);
   const cartItems = useCartStore((state) => state.cartItems);
   const router = useRouter();
-  const addFavorite = useFavoriteStore((state) => state.addFavorite);
+  const { addFavorite, isFavorite } = useFavoriteStore();
   const removeFavorite = useFavoriteStore((state) => state.removeFavorite);
   const favorites = useFavoriteStore((state) => state.favorites);
   const branchActions = useBranchAction();
   const { data: branchData } = branchActions.getBranchById(
     productQuery.data?.branchId
   );
-
+  const isThisFavorite = isFavorite(id as string);
   if (productQuery.isLoading) {
     return <Text>Loading...</Text>;
   }
@@ -85,13 +86,10 @@ const Index = () => {
     categoryId = "",
     description = "",
     inventory,
-    id: productId,
+    id: productServiceId,
   } = productQuery.data || ({} as Product);
   const validFavorites = favorites.filter(
     (fav) => fav && typeof fav === "object" && fav.id
-  );
-  const isFavorite = validFavorites.some(
-    (fav) => fav.id === (productId || name)
   );
 
   // Handler para agregar al carrito y navegar
@@ -109,28 +107,26 @@ const Index = () => {
       price: Number.parseFloat(finalPrice),
       image: logo,
       quantity: quantity,
+      productServiceId,
     });
     router.push("/(client)/(tabs)/cart");
   };
 
   // Handler para alternar favorito
   const handleAddFavorite = () => {
-    if (!productQuery.data || (!productId && !name)) return;
-    if (isFavorite) {
-      removeFavorite(productId || name);
-      setFavoriteAction('remove');
+    if (!productQuery.data || (!productServiceId && !name)) return;
+    if (isThisFavorite) {
+      removeFavorite(productServiceId);
+      setFavoriteAction("remove");
       setShowFavoriteDialog(true);
     } else {
-      const newItem = {
-        id: productId,
-        name: name,
-        price: Number.parseFloat(finalPrice),
-        image: logo,
-        discount: Number.parseFloat(discount),
-        branchId: branchData?.id,
-      } as FavoriteItem;
+      const newItem: FavoriteItem = {
+        productServiceId: productServiceId,
+        userId: user?.foreignPersonId!,
+        productService: productQuery.data
+      };
       addFavorite(newItem);
-      setFavoriteAction('add');
+      setFavoriteAction("add");
       setShowFavoriteDialog(true);
     }
   };
@@ -154,7 +150,11 @@ const Index = () => {
                 className="bg-white/80 rounded-full p-2 mr-2"
                 onPress={handleAddFavorite}
               >
-                <Heart size={22} color={isFavorite ? "red" : "#222"} fill={isFavorite ? "red" : "none"} />
+                <Heart
+                  size={22}
+                  color={isThisFavorite ? "red" : "#222"}
+                  fill={isThisFavorite ? "red" : "none"}
+                />
               </TouchableOpacity>
               <TouchableOpacity className="bg-white/80 rounded-full p-2 mr-2">
                 <Share2 size={22} color="#222" />
@@ -220,26 +220,26 @@ const Index = () => {
               className="w-8 h-8 rounded-full mr-2"
             />
             <Text className="font-bold text-lg">{branchData?.name || ""}</Text>
-            {/* <Button
+            <Button
               className="ml-auto bg-blue-500 px-4 py-1 rounded-full"
               size="sm"
             >
               <Text className="text-white">Ver tienda</Text>
-            </Button> */}
+            </Button>
           </View>
           <View className="px-4 mt-2">
             <Text className="text-xl font-bold mb-1">Descripción</Text>
             <Text className="text-gray-700 mb-2">{description}</Text>
           </View>
+          <View className="absolute left-0 right-0 bottom-0 p-4 bg-white border-t border-gray-200">
+            <Button
+              className="w-full bg-yellow-400 rounded-full py-4"
+              onPress={handleAddToCart}
+            >
+              <Text className="text-black font-bold text-xl">¡Lo quiero!</Text>
+            </Button>
+          </View>
         </ScrollView>
-        <View className="absolute left-0 right-0 bottom-0 p-4 bg-white border-t border-gray-200">
-          <Button
-            className="w-full bg-yellow-400 rounded-full py-4"
-            onPress={handleAddToCart}
-          >
-            <Text className="text-black font-bold text-xl">¡Lo quiero!</Text>
-          </Button>
-        </View>
         <FavoriteConfirmationDialog
           open={showFavoriteDialog}
           onOpenChange={setShowFavoriteDialog}

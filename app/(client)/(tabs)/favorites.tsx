@@ -1,4 +1,4 @@
-import { ScrollView, View } from "react-native";
+import { RefreshControl, ScrollView, View } from "react-native";
 import { Text } from "~/components/ui/text";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -7,12 +7,18 @@ import React from "react";
 import FavoriteCard from "~/components/epic/favoriteCard";
 import { useFavoriteStore } from "~/store/favoriteStore";
 import { Button } from "~/components/ui/button";
+import { useBranchAction } from "~/actions/branch.action";
 
 export default function FavoritesScreen() {
   const router = useRouter();
-  const favorites = useFavoriteStore((state) => state.favorites);
-  const removeFavorite = useFavoriteStore((state) => state.removeFavorite);
-
+  const { favorites, removeFavorite, loading, refresh } = useFavoriteStore();
+  const branchActions = useBranchAction();
+  const BranchesQuery = branchActions.getBranchesById(
+    favorites.map((e) => e.productService?.branchId)
+  );
+  function handleRefresh() {
+    refresh();
+  }
   return (
     <>
       <Stack.Screen
@@ -21,16 +27,23 @@ export default function FavoritesScreen() {
           headerTitle: "Mis favoritos",
           headerTitleAlign: "center",
           headerShown: true,
-          headerBackVisible: true, 
+          headerBackVisible: true,
         }}
       />
-      <ScrollView className="h-full w-full p-4">
+      <ScrollView
+        className="h-full w-full p-4"
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={handleRefresh} />
+        }
+      >
         {favorites.length === 0 ? (
           <View className="items-center justify-center py-10">
-            <Text className="text-xl text-gray-500 mb-6">No tienes favoritos aún</Text>
-            <Button 
+            <Text className="text-xl text-gray-500 mb-6">
+              No tienes favoritos aún
+            </Text>
+            <Button
               className="bg-yellow-400 rounded-full px-8"
-              onPress={() => router.push('/home')}
+              onPress={() => router.push("/home")}
             >
               <Text className="text-black font-bold">Explorar productos</Text>
             </Button>
@@ -39,15 +52,19 @@ export default function FavoritesScreen() {
           favorites.map((item) => (
             <FavoriteCard
               key={item.id}
-              name={item.name}
-              price={item.price}
-              image={item.image}
-              discount={item.discount}
-              veciproveedor={item.veciproveedor}
-              onDelete={() => removeFavorite(item.id)}
+              name={item.productService?.name}
+              price={Number.parseFloat(item.productService?.price)}
+              image={item.productService?.logo || ""}
+              discount={Number.parseFloat(item.productService?.discount)}
+              veciproveedor={
+                BranchesQuery.find(
+                  (query) => query.data?.id === item?.productService?.branchId
+                )?.data?.name || "Desconocido"
+              }
+              onDelete={() => removeFavorite(item.productServiceId)}
               onWantIt={() => {
                 // Handle "Lo quiero" action
-                console.log('Want to buy:', item.name);
+                console.log("Want to buy:", item.productService?.name);
               }}
             />
           ))

@@ -303,3 +303,24 @@ export interface ServiceOrder extends BaseAttributes {
   rating?: number;
   comment?: string;
 }
+export interface ShoppingCartItem {
+  productServiceId: string;
+  branchId: string;
+  quantity: number;
+  unitPrice: string; //decimal
+  totalPrice: string; //decimal
+  addedAt: Date;
+}
+export interface ShoppingCart extends BaseAttributes {
+  id: string;
+  customerId: string;
+  items: Array<ShoppingCartItem>;
+}
+
+export interface FavoriteItem {
+  createdAt?: Date;
+  id?: string; //ignorar
+  productServiceId: string;
+  userId: string;
+  productService: Product;
+}

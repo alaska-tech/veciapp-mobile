@@ -28,17 +28,18 @@ export default function HomeScreen() {
   } = useInfiniteQuery({
     queryKey: ["products"],
     queryFn: fetchProductsPage,
+    initialPageParam: 0,
     getNextPageParam: (lastPage) => {
-      const currentPage = lastPage.data.meta.page + 1;
-      const totalPages = lastPage.data.meta.lastPage;
-
+      const currentPage = lastPage.data.meta.page;
+      console.log("current page", currentPage);
+      const totalPages = lastPage.data.meta.lastPage - 1;
+      console.log("total pagse", totalPages);
       return currentPage < totalPages ? currentPage + 1 : undefined;
     },
-    initialPageParam: 0,
   });
   const { location } = useLocation();
-  const { getVendorByLocation } = useBranchAction();
-  const { data: vendors } = getVendorByLocation({
+  const { getBranchesByLocation } = useBranchAction();
+  const { data: vendors } = getBranchesByLocation({
     latitude: location?.latitude || 0,
     longitude: location?.longitude || 0,
     radius: 300,
