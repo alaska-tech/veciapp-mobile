@@ -35,12 +35,12 @@ export default function CartScreen() {
   } = useCartStore();
 
   // Manejadores de eventos que ahora usan las acciones de Zustand
-  const handleQuantityChange = (index: number, newQuantity: number) => {
-    updateCartItemQuantity(index, newQuantity);
+  const handleQuantityChange = (productServiceId:string, newQuantity: number, price:number) => {
+    updateCartItemQuantity(productServiceId, newQuantity, price);
   };
 
-  const handleDelete = (index: number) => {
-    removeCartItem(index);
+  const handleDelete = (productServiceId: string) => {
+    removeCartItem(productServiceId);
   };
   function handleRefresh() {
     refresh();
@@ -112,6 +112,7 @@ export default function CartScreen() {
                     price: Number(item.unitPrice)*item.quantity,
                     image: product?.logo || "",
                     quantity: item.quantity,
+                    productServiceId: item.productServiceId
                   };
                 })}
                 subtotal={subtotal}

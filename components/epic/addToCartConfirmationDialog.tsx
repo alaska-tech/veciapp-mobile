@@ -107,7 +107,7 @@ export const AddToCartConfirmationDialog: React.FC<
         </DialogHeader>
         <View className="flex flex-row justify-between space-x-4">
           <Button
-            className="rounded-full py-4 flex-1"
+            className="bg-white rounded-full py-4 flex-1"
             onPress={() => {
               onOpenChange(false);
             }}

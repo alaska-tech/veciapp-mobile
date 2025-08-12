@@ -3,19 +3,12 @@ import { create } from "zustand";
 import { persist, PersistOptions } from "zustand/middleware";
 import {
   addProductToCart,
+  deleteItemFromCart,
   fetchCartItemsByCustomerId,
-  updateCart,
+  updateProductQuatityInCart,
 } from "~/actions/shoppingCart.action";
 import { ShoppingCartItem } from "~/constants/models";
 
-// Definir interfaces para mayor seguridad de tipos
-export interface CartItem {
-  productServiceId: string;
-  name: string;
-  price: number;
-  image: string;
-  quantity: number;
-}
 export interface ShoppingCartStore {
   customerId: string;
   shoppingCarts: Array<ShoppingCartItem>;
@@ -31,8 +24,12 @@ interface CartState {
 
   // Acciones para comidas
   addCartItem: (item: ShoppingCartItem) => void;
-  updateCartItemQuantity: (index: number, quantity: number) => void;
-  removeCartItem: (index: number) => void;
+  updateCartItemQuantity: (
+    productServiceId: string,
+    quantity: number,
+    price: number
+  ) => void;
+  removeCartItem: (productServiceId: string) => void;
 
   // Helpers
   getTotalItemsCount: () => number;
@@ -42,24 +39,25 @@ type MyPersist = PersistOptions<CartState>;
 export const useCartStore = create<CartState>()(
   persist<CartState, [], [], MyPersist>(
     (set, get) => ({
-      // Estado inicial
       cartItems: [],
       customerId: null,
       loading: false,
       error: null,
 
-      // Inicializa el carrito
       initCart: async (clientId: string) => {
         set({ loading: true, error: null, customerId: clientId });
 
         try {
           const data = await fetchCartItemsByCustomerId(clientId);
-          console.log("Cart data:", data);
+          const sortedShoppingCarts =
+            data?.data?.shoppingCarts.sort((a, b) =>
+              (a.updatedAt ?? "").localeCompare(b.updatedAt ?? "")
+            ) || [];
           set({
-            cartItems: data?.data?.shoppingCarts || [],
+            cartItems: sortedShoppingCarts,
           });
         } catch (err) {
-          console.log("Error cargando carrito:", err);
+          console.error("Error cargando carrito:", err);
         } finally {
           set({ loading: false });
         }
@@ -71,7 +69,7 @@ export const useCartStore = create<CartState>()(
         }
       },
       // Acciones para comidas
-      addCartItem: (item) => {
+      addCartItem: async (item) => {
         const { customerId } = get();
         try {
           if (!customerId) {
@@ -94,7 +92,7 @@ export const useCartStore = create<CartState>()(
               return { cartItems: [...state.cartItems, item] };
             }
           });
-          addProductToCart({
+          await addProductToCart({
             customerId,
             productServiceId: item.productServiceId,
             quantity: item.quantity,
@@ -106,19 +104,64 @@ export const useCartStore = create<CartState>()(
         }
       },
 
-      updateCartItemQuantity: (index, quantity) =>
-        set((state) => {
-          const newItems = [...state.cartItems];
-          if (newItems[index]) {
-            newItems[index].quantity = quantity;
+      updateCartItemQuantity: async (productServiceId, quantity, price) => {
+        const { cartItems } = get();
+        try {
+          if (quantity <= 0) {
+            throw new Error("Quantity must be greater than 0");
           }
-          return { cartItems: newItems };
-        }),
+          if (!productServiceId) {
+            throw new Error("ProductServiceId is required");
+          }
 
-      removeCartItem: (index) =>
-        set((state) => ({
-          cartItems: state.cartItems.filter((_, i) => i !== index),
-        })),
+          set(() => {
+            const newItems = [...cartItems];
+            const index = newItems.findIndex(
+              (item) => item.productServiceId === productServiceId
+            );
+            if (newItems[index]) {
+              newItems[index].quantity = quantity;
+            }
+            return { cartItems: newItems };
+          });
+          const item = cartItems.find(
+            (item) => item.productServiceId === productServiceId
+          );
+          if (!item) {
+            throw new Error("Item not found in cart");
+          }
+          await updateProductQuatityInCart(item.id!, {
+            productServiceId,
+            quantity,
+            price: price,
+          });
+        } catch (error) {
+          console.error("Error updating item quantity in cart:", error);
+        }
+      },
+      removeCartItem: async (productServiceId: string) => {
+        const { cartItems } = get();
+        try {
+          if (!productServiceId) {
+            throw new Error("ProductServiceId is required");
+          }
+          const index = cartItems.findIndex(
+            (item) => item.productServiceId === productServiceId
+          );
+          const cartEntry = cartItems.find(
+            (item) => item.productServiceId === productServiceId
+          );
+          if (!cartEntry?.id) {
+            throw new Error("Item not found in cart");
+          }
+          set((state) => ({
+            cartItems: state.cartItems.filter((_, i) => i !== index),
+          }));
+          await deleteItemFromCart(cartEntry?.id);
+        } catch (error) {
+          console.error("Error removing item from cart:", error);
+        }
+      },
 
       // Helper para obtener el número total de elementos en el carrito ,
       //  @podria descartarlo pero lo dejo como referencia por si necesito operaciones mas complejas en el futuro

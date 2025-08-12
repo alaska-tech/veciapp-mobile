@@ -14,7 +14,7 @@ export default function ClientLayout() {
     if (!user?.foreignPersonId) {
       return;
     }
-   // initCart(user?.foreignPersonId);
+    initCart(user?.foreignPersonId);
     initFavorites(user?.foreignPersonId);
   }, [user?.foreignPersonId]);
 

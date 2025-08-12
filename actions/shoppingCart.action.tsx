@@ -26,33 +26,6 @@ export async function addProductToCart({
   return res.data;
 }
 
-export function updateProductQuatityInCart(props: {
-  //if quantity is 0, it means deleting
-  clientId: string;
-  productServiceId: string;
-  quantity: number;
-}): Response<unknown> {
-  return {} as Response<unknown>;
-}
-
-export async function createCart(
-  clientId: string,
-  productServiceDto: {
-    productServiceId: string;
-    quantity: number;
-    price: number;
-  }
-) {
-  const res = await apiClient.post<AxiosResponse<Response<null>>>(
-    "/shoppingcart",
-    {
-      clientId,
-      ...productServiceDto,
-    }
-  );
-  return res.data;
-}
-
 export async function fetchCartItemsByCustomerId(customerId: string) {
   const res = await apiClient.get<
     Response<{
@@ -62,31 +35,25 @@ export async function fetchCartItemsByCustomerId(customerId: string) {
   return res.data;
 }
 
-export async function updateCart(
-  customerId: string,
+export async function updateProductQuatityInCart(
+  shoppingCartEntryId: string,
   items: {
     quantity: number;
     productServiceId: string;
-    updatedBy: string;
+    price:number;
   }
 ) {
   const res = await apiClient.put<Response<ShoppingCartStore>>(
-    `/shoppingcart/update/${customerId}`,
+    `/shoppingcart/update/${shoppingCartEntryId}`,
     { ...items }
   );
   return res.data;
 }
 
-export async function deleteItemFromCart(productServiceId: string, items: any) {
+export async function deleteItemFromCart(shoppingCartEntryId: string) {
   const res = await apiClient.delete<
     AxiosResponse<Response<ShoppingCartStore>>
-  >(`/shoppingcart/delete-item/${productServiceId}`);
+  >(`/shoppingcart/delete-item/${shoppingCartEntryId}`);
   return res.data;
 }
 
-export async function clearCart(customerId: string) {
-  const res = await apiClient.get<AxiosResponse<Response<ShoppingCartStore>>>(
-    `/shoppingcart/clear-cart/customer/${customerId}`
-  );
-  return res.data;
-}
