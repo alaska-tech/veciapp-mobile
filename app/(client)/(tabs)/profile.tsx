@@ -52,7 +52,10 @@ export default function ProfileScreen() {
             headerBackVisible: true,
           }}
         />
-        <ScrollView className="h-full w-full p-4 bg-white" contentContainerStyle={{ paddingBottom: 30 }}>
+        <ScrollView
+          className="h-full w-full p-4 bg-white"
+          contentContainerStyle={{ paddingBottom: 30 }}
+        >
           {/* Tarjeta de perfil */}
           <Card className="mb-6 pt-8 rounded-3xl">
             <CardContent>
@@ -121,6 +124,22 @@ export default function ProfileScreen() {
             </Button>
             <Separator />
 
+            {/* Historial */}
+            <Button
+              className="w-full flex-row items-center justify-between"
+              variant="ghost"
+              onPress={() =>
+                router.push("/(customerscreens)/orderHistoryScreen")
+              }
+            >
+              <View className="flex-row items-center gap-2">
+                <TimerReset className="h-5 w-5 mr-3" color="#000000" />
+                <Text>Historial</Text>
+              </View>
+              <ChevronRight className="h-5 w-5" color="#000000" />
+            </Button>
+            <Separator />
+
             {/* Notificaciones Push */}
             <View className="flex-row items-center justify-between px-4 py-3 bg-transparent">
               <View className="flex-row items-center gap-2">
@@ -159,19 +178,6 @@ export default function ProfileScreen() {
                   color="#000000"
                 />
                 <Text>Preguntas frecuentes</Text>
-              </View>
-              <ChevronRight className="h-5 w-5" color="#000000" />
-            </Button>
-            <Separator />
-
-            {/* Historial */}
-            <Button
-              className="w-full flex-row items-center justify-between"
-              variant="ghost"
-            >
-              <View className="flex-row items-center gap-2">
-                <TimerReset className="h-5 w-5 mr-3" color="#000000" />
-                <Text>Historial</Text>
               </View>
               <ChevronRight className="h-5 w-5" color="#000000" />
             </Button>

@@ -35,7 +35,11 @@ export default function CartScreen() {
   } = useCartStore();
 
   // Manejadores de eventos que ahora usan las acciones de Zustand
-  const handleQuantityChange = (productServiceId:string, newQuantity: number, price:number) => {
+  const handleQuantityChange = (
+    productServiceId: string,
+    newQuantity: number,
+    price: number
+  ) => {
     updateCartItemQuantity(productServiceId, newQuantity, price);
   };
 
@@ -109,10 +113,10 @@ export default function CartScreen() {
                   )?.data;
                   return {
                     name: product?.name || "Desconocido",
-                    price: Number(item.unitPrice)*item.quantity,
+                    price: Number(item.unitPrice) * item.quantity,
                     image: product?.logo || "",
                     quantity: item.quantity,
-                    productServiceId: item.productServiceId
+                    productServiceId: item.productServiceId,
                   };
                 })}
                 subtotal={subtotal}
@@ -141,6 +145,18 @@ export default function CartScreen() {
         ) : (
           <></>
         )}
+        <View className="mt-8 mb-4 px-0">
+          <Button
+            variant="outline"
+            size="lg"
+            className="w-full rounded-full border-gray-200 bg-gray-100"
+            onPress={() => router.push("/(customerscreens)/orderHistoryScreen")}
+          >
+            <Text className="text-gray-700 font-normal">
+              Ver historial de pedidos
+            </Text>
+          </Button>
+        </View>
       </ScrollView>
     </>
   );
