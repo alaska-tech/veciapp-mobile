@@ -304,18 +304,18 @@ export interface ServiceOrder extends BaseAttributes {
   comment?: string;
 }
 export interface ShoppingCartItem {
-  productServiceId: string;
-  branchId: string;
-  quantity: number;
-  unitPrice: string; //decimal
-  totalPrice: string; //decimal
-  addedAt: Date;
-}
-export interface ShoppingCart extends BaseAttributes {
-  id: string;
   customerId: string;
-  items: Array<ShoppingCartItem>;
+  quantity: number;
+  productServiceId: string;
+  updatedBy?: string;
+  id?: string; //del elemtno "carrito"
+  branchId: string;
+  unitPrice?: number;
+  totalPrice?: string;
+  addedAt?: string; //date
+  updatedAt?: string; //date
 }
+
 
 export interface FavoriteItem {
   createdAt?: Date;

@@ -1,4 +1,4 @@
-import { ScrollView } from "react-native";
+import { RefreshControl, ScrollView } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useRouter } from "expo-router";
@@ -7,44 +7,30 @@ import { Stack } from "expo-router";
 import React from "react";
 import { View } from "react-native";
 import { MapPinIcon } from "lucide-react-native";
-import { useCartStore } from "~/store/cartStore";
+import { useCartItemsByBranch, useCartStore } from "~/store/cartStore";
 import { useAuth } from "~/components/ContextProviders/AuthProvider";
 import useCustomerAction from "~/actions/customer.action";
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "~/services/clients";
+import { Response, ShoppingCartItem } from "../../../constants/models";
+import { useProductAction } from "~/actions/product.action";
+import { useBranchAction } from "~/actions/branch.action";
+import { fetchCartItemsByCustomerId } from "~/actions/shoppingCart.action";
+
+const SERVICE_FEE_PERCENTAGE = 0.1;
+const DELIVERY_CHARGE = 10000;
 
 export default function CartScreen() {
   const router = useRouter();
   const { user } = useAuth();
   const customerActions = useCustomerAction();
   const customer = customerActions.getCustomerDetails(user?.foreignPersonId);
+  const productActions = useProductAction();
+  const branchActions = useBranchAction();
   const { address = '{"address":"Desconocido"}' } = customer.data ?? {};
   const parsedAddress = JSON.parse(address);
   // Usar el store de Zustand para gestionar el estado del carrito
-  const {
-    cartItems,
-    salonItems,
-    updateCartItemQuantity,
-    removeCartItem,
-    updateSalonItemQuantity,
-    removeSalonItem,
-  } = useCartStore();
-
-  // Calculate totals based on current cart items
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-  const serviceCharge = subtotal * 0.1; // 10% service charge
-  const deliveryFee = 10000;
-  const total = subtotal + serviceCharge + deliveryFee;
-
-  // Calculate totals for salon items
-  const salonSubtotal = salonItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-  const salonServiceCharge = salonSubtotal * 0.1; // 10% service charge
-  const salonDeliveryFee = 8000;
-  const salonTotal = salonSubtotal + salonServiceCharge + salonDeliveryFee;
+  const { cartItems, updateCartItemQuantity, removeCartItem,refresh,loading } = useCartStore();
 
   // Manejadores de eventos que ahora usan las acciones de Zustand
   const handleQuantityChange = (index: number, newQuantity: number) => {
@@ -54,20 +40,21 @@ export default function CartScreen() {
   const handleDelete = (index: number) => {
     removeCartItem(index);
   };
-
-  const handleSalonQuantityChange = (index: number, newQuantity: number) => {
-    updateSalonItemQuantity(index, newQuantity);
-  };
-
-  const handleSalonDelete = (index: number) => {
-    removeSalonItem(index);
-  };
-
-  const handlePayment = (cartType: 'regular' | 'salon') => {
+  function handleRefresh() {
+    refresh();
+  }
+  const handlePayment = (cartType: "regular") => {
     console.log(`Processing ${cartType} payment...`);
-    // Here you can add your payment logic based on the cart type
   };
+  const productsQuery = productActions.getProductsById(
+    cartItems?.map((e) => e.productServiceId)
+  );
 
+  const cartItemsByBranch = useCartItemsByBranch();
+  const cartItemsFromQueryLenght = cartItems.length || 0;
+  const branchesQuery = branchActions.getBranchesById(
+    Object.keys(cartItemsByBranch)
+  );
   return (
     <>
       <Stack.Screen
@@ -79,7 +66,13 @@ export default function CartScreen() {
           headerBackVisible: true,
         }}
       />
-      <ScrollView className="h-full w-full p-4">
+      <ScrollView
+        className="h-full w-full p-4"
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={handleRefresh} />
+        }
+      >
+        {/* <Text>{JSON.stringify(cartItems, null, 4)}</Text> */}
         <View className="flex-row items-center flex-1 ml-2 mb-4 pb-4 border-b border-gray-300">
           <MapPinIcon size={20} color="#ffffff" fill="#666" />
           <Text className="text-gray-500 text-md pr-1">Enviar a</Text>
@@ -91,54 +84,61 @@ export default function CartScreen() {
             {parsedAddress?.address || ""}
           </Text>
         </View>
-      {cartItems.length > 0 && (
-        <CartCard
-          providerName="Sabores de Santa Marta"
-          providerImage="https://picsum.photos/200"
-          distance="1.2Km"
-          items={cartItems}
-          subtotal={subtotal}
-          serviceCharge={serviceCharge}
-          deliveryFee={deliveryFee}
-          total={total}
-          onQuantityChange={handleQuantityChange}
-          onDelete={handleDelete}
-          onPayPress={() => handlePayment('regular')}
-        />
-      )}
-      
-      {cartItems.length > 0 && salonItems.length > 0 && <View className="h-4" />}
-      
-      {salonItems.length > 0 && (
-        <CartCard
-          providerName="Estilo Caribe Salón"
-          providerImage="https://picsum.photos/201"
-          distance="0.8Km"
-          items={salonItems}
-          subtotal={salonSubtotal}
-          serviceCharge={salonServiceCharge}
-          deliveryFee={salonDeliveryFee}
-          total={salonTotal}
-          onQuantityChange={handleSalonQuantityChange}
-          onDelete={handleSalonDelete}
-          onPayPress={() => {
-            console.log("Processing salon payment...");
-          }}
-        />
-      )}
-      
-      {cartItems.length === 0 && salonItems.length === 0 && (
-        <View className="items-center justify-center py-10">
-          <Text className="text-xl text-gray-500 mb-6">Tu carrito está vacío</Text>
-          <Button 
-            className="bg-yellow-400 rounded-full px-8"
-            onPress={() => router.push('/home')}
-          >
-            <Text className="text-black font-bold">Explorar productos</Text>
-          </Button>
-        </View>
-      )}
-    </ScrollView>
+        {Object.entries(cartItemsByBranch).map(([branchId, cartItem]) => {
+          const branch = branchesQuery.find(
+            (e) => e.data?.id === branchId
+          )?.data;
+          const subtotal = cartItem.reduce((acc, item) => {
+            return acc + Number.parseFloat(item.totalPrice || "0");
+          }, 0);
+          const serviceCharge = subtotal * SERVICE_FEE_PERCENTAGE;
+
+          const total = subtotal + serviceCharge + DELIVERY_CHARGE;
+          return (
+            <>
+              {/* <Text>{JSON.stringify(cartItem, null, 4)}</Text> */}
+              <CartCard
+                providerName={branch?.name || "Desconocido"}
+                providerImage={branch?.logo || "https://picsum.photos/200"}
+                distance="---"
+                items={cartItem.map((item) => {
+                  const product = productsQuery.find(
+                    (e) => e.data?.id === item.productServiceId
+                  )?.data;
+                  return {
+                    name: product?.name || "Desconocido",
+                    price: Number(item.unitPrice),
+                    image: product?.logo || "",
+                    quantity: item.quantity,
+                  };
+                })}
+                subtotal={subtotal}
+                serviceCharge={serviceCharge}
+                deliveryFee={DELIVERY_CHARGE}
+                total={total}
+                onQuantityChange={handleQuantityChange}
+                onDelete={handleDelete}
+                onPayPress={() => handlePayment("regular")}
+              />
+            </>
+          );
+        })}
+        {cartItemsFromQueryLenght === 0 ? (
+          <View className="items-center justify-center py-10">
+            <Text className="text-xl text-gray-500 mb-6">
+              Tu carrito está vacío
+            </Text>
+            <Button
+              className="bg-yellow-400 rounded-full px-8"
+              onPress={() => router.push("/home")}
+            >
+              <Text className="text-black font-bold">Explorar productos</Text>
+            </Button>
+          </View>
+        ) : (
+          <></>
+        )}
+      </ScrollView>
     </>
   );
 }

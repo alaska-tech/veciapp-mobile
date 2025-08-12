@@ -7,17 +7,14 @@ import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import { Star, MapPin, Plus, Minus, Heart, Share2 } from "lucide-react-native";
-import { useCartStore } from "~/store/cartStore";
-import { useRouter } from "expo-router";
 import { useFavoriteStore } from "~/store/favoriteStore";
 import { FavoriteItem, Product } from "~/constants/models";
 import { useBranchAction } from "~/actions/branch.action";
 import { FavoriteConfirmationDialog } from "~/components/epic/favoriteConfirmationDialog";
 import { useAuth } from "~/components/ContextProviders/AuthProvider";
-import { apiClient } from "~/services/clients";
-import { useQueryClient } from "@tanstack/react-query";
 import { addProductToCart } from "~/actions/shoppingCart.action";
 import { AddToCartConfirmationDialog } from "~/components/epic/addToCartConfirmationDialog";
+import { useCartStore } from "~/store/cartStore";
 
 // Componente reutilizable para sumar/restar cantidad
 function QuantityControl({
@@ -60,19 +57,15 @@ const Index = () => {
   const productQuery = actions.getProductById(id as string);
   const [quantity, setQuantity] = useState(1);
   const [showFavoriteDialog, setShowFavoriteDialog] = useState(false);
-  const [showAddToCartDialog, setShowAddToCartDialog] = useState(true);
+  const [showAddToCartDialog, setShowAddToCartDialog] = useState(false);
   const [favoriteAction, setFavoriteAction] = useState<"add" | "remove">("add");
-  const addCartItem = useCartStore((state) => state.addCartItem);
-  const cartItems = useCartStore((state) => state.cartItems);
-  const router = useRouter();
-  const { addFavorite, isFavorite } = useFavoriteStore();
-  const removeFavorite = useFavoriteStore((state) => state.removeFavorite);
-  const favorites = useFavoriteStore((state) => state.favorites);
+  const { addFavorite, isFavorite, removeFavorite } = useFavoriteStore();
   const branchActions = useBranchAction();
   const { data: branchData } = branchActions.getBranchById(
     productQuery.data?.branchId
   );
   const isThisFavorite = isFavorite(id as string);
+  const {addCartItem}=useCartStore()
   if (productQuery.isLoading) {
     return <Text>Loading...</Text>;
   }
@@ -84,7 +77,6 @@ const Index = () => {
     name = "",
     rating = "",
     distance = "",
-    state = "",
     discount = "",
     price = "",
     finalPrice = "",
@@ -93,42 +85,20 @@ const Index = () => {
     inventory,
     id: productServiceId,
   } = productQuery.data || ({} as Product);
-  const validFavorites = favorites.filter(
-    (fav) => fav && typeof fav === "object" && fav.id
-  );
-  const queryClient = useQueryClient();
-  // Handler para agregar al carrito y navegar
+
   const handleAddToCart = async () => {
     if (!productQuery.data?.branchId || !user?.foreignPersonId) return;
-    await addProductToCart({
+    await addCartItem({
       customerId: user?.foreignPersonId,
       productServiceId: id as string,
       quantity: quantity,
       unitPrice: Number.parseFloat(price),
       branchId: productQuery.data?.branchId,
     });
-    queryClient.invalidateQueries({ queryKey: ["cart"] });
     setShowAddToCartDialog(true);
     return;
-    // Buscar si el producto ya está en el carrito por nombre (puedes cambiar a id si lo tienes)
-    const existingIndex = cartItems.findIndex(
-      (item: any) => item.name === name
-    );
-    if (existingIndex !== -1) {
-      // Si ya existe, sumar la cantidad (esto podría mejorarse con una acción updateCartItemQuantity)
-      // Aquí solo agregamos como nuevo para mantener la lógica simple
-    }
-    addCartItem({
-      name: name,
-      price: Number.parseFloat(finalPrice),
-      image: logo,
-      quantity: quantity,
-      productServiceId,
-    });
-    router.push("/(client)/(tabs)/cart");
   };
 
-  // Handler para alternar favorito
   const handleAddFavorite = () => {
     if (!productQuery.data || (!productServiceId && !name)) return;
     if (isThisFavorite) {

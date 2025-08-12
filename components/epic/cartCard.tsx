@@ -59,7 +59,7 @@ export default function CartCard({
   };
 
   return (
-    <Card className="rounded-3xl overflow-hidden">
+    <Card className="rounded-3xl overflow-hidden mb-8">
       {/* Provider Info Section */}
       <View className="p-4 flex-row items-center justify-between">
         <View className="flex-row items-center flex-1">

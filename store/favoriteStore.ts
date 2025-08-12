@@ -38,9 +38,9 @@ export const useFavoriteStore = create<FavoriteState>((set, get) => {
       }
     },
     refresh: () => {
-      const { customerId } = get();
+      const { customerId, initFavorites } = get();
       if (customerId) {
-        get().initFavorites(customerId);
+        initFavorites(customerId);
       }
     },
     addFavorite: async (item) => {

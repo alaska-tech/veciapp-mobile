@@ -17,7 +17,7 @@ export const useBranchSelectedStore = create<BranchSelectedState>()(
       clear: () => set({ branch: undefined }),
     }),
     {
-      name: "my-app-storage", // clave única en AsyncStorage
+      name: "branchSelectedStore",
       storage: {
         getItem: async (name) => {
           const value = await AsyncStorage.getItem(name);
