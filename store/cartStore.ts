@@ -77,9 +77,23 @@ export const useCartStore = create<CartState>()(
           if (!customerId) {
             throw new Error("There is not customerId");
           }
-          set((state) => ({
-            cartItems: [...state.cartItems, item],
-          }));
+          set((state) => {
+            const existingIndex = state.cartItems.findIndex(
+              (ci) => ci.productServiceId === item.productServiceId
+            );
+            if (existingIndex !== -1) {
+              // Ya existe, suma las cantidades
+              const updatedItems = [...state.cartItems];
+              updatedItems[existingIndex] = {
+                ...updatedItems[existingIndex],
+                quantity: updatedItems[existingIndex].quantity + item.quantity,
+              };
+              return { cartItems: updatedItems };
+            } else {
+              // No existe, agregar al final
+              return { cartItems: [...state.cartItems, item] };
+            }
+          });
           addProductToCart({
             customerId,
             productServiceId: item.productServiceId,

@@ -10,12 +10,8 @@ import { MapPinIcon } from "lucide-react-native";
 import { useCartItemsByBranch, useCartStore } from "~/store/cartStore";
 import { useAuth } from "~/components/ContextProviders/AuthProvider";
 import useCustomerAction from "~/actions/customer.action";
-import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "~/services/clients";
-import { Response, ShoppingCartItem } from "../../../constants/models";
 import { useProductAction } from "~/actions/product.action";
 import { useBranchAction } from "~/actions/branch.action";
-import { fetchCartItemsByCustomerId } from "~/actions/shoppingCart.action";
 
 const SERVICE_FEE_PERCENTAGE = 0.1;
 const DELIVERY_CHARGE = 10000;
@@ -30,7 +26,13 @@ export default function CartScreen() {
   const { address = '{"address":"Desconocido"}' } = customer.data ?? {};
   const parsedAddress = JSON.parse(address);
   // Usar el store de Zustand para gestionar el estado del carrito
-  const { cartItems, updateCartItemQuantity, removeCartItem,refresh,loading } = useCartStore();
+  const {
+    cartItems,
+    updateCartItemQuantity,
+    removeCartItem,
+    refresh,
+    loading,
+  } = useCartStore();
 
   // Manejadores de eventos que ahora usan las acciones de Zustand
   const handleQuantityChange = (index: number, newQuantity: number) => {
@@ -107,7 +109,7 @@ export default function CartScreen() {
                   )?.data;
                   return {
                     name: product?.name || "Desconocido",
-                    price: Number(item.unitPrice),
+                    price: Number(item.unitPrice)*item.quantity,
                     image: product?.logo || "",
                     quantity: item.quantity,
                   };
