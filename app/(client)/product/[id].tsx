@@ -14,6 +14,10 @@ import { FavoriteItem, Product } from "~/constants/models";
 import { useBranchAction } from "~/actions/branch.action";
 import { FavoriteConfirmationDialog } from "~/components/epic/favoriteConfirmationDialog";
 import { useAuth } from "~/components/ContextProviders/AuthProvider";
+import { apiClient } from "~/services/clients";
+import { useQueryClient } from "@tanstack/react-query";
+import { addProductToCart } from "~/actions/shoppingCart.action";
+import { AddToCartConfirmationDialog } from "~/components/epic/addToCartConfirmationDialog";
 
 // Componente reutilizable para sumar/restar cantidad
 function QuantityControl({
@@ -51,11 +55,12 @@ function QuantityControl({
 const Index = () => {
   // TODOS los hooks deben ir aquí arriba
   const { id } = useLocalSearchParams();
-  const { user } = useAuth()
+  const { user } = useAuth();
   const actions = useProductAction();
   const productQuery = actions.getProductById(id as string);
   const [quantity, setQuantity] = useState(1);
   const [showFavoriteDialog, setShowFavoriteDialog] = useState(false);
+  const [showAddToCartDialog, setShowAddToCartDialog] = useState(true);
   const [favoriteAction, setFavoriteAction] = useState<"add" | "remove">("add");
   const addCartItem = useCartStore((state) => state.addCartItem);
   const cartItems = useCartStore((state) => state.cartItems);
@@ -91,9 +96,20 @@ const Index = () => {
   const validFavorites = favorites.filter(
     (fav) => fav && typeof fav === "object" && fav.id
   );
-
+  const queryClient = useQueryClient();
   // Handler para agregar al carrito y navegar
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
+    if (!productQuery.data?.branchId || !user?.foreignPersonId) return;
+    await addProductToCart({
+      customerId: user?.foreignPersonId,
+      productServiceId: id as string,
+      quantity: quantity,
+      unitPrice: Number.parseFloat(price),
+      branchId: productQuery.data?.branchId,
+    });
+    queryClient.invalidateQueries({ queryKey: ["cart"] });
+    setShowAddToCartDialog(true);
+    return;
     // Buscar si el producto ya está en el carrito por nombre (puedes cambiar a id si lo tienes)
     const existingIndex = cartItems.findIndex(
       (item: any) => item.name === name
@@ -123,7 +139,7 @@ const Index = () => {
       const newItem: FavoriteItem = {
         productServiceId: productServiceId,
         userId: user?.foreignPersonId!,
-        productService: productQuery.data
+        productService: productQuery.data,
       };
       addFavorite(newItem);
       setFavoriteAction("add");
@@ -245,6 +261,11 @@ const Index = () => {
           onOpenChange={setShowFavoriteDialog}
           productName={name}
           action={favoriteAction}
+        />
+        <AddToCartConfirmationDialog
+          open={showAddToCartDialog}
+          onOpenChange={setShowAddToCartDialog}
+          productName={name}
         />
       </View>
     </SafeAreaView>
