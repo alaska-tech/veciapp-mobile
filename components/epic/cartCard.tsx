@@ -28,6 +28,7 @@ interface CartCardProps {
     image: string | ImageSourcePropType;
     quantity: number;
     productServiceId: string;
+    inventory: number;
   }>;
   subtotal: number;
   serviceCharge: number;
@@ -147,6 +148,7 @@ export default function CartCard({
                   <Button
                     variant="ghost"
                     size="icon"
+                    disabled={item.quantity >= item.inventory}
                     onPress={() =>
                       onQuantityChange?.(
                         item.productServiceId,

@@ -65,7 +65,9 @@ const Index = () => {
     productQuery.data?.branchId
   );
   const isThisFavorite = isFavorite(id as string);
-  const {addCartItem}=useCartStore()
+  const { addCartItem, cartItems } = useCartStore();
+  const quantityInCart =
+    cartItems.find((e) => e.productServiceId === id)?.quantity || 0;
   if (productQuery.isLoading) {
     return <Text>Loading...</Text>;
   }
@@ -76,7 +78,7 @@ const Index = () => {
     logo = "https://picsum.photos/400",
     name = "",
     rating = "",
-    distance = "",
+    distance = "---",
     discount = "",
     price = "",
     finalPrice = "",
@@ -88,13 +90,14 @@ const Index = () => {
 
   const handleAddToCart = async () => {
     if (!productQuery.data?.branchId || !user?.foreignPersonId) return;
-    await addCartItem({
+    addCartItem({
       customerId: user?.foreignPersonId,
       productServiceId: id as string,
       quantity: quantity,
       unitPrice: Number.parseFloat(price),
       branchId: productQuery.data?.branchId,
     });
+    setQuantity(1)
     setShowAddToCartDialog(true);
     return;
   };
@@ -176,8 +179,6 @@ const Index = () => {
               )}
             </View>
             <View className="flex-row items-center gap-2 mb-2">
-              <Star size={18} color="#FFD700" fill="#FFD700" />
-              <Text className="text-lg font-semibold">{rating}</Text>
               <MapPin size={16} color="#666" />
               <Text className="text-gray-500">{distance} de distancia</Text>
             </View>
@@ -185,12 +186,21 @@ const Index = () => {
               <QuantityControl
                 quantity={quantity}
                 setQuantity={setQuantity}
-                max={inventory}
+                max={inventory - quantityInCart}
                 min={1}
               />
-              <Text className="ml-4 text-gray-500">
-                {inventory} Disponibles
-              </Text>
+              <View>
+                <Text className="ml-4 text-gray-500">
+                  {inventory} Disponibles
+                </Text>
+                {quantityInCart > 0 ? (
+                  <Text className="ml-4 text-gray-500">
+                    Ya tienes {quantityInCart} de esto en tu carrito
+                  </Text>
+                ) : (
+                  <></>
+                )}
+              </View>
             </View>
             <Badge
               variant="secondary"
@@ -221,6 +231,7 @@ const Index = () => {
             <Button
               className="w-full bg-yellow-400 rounded-full py-4"
               onPress={handleAddToCart}
+              disabled={inventory - quantityInCart === 0}
             >
               <Text className="text-black font-bold text-xl">¡Lo quiero!</Text>
             </Button>

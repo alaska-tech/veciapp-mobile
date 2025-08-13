@@ -201,12 +201,46 @@ export const useCartItemsCount = () =>
 
 export const useCartItemsByBranch = () =>
   useCartStore((state) => {
-    const cartItemsByBranch = state.cartItems.reduce<
-      Record<string, ShoppingCartItem[]>
-    >((acc, item) => {
-      if (!acc[item.branchId]) acc[item.branchId] = [];
-      acc[item.branchId].push(item);
+    const cartItemsByBranch: Record<string, ShoppingCartItem[]> =
+      state.cartItems.reduce<Record<string, ShoppingCartItem[]>>(
+        (acc, item) => {
+          if (!acc[item.branchId]) {
+            acc[item.branchId] = [];
+          }
+          acc[item.branchId].push(item);
+          return acc;
+        },
+        {}
+      );
+    const cartItemsWithPaymentQuatities: Record<
+      string,
+      {
+        ShoppingCartItem: ShoppingCartItem[];
+        subtotal: number;
+        mostRecentDate: number;
+      }
+    > = Object.entries(cartItemsByBranch).reduce<
+      Record<
+        string,
+        {
+          ShoppingCartItem: ShoppingCartItem[];
+          subtotal: number;
+          mostRecentDate: number;
+        }
+      >
+    >((acc, [branchId, carts]) => {
+      const subtotal = carts.reduce((sum, item) => {
+        return sum + (item.unitPrice || 0) * item.quantity;
+      }, 0);
+      const mostRecentDate = Math.max(
+        ...carts.map((item) => new Date(item.updatedAt || 0).getTime())
+      );
+      acc[branchId] = {
+        ShoppingCartItem: carts,
+        subtotal,
+        mostRecentDate: mostRecentDate,
+      };
       return acc;
     }, {});
-    return cartItemsByBranch;
+    return cartItemsWithPaymentQuatities;
   });

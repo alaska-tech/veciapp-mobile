@@ -102,7 +102,7 @@ export const AddToCartConfirmationDialog: React.FC<
             </View>
           </View>
           <DialogTitle className="text-center text-lg font-bold text-gray-800">
-            {`¡Tu "${productName}" ya esta en el carrito!`}
+            {`¡Agregaste tu "${productName}" al carrito!`}
           </DialogTitle>
         </DialogHeader>
         <View className="flex flex-row justify-between space-x-4">

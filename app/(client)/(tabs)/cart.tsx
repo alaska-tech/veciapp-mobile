@@ -90,46 +90,48 @@ export default function CartScreen() {
             {parsedAddress?.address || ""}
           </Text>
         </View>
-        {Object.entries(cartItemsByBranch).map(([branchId, cartItem]) => {
-          const branch = branchesQuery.find(
-            (e) => e.data?.id === branchId
-          )?.data;
-          const subtotal = cartItem.reduce((acc, item) => {
-            return acc + Number.parseFloat(item.totalPrice || "0");
-          }, 0);
-          const serviceCharge = subtotal * SERVICE_FEE_PERCENTAGE;
+        {Object.entries(cartItemsByBranch)
+          .sort(([branchId1, cartItem1], [branchId2, cartItem2]) => {
+            return cartItem2.mostRecentDate - cartItem1.mostRecentDate;
+          })
+          .map(([branchId, cartItem]) => {
+            const branch = branchesQuery.find(
+              (e) => e.data?.id === branchId
+            )?.data;
+            const serviceCharge = cartItem.subtotal * SERVICE_FEE_PERCENTAGE;
 
-          const total = subtotal + serviceCharge + DELIVERY_CHARGE;
-          return (
-            <>
-              {/* <Text>{JSON.stringify(cartItem, null, 4)}</Text> */}
-              <CartCard
-                providerName={branch?.name || "Desconocido"}
-                providerImage={branch?.logo || "https://picsum.photos/200"}
-                distance="---"
-                items={cartItem.map((item) => {
-                  const product = productsQuery.find(
-                    (e) => e.data?.id === item.productServiceId
-                  )?.data;
-                  return {
-                    name: product?.name || "Desconocido",
-                    price: Number(item.unitPrice) * item.quantity,
-                    image: product?.logo || "",
-                    quantity: item.quantity,
-                    productServiceId: item.productServiceId,
-                  };
-                })}
-                subtotal={subtotal}
-                serviceCharge={serviceCharge}
-                deliveryFee={DELIVERY_CHARGE}
-                total={total}
-                onQuantityChange={handleQuantityChange}
-                onDelete={handleDelete}
-                onPayPress={() => handlePayment("regular")}
-              />
-            </>
-          );
-        })}
+            const total = cartItem.subtotal + serviceCharge + DELIVERY_CHARGE;
+            return (
+              <>
+                {/* <Text>{JSON.stringify(cartItem, null, 4)}</Text> */}
+                <CartCard
+                  providerName={branch?.name || "Desconocido"}
+                  providerImage={branch?.logo || "https://picsum.photos/200"}
+                  distance="---"
+                  items={cartItem.ShoppingCartItem.map((item) => {
+                    const product = productsQuery.find(
+                      (e) => e.data?.id === item.productServiceId
+                    )?.data;
+                    return {
+                      name: product?.name || "Desconocido",
+                      price: Number(item.unitPrice) * item.quantity,
+                      image: product?.logo || "",
+                      quantity: item.quantity,
+                      productServiceId: item.productServiceId,
+                      inventory: product?.inventory||0,
+                    };
+                  })}
+                  subtotal={cartItem.subtotal}
+                  serviceCharge={serviceCharge}
+                  deliveryFee={DELIVERY_CHARGE}
+                  total={total}
+                  onQuantityChange={handleQuantityChange}
+                  onDelete={handleDelete}
+                  onPayPress={() => handlePayment("regular")}
+                />
+              </>
+            );
+          })}
         {cartItemsFromQueryLenght === 0 ? (
           <View className="items-center justify-center py-10">
             <Text className="text-xl text-gray-500 mb-6">
