@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, TouchableOpacity, Image } from "react-native";
 import { Card } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
-import { Calendar, ChevronDown, ChevronUp } from "lucide-react-native";
+import { Calendar, ChevronDown, ChevronUp, MessageCircleMore } from "lucide-react-native";
 import { Separator } from "~/components/ui/separator";
 
 interface TimelineItem {
@@ -120,10 +120,11 @@ export default function OrderDetailCard({
         {/* Coordinate Delivery Button */}
         <TouchableOpacity 
           onPress={onCoordinateDelivery}
-          className="bg-yellow-400 rounded-full py-4 mb-6"
+          className="bg-yellow-400 rounded-full py-4 mb-6 flex-row items-center justify-center"
         >
-          <Text className="text-black text-center font-semibold text-lg">
-            Coordinar entrega
+          <MessageCircleMore size={20} color="#000" />
+          <Text className="text-black text-center font-semibold text-lg ml-2">
+            Chatear entrega
           </Text>
         </TouchableOpacity>
 
