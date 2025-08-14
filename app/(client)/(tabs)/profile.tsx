@@ -183,6 +183,20 @@ export default function ProfileScreen() {
             </Button>
             <Separator />
 
+            {/* Seguridad */}
+            <Button
+              className="w-full flex-row items-center justify-between"
+              variant="ghost"
+              onPress={() => router.push("/(customerscreens)/securitySettings")}
+            >
+              <View className="flex-row items-center gap-2">
+                <UserCircle className="h-5 w-5 mr-3" color="#000000" />
+                <Text>Seguridad</Text>
+              </View>
+              <ChevronRight className="h-5 w-5" color="#000000" />
+            </Button>
+            <Separator />
+
             {/* Cerrar Sesión */}
             <Button
               className="w-full flex-row items-center justify-between"
