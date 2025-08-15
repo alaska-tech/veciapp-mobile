@@ -24,6 +24,12 @@ import {
 } from "~/actions/localStorage.actions";
 import { refreshParameters } from "~/actions/parameter.action";
 import { useAuth } from "~/components/ContextProviders/AuthProvider";
+import {
+  registerForPushNotifications,
+  sendImmediateNotification,
+  addNotificationReceivedListener,
+  addNotificationResponseReceivedListener,
+} from "~/lib/notifications";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -40,6 +46,62 @@ export default function LoginScreen() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const passwordRef = useRef<TextInput>(null);
   const { refreshAuthInfo } = useAuth();
+
+  // Configurar notificaciones al cargar el componente
+  useEffect(() => {
+    setupNotifications();
+  }, []);
+
+  const setupNotifications = async () => {
+    try {
+      // Registrar para notificaciones push
+      const token = await registerForPushNotifications();
+      if (token) {
+        console.log('Dispositivo registrado para notificaciones push');
+      }
+
+      // Configurar listener para notificaciones recibidas en primer plano
+      const receivedSubscription = addNotificationReceivedListener(notification => {
+        console.log('Notificación recibida en primer plano:', notification);
+      });
+
+      // Configurar listener para notificaciones tocadas
+      const responseSubscription = addNotificationResponseReceivedListener(response => {
+        console.log('Usuario tocó la notificación:', response);
+        // Aquí puedes navegar a una pantalla específica basada en la notificación
+        const data = response.notification.request.content.data;
+        if (data?.screen && typeof data.screen === 'string') {
+          // Validar que la ruta sea válida antes de navegar
+          const screenPath = data.screen as string;
+          if (screenPath.startsWith('/')) {
+            router.push(screenPath as any);
+          }
+        }
+      });
+
+      // Cleanup al desmontar el componente
+      return () => {
+        receivedSubscription.remove();
+        responseSubscription.remove();
+      };
+    } catch (error) {
+      console.error('Error al configurar notificaciones:', error);
+    }
+  };
+
+  // Función para probar notificaciones locales
+  const testNotification = async () => {
+    try {
+      await sendImmediateNotification(
+        '¡Bienvenido a Veciapp! 🎉',
+        'Tu sesión ha sido iniciada exitosamente.',
+        { screen: '/home' }
+      );
+      console.log('Notificación de prueba enviada');
+    } catch (error) {
+      console.error('Error al enviar notificación de prueba:', error);
+    }
+  };
 
   useEffect(() => {
     if (showPassword) {
@@ -89,6 +151,17 @@ export default function LoginScreen() {
       await setToken(token);
       await refreshParameters();
       await refreshAuthInfo();
+
+              // Enviar notificación de bienvenida
+        try {
+          await sendImmediateNotification(
+            '¡Bienvenido de vuelta! 👋',
+            `Hola ${(user as any).name || user.email}, tu sesión ha sido iniciada exitosamente.`,
+            { screen: '/home' }
+          );
+        } catch (notificationError) {
+          console.error('Error al enviar notificación de bienvenida:', notificationError);
+        }
     } catch (error) {
       console.error("Login error:", error);
       Alert.alert(
@@ -235,6 +308,19 @@ export default function LoginScreen() {
             </Text>
           )}
         </Button>
+
+        {/* Botón de prueba de notificaciones */}
+        {!isLoading && showPassword && (
+          <Button
+            onPress={testNotification}
+            variant="outline"
+            className="w-full rounded-full mb-4"
+          >
+            <Text className="text-blue-600 font-bold text-md">
+              🔔 Probar Notificación
+            </Text>
+          </Button>
+        )}
         {devButton}
         {!isLoading && (
           <>
