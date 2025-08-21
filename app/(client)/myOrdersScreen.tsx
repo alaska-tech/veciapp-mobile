@@ -47,17 +47,7 @@ export default function MyOrdersScreen() {
   };
 
   return (
-    <>
-      <Stack.Screen
-        options={{
-          headerShadowVisible: false,
-          headerTitle: "Mis Pedidos",
-          headerTitleAlign: "center",
-          headerShown: true,
-          headerBackTitle: "Volver",
-          headerBackVisible: true,
-        }}
-      />
+
       
       <View className="flex-1 bg-white">
         {/* Content */}
@@ -75,6 +65,5 @@ export default function MyOrdersScreen() {
           />
         </ScrollView>
       </View>
-    </>
   );
 } 

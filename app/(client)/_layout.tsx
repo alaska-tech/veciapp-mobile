@@ -29,6 +29,14 @@ export default function ClientLayout() {
           headerTitle: "Detalles del producto",
         }}
       />
+      <Stack.Screen
+        name="myOrdersScreen"
+        options={{
+          headerShown: true,
+          headerBackTitle: "Volver",
+          headerTitle: "Mis Pedidos",
+        }}
+      />
     </Stack>
   );
 }

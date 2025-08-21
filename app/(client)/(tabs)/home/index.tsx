@@ -1,6 +1,6 @@
 import { ActivityIndicator, FlatList, View } from "react-native";
 import { Text } from "~/components/ui/text";
-import HeaderHome from "../../../components/epic/headerHome";
+
 import CategoriesHome from "~/components/epic/categoriesHome";
 import ImageCarousel from "~/components/epic/imageCarousel";
 import Veciproveedores from "~/components/epic/veciproveedores";
@@ -12,9 +12,12 @@ import { Button } from "~/components/ui/button";
 import { useProductAction } from "~/actions/product.action";
 import { useLocation } from "~/components/ContextProviders/LocationProvider";
 import { useBranchAction } from "~/actions/branch.action";
+import HeaderHome from "~/components/epic/headerHome";
+import React from "react";
 
 export default function HomeScreen() {
   const router = useRouter();
+
   const actions = useProductAction();
   const fetchProductsPage = actions.fetchProductsFunction;
   const {
@@ -77,7 +80,7 @@ export default function HomeScreen() {
       {hasActiveOrder && (
         <ActiveOrderBanner
           onPress={() => {
-            router.push("/(customerscreens)/myOrdersScreen");
+            router.push("/(client)/myOrdersScreen");
           }}
           orderCount={1}
         />

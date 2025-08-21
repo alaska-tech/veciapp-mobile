@@ -2,6 +2,7 @@ import { Redirect, Stack, Tabs } from "expo-router";
 import { useContext } from "react";
 import { AuthContext } from "~/lib/authContext";
 import { Home, ShoppingCart, Heart, User } from "lucide-react-native";
+import { StackActions } from "@react-navigation/native";
 
 export const unstable_settings = {
   initialRouteName: "(tabs)", // anchor
@@ -30,7 +31,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="home/index"
         options={{
           title: "Inicio",
           tabBarIcon: ({ color }) => <Home size={24} color={color} />,

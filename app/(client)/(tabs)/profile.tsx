@@ -85,7 +85,7 @@ export default function ProfileScreen() {
             <View className="flex-1 items-center mx-1">
               <TouchableOpacity
                 activeOpacity={0.7}
-                onPress={() => router.push("/cart")}
+                onPress={() => router.push("/(client)/myOrdersScreen")}
                 className="w-[90px] h-[90px] bg-green-200 rounded-2xl items-center justify-center"
               >
                 <PackageOpen size={40} color="#16a34a" />
