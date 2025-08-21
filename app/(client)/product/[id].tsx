@@ -15,6 +15,7 @@ import { useAuth } from "~/components/ContextProviders/AuthProvider";
 import { addProductToCart } from "~/actions/shoppingCart.action";
 import { AddToCartConfirmationDialog } from "~/components/epic/addToCartConfirmationDialog";
 import { useCartStore } from "~/store/cartStore";
+import { Loader } from "~/components/ui/loader";
 
 // Componente reutilizable para sumar/restar cantidad
 function QuantityControl({
@@ -65,14 +66,14 @@ const Index = () => {
     productQuery.data?.branchId
   );
   const isThisFavorite = isFavorite(id as string);
-  const { addCartItem, cartItems } = useCartStore();
+  const { addCartItem, cartItems, loading } = useCartStore();
   const quantityInCart =
     cartItems.find((e) => e.productServiceId === id)?.quantity || 0;
   if (productQuery.isLoading) {
     return <Text>Loading...</Text>;
   }
-  if (productQuery.isError) {
-    return <Text>Error: {productQuery.error.message}</Text>;
+  if (!productQuery.data) {
+    return <Text>Sin conexión. Por favor, conéctate a internet.</Text>;
   }
   const {
     logo = "https://picsum.photos/400",
@@ -90,14 +91,14 @@ const Index = () => {
 
   const handleAddToCart = async () => {
     if (!productQuery.data?.branchId || !user?.foreignPersonId) return;
-    addCartItem({
+    await addCartItem({
       customerId: user?.foreignPersonId,
       productServiceId: id as string,
       quantity: quantity,
       unitPrice: Number.parseFloat(price),
       branchId: productQuery.data?.branchId,
     });
-    setQuantity(1)
+    setQuantity(1);
     setShowAddToCartDialog(true);
     return;
   };

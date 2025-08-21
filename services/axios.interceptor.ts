@@ -13,7 +13,6 @@ import {
 const addJwtToHeader = async (request: AxiosRequestConfig) => {
   const jwt = await getToken();
   if (jwt) {
-    console.log("Adding JWT to request header", jwt);
     const newHeader = {
       Authorization: `Bearer ${jwt}`,
       "Content-Type": "application/json",

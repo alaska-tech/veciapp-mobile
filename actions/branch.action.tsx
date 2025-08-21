@@ -20,7 +20,6 @@ export const useBranchAction = () => {
         const response = await apiClient.get<
           Extract<Response<Branch>, { status: "Success" }>
         >(`/branches/get-details/${id}`);
-        console.log(response);
         return response.data.data;
       } catch (error) {
         throw error;
@@ -36,7 +35,6 @@ export const useBranchAction = () => {
         const response = await apiClient.get<
           Extract<Response<Branch>, { status: "Success" }>
         >(`/branches/get-details/${id}`);
-        console.log(response);
         return response.data.data;
       } catch (error) {
         throw error;
@@ -58,7 +56,6 @@ export const useBranchAction = () => {
           >(
             `/branches/get-nearby-branches?latitude=${latitude}&longitude=${longitude}&radius=${radius}${limitParam}${pageParam}`
           );
-          console.log(response);
           return response.data;
         } catch (error) {
           throw error;

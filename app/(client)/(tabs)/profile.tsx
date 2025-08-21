@@ -189,7 +189,7 @@ export default function ProfileScreen() {
               variant="ghost"
               onPress={async () => {
                 try {
-                  await logOut.mutateAsync({});
+                  logOut.mutate({});
                 } catch (error) {
                   console.error(error);
                 } finally {
