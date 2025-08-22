@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Alert,
   TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { Eye, EyeOff } from "lucide-react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
@@ -224,141 +226,143 @@ export default function LoginScreen() {
     </>
   );
   return (
-    <View className="flex-1 items-center justify-center p-4 px-12 bg-background">
-      <Image
-        source={require("../assets/images/onboarding1.png")}
-        className="w-80 h-80"
-        resizeMode="contain"
-      />
-
-      {isLoading ? (
-        <Text className="text-xl font-bold mb-5 text-center">
-          Iniciando Sesión
-        </Text>
-      ) : (
-        <Text className="text-sm text-muted-foreground text-left w-full mt-4">
-          Ingresa tu correo electrónico
-        </Text>
-      )}
-
-      <View className="w-full gap-4">
-        <Input
-          placeholder="correo@dominio.com"
-          value={email}
-          onChangeText={(text) => {
-            setEmail(text);
-            setErrors({ ...errors, email: "" });
-          }}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          className="rounded-xl"
-          editable={!isLoading}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View className="flex-1 items-center justify-center p-4 px-12 bg-background">
+        <Image
+          source={require("../assets/images/onboarding1.png")}
+          className="w-80 h-80"
+          resizeMode="contain"
         />
-        {errors.email ? (
-          <Text className="text-red-500 text-xs">{errors.email}</Text>
-        ) : null}
 
-        {showPassword && (
-          <Animated.View entering={FadeIn.duration(300)}>
-            <Text className="text-sm text-muted-foreground text-left w-full mt-4">
-              Escribe tu contraseña
-            </Text>
-            <View className="relative">
-              <Input
-                placeholder="Contraseña"
-                value={password}
-                onChangeText={(text) => {
-                  setPassword(text);
-                  setErrors({ ...errors, password: "" });
-                }}
-                secureTextEntry={!isPasswordVisible}
-                className="rounded-xl pr-12"
-                editable={!isLoading}
-                ref={passwordRef}
-              />
-              <TouchableOpacity
-                className="absolute right-3 top-0 bottom-0 justify-center"
-                onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-              >
-                {isPasswordVisible ? (
-                  <EyeOff size={20} color="#666" />
-                ) : (
-                  <Eye size={20} color="#666" />
-                )}
-              </TouchableOpacity>
-            </View>
-            {errors.password ? (
-              <Text className="text-red-500 text-xs">{errors.password}</Text>
-            ) : null}
-          </Animated.View>
+        {isLoading ? (
+          <Text className="text-xl font-bold mb-5 text-center">
+            Iniciando Sesión
+          </Text>
+        ) : (
+          <Text className="text-sm text-muted-foreground text-left w-full mt-4">
+            Ingresa tu correo electrónico
+          </Text>
         )}
 
-        <Button
-          onPress={async () => {
-            await handleSignIn();
-          }}
-          className="w-full bg-yellow-400 rounded-full mb-4"
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <Loader />
-          ) : (
-            <Text className="text-black font-bold text-md">
-              {showPassword ? "Iniciar sesión" : "Continuar"}
-            </Text>
+        <View className="w-full gap-4">
+          <Input
+            placeholder="correo@dominio.com"
+            value={email}
+            onChangeText={(text) => {
+              setEmail(text);
+              setErrors({ ...errors, email: "" });
+            }}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            className="rounded-xl"
+            editable={!isLoading}
+          />
+          {errors.email ? (
+            <Text className="text-red-500 text-xs">{errors.email}</Text>
+          ) : null}
+
+          {showPassword && (
+            <Animated.View entering={FadeIn.duration(300)}>
+              <Text className="text-sm text-muted-foreground text-left w-full mt-4">
+                Escribe tu contraseña
+              </Text>
+              <View className="relative">
+                <Input
+                  placeholder="Contraseña"
+                  value={password}
+                  onChangeText={(text) => {
+                    setPassword(text);
+                    setErrors({ ...errors, password: "" });
+                  }}
+                  secureTextEntry={!isPasswordVisible}
+                  className="rounded-xl pr-12"
+                  editable={!isLoading}
+                  ref={passwordRef}
+                />
+                <TouchableOpacity
+                  className="absolute right-3 top-0 bottom-0 justify-center"
+                  onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                >
+                  {isPasswordVisible ? (
+                    <EyeOff size={20} color="#666" />
+                  ) : (
+                    <Eye size={20} color="#666" />
+                  )}
+                </TouchableOpacity>
+              </View>
+              {errors.password ? (
+                <Text className="text-red-500 text-xs">{errors.password}</Text>
+              ) : null}
+            </Animated.View>
           )}
-        </Button>
 
-        {/* Botón de prueba de notificaciones */}
-        {!isLoading && showPassword && (
           <Button
-            onPress={testNotification}
-            variant="outline"
-            className="w-full rounded-full mb-4"
+            onPress={async () => {
+              await handleSignIn();
+            }}
+            className="w-full bg-yellow-400 rounded-full mb-4"
+            disabled={isLoading}
           >
-            <Text className="text-blue-600 font-bold text-md">
-              🔔 Probar Notificación
-            </Text>
+            {isLoading ? (
+              <Loader />
+            ) : (
+              <Text className="text-black font-bold text-md">
+                {showPassword ? "Iniciar sesión" : "Continuar"}
+              </Text>
+            )}
           </Button>
-        )}
-        {devButton}
-        {!isLoading && (
-          <>
-            <Text
-              className="text-blue-500 font-medium text-center text-md mb-6"
-              onPress={() => router.push("/forgotPassword")}
+
+          {/* Botón de prueba de notificaciones */}
+          {!isLoading && showPassword && (
+            <Button
+              onPress={testNotification}
+              variant="outline"
+              className="w-full rounded-full mb-4"
             >
-              No recuerdo mi clave
-            </Text>
-
-            <View className="flex-row justify-center items-center mt-2">
-              <Text className="text-md text-muted-foreground">
-                ¿No tienes cuenta?{" "}
+              <Text className="text-blue-600 font-bold text-md">
+                🔔 Probar Notificación
               </Text>
+            </Button>
+          )}
+          {devButton}
+          {!isLoading && (
+            <>
               <Text
-                className="text-primary font-bold underline text-md"
-                onPress={() => router.push("/register")}
+                className="text-blue-500 font-medium text-center text-md mb-6"
+                onPress={() => router.push("/forgotPassword")}
               >
-                Regístrate aquí
+                No recuerdo mi clave
               </Text>
-            </View>
 
-            <Text className="text-center text-muted-foreground mt-4">
-              Al seguir, aceptas nuestros{" "}
-              <Text className="text-primary font-semibold" onPress={openTerms}>
-                Términos
-              </Text>{" "}
-              y{" "}
-              <Text
-                className="text-primary font-semibold"
-                onPress={openPrivacy}
-              >
-                Políticas de Privacidad
+              <View className="flex-row justify-center items-center mt-2">
+                <Text className="text-md text-muted-foreground">
+                  ¿No tienes cuenta?{" "}
+                </Text>
+                <Text
+                  className="text-primary font-bold underline text-md"
+                  onPress={() => router.push("/register")}
+                >
+                  Regístrate aquí
+                </Text>
+              </View>
+
+              <Text className="text-center text-muted-foreground mt-4">
+                Al seguir, aceptas nuestros{" "}
+                <Text className="text-primary font-semibold" onPress={openTerms}>
+                  Términos
+                </Text>{" "}
+                y{" "}
+                <Text
+                  className="text-primary font-semibold"
+                  onPress={openPrivacy}
+                >
+                  Políticas de Privacidad
+                </Text>
               </Text>
-            </Text>
-          </>
-        )}
+            </>
+          )}
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
