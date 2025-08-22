@@ -17,6 +17,7 @@ export default function PaymentResultScreen() {
   }, [counter]);
 
   const handleCoordinateDelivery = () => {
+    router.dismissAll();
     router.push('/(customerscreens)/myOrdersScreen');
   };
 
