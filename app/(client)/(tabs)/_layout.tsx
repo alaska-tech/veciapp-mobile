@@ -47,6 +47,7 @@ export default function TabLayout() {
         options={{
           title: "Perfil",
           tabBarIcon: ({ color }) => <User size={24} color={color} />,
+          popToTopOnBlur:true
         }}
       />
       <Tabs.Screen

@@ -68,7 +68,7 @@ export default function HeaderHome() {
 
       {/* Location Section */}
       <TouchableOpacity
-        onPress={() => router.push("/(customerscreens)/locationSettings")}
+        onPress={() => router.push("/(client)/(tabs)/profile/locationSettings")}
         className="flex-row items-center"
       >
         <MapPinIcon size={20} color="#ffffff" fill="#666" />

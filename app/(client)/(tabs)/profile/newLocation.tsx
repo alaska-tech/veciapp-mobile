@@ -212,7 +212,7 @@ export default function App() {
           ></MapView>
           <View style={styles.markerFixed}>
             <Image
-              source={require("../../assets/images/location-marker.png")}
+              source={require("~/assets/images/location-marker.png")}
               style={styles.marker}
             />
           </View>

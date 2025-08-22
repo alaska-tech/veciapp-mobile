@@ -45,6 +45,15 @@ export default function ProfileLayout() {
         }}
       />
       <Stack.Screen
+        name="newLocation"
+        options={{
+          title: "Nueva dirección",
+          headerShown: true,
+          headerTitleAlign: "center",
+          headerBackTitle: "Volver",
+        }}
+      />
+      <Stack.Screen
         name="orderHistoryScreen"
         options={{
           title: "Historial de Pedidos",
