@@ -1,4 +1,4 @@
-import 'react-native-gesture-handler';
+import "react-native-gesture-handler";
 import "~/global.css";
 
 import {
@@ -35,6 +35,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { LocationProvider } from "~/components/ContextProviders/LocationProvider";
+import { Loader } from "~/components/ui/loader";
+import { useGlobalLoadingScreen } from "~/store/loadingStore";
+import { NetworkErrorDialog } from "~/components/epic/networkErrorDialog";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -103,6 +106,9 @@ export default function RootLayout() {
       await SplashScreen.hideAsync();
     }
   }, [isColorSchemeLoaded]);
+
+  const { isLoading } = useGlobalLoadingScreen();
+
   //useOnlineManager();
   //useAppState(onAppStateChange);
   if (!isColorSchemeLoaded) {
@@ -131,6 +137,14 @@ export default function RootLayout() {
                           }}
                         />
                       </Stack>
+                      {isLoading ? (
+                        <View className="absolute inset-0 bg-[#22222279] items-center justify-center z-99999999999999999999999">
+                          <View className="items-center justify-center flex-1 w-full">
+                            <Loader color="#FFD600" />
+                          </View>
+                        </View>
+                      ):<></>}
+                      <NetworkErrorDialog/>
                       <PortalHost />
                     </ThemeProvider>
                   </View>

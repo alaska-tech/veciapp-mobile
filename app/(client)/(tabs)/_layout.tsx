@@ -9,15 +9,6 @@ export const unstable_settings = {
 };
 
 export default function TabLayout() {
-/*   const authState = useContext(AuthContext);
-
-  if (!authState.isReady) {
-    return null;
-  }
-
-  if (!authState.isLoggedIn || authState.user?.role !== "customer") {
-    return <Redirect href="/" />;
-  } */
   return (
     <Tabs
       screenOptions={{
@@ -31,7 +22,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="home/index"
+        name="home"
         options={{
           title: "Inicio",
           tabBarIcon: ({ color }) => <Home size={24} color={color} />,
@@ -56,6 +47,12 @@ export default function TabLayout() {
         options={{
           title: "Perfil",
           tabBarIcon: ({ color }) => <User size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="myOrdersScreen"
+        options={{
+          href: null,
         }}
       />
     </Tabs>

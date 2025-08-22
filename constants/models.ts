@@ -284,19 +284,22 @@ export const ServiceOrderPaymentStatus = [
 export type ServiceOrderPaymentStatusType = typeof ServiceOrderPaymentStatus;
 export interface ServiceOrder extends BaseAttributes {
   id: string;
-  orderNumber: string;
   customerId: string;
   vendorId: string;
   branchId: string;
-  items: Array<{
+  products: Array<{
     productServiceId: string;
     quantity: number;
     price: number;
   }>;
-  deliveryAddress?: string;
-  deliveryType: ServiceOrderDeliveryTypeType[number];
-  paymentMethod: ServiceOrderPaymentMethodType[number];
   totalAmount: number;
+  paymentMethod: ServiceOrderPaymentMethodType[number];
+  deliveryType: ServiceOrderDeliveryTypeType[number];
+  deliveryAddress?: string;
+  orderNumber: string;
+  status: string;
+  timeline: Array<string>;
+  discount?: number;
   notes?: string;
   orderStatus: ServiceOrderOrderStatusType[number];
   paymentStatus: ServiceOrderPaymentStatusType[number];
