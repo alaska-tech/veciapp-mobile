@@ -52,6 +52,8 @@ export default function LoginScreen() {
   // Configurar notificaciones al cargar el componente
   useEffect(() => {
     setupNotifications();
+    // Mostrar notificación de bienvenida al ingresar a la app
+    showWelcomeNotification();
   }, []);
 
   const setupNotifications = async () => {
@@ -102,6 +104,19 @@ export default function LoginScreen() {
       console.log('Notificación de prueba enviada');
     } catch (error) {
       console.error('Error al enviar notificación de prueba:', error);
+    }
+  };
+
+  // Función para mostrar notificación de bienvenida al ingresar a la app
+  const showWelcomeNotification = async () => {
+    try {
+      await sendImmediateNotification(
+        '¡Bienvenido a Veciapp! 🎉',
+        'Gracias por hacer parte del vecindario. ¡Disfruta tu experiencia!',
+      );
+      console.log('Notificación de bienvenida enviada');
+    } catch (error) {
+      console.error('Error al enviar notificación de bienvenida:', error);
     }
   };
 
