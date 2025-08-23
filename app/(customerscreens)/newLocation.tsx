@@ -7,6 +7,9 @@ import {
   ActivityIndicator,
   Image,
   TextInput,
+  ScrollView,
+  TouchableOpacity,
+  Keyboard,
 } from "react-native";
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
@@ -136,7 +139,31 @@ export default function App() {
           headerBackVisible: true,
         }}
       />
-      <View style={styles.container}>
+      <ScrollView 
+        style={styles.container}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
+        <View>
+          <MapView
+            initialRegion={region}
+            style={styles.map}
+            onRegionChange={(newRegion) => {
+              console.log("Region changed:", newRegion);
+              setMarkerPosition({
+                latitude: newRegion.latitude,
+                longitude: newRegion.longitude,
+              });
+            }}
+          ></MapView>
+          <View style={styles.markerFixed}>
+            <Image
+              source={require("../../assets/images/location-marker.png")}
+              style={styles.marker}
+            />
+          </View>
+        </View>
+        
         <View
           style={{
             position: "absolute",
@@ -146,6 +173,22 @@ export default function App() {
             width: "95%",
           }}
         >
+          {/* Botón para cerrar teclado */}
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              top: -40,
+              right: 0,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              borderRadius: 20,
+              padding: 8,
+              zIndex: 1001,
+            }}
+            onPress={() => Keyboard.dismiss()}
+          >
+            <Text style={{ color: 'white', fontSize: 12 }}>Cerrar teclado</Text>
+          </TouchableOpacity>
+          
           <View className="border border-gray-200 rounded-lg p-1 mb-2 bg-white w-full">
             <Textarea
               value={address}
@@ -198,26 +241,7 @@ export default function App() {
             )}
           </Button>
         </View>
-        <View>
-          <MapView
-            initialRegion={region}
-            style={styles.map}
-            onRegionChange={(newRegion) => {
-              console.log("Region changed:", newRegion);
-              setMarkerPosition({
-                latitude: newRegion.latitude,
-                longitude: newRegion.longitude,
-              });
-            }}
-          ></MapView>
-          <View style={styles.markerFixed}>
-            <Image
-              source={require("../../assets/images/location-marker.png")}
-              style={styles.marker}
-            />
-          </View>
-        </View>
-      </View>
+      </ScrollView>
     </>
   );
 }
