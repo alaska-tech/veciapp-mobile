@@ -96,8 +96,8 @@ export default function LoginScreen() {
     try {
       await sendImmediateNotification(
         '¡Bienvenido a Veciapp! 🎉',
-        'Tu sesión ha sido iniciada exitosamente.',
-        { screen: '/home' }
+        '',
+        { screen: '/' }
       );
       console.log('Notificación de prueba enviada');
     } catch (error) {
