@@ -15,6 +15,8 @@ import { useAuth } from "~/components/ContextProviders/AuthProvider";
 import { addProductToCart } from "~/actions/shoppingCart.action";
 import { AddToCartConfirmationDialog } from "~/components/epic/addToCartConfirmationDialog";
 import { useCartStore } from "~/store/cartStore";
+import { sendImmediateNotification } from "~/lib/notifications";
+import { useNotificationSettings } from "~/hooks/useNotificationSettings";
 
 // Componente reutilizable para sumar/restar cantidad
 function QuantityControl({
@@ -66,6 +68,7 @@ const Index = () => {
   );
   const isThisFavorite = isFavorite(id as string);
   const { addCartItem, cartItems } = useCartStore();
+  const { canSendNotifications } = useNotificationSettings();
   const quantityInCart =
     cartItems.find((e) => e.productServiceId === id)?.quantity || 0;
   if (productQuery.isLoading) {
@@ -99,6 +102,25 @@ const Index = () => {
     });
     setQuantity(1)
     setShowAddToCartDialog(true);
+    
+    // Enviar notificación de producto agregado al carrito solo si están habilitadas
+    if (canSendNotifications()) {
+      try {
+        await sendImmediateNotification(
+          '🛒 Producto Agregado al Carrito',
+          `${name} se agregó a tu carrito (${quantity} ${quantity === 1 ? 'unidad' : 'unidades'})`,
+          { 
+            screen: '/cart', 
+            productId: id,
+            type: 'product_added_to_cart',
+            quantity: quantity
+          }
+        );
+      } catch (error) {
+        console.error('Error al enviar notificación:', error);
+      }
+    }
+    
     return;
   };
 
@@ -108,6 +130,23 @@ const Index = () => {
       removeFavorite(productServiceId);
       setFavoriteAction("remove");
       setShowFavoriteDialog(true);
+      
+      // Enviar notificación de producto removido de favoritos solo si están habilitadas
+      if (canSendNotifications()) {
+        try {
+          sendImmediateNotification(
+            '💔 Producto Removido de Favoritos',
+            `${name} se removió de tus favoritos`,
+            { 
+              screen: '/favorites', 
+              productId: id,
+              type: 'product_removed_from_favorites'
+            }
+          );
+        } catch (error) {
+          console.error('Error al enviar notificación:', error);
+        }
+      }
     } else {
       const newItem: FavoriteItem = {
         productServiceId: productServiceId,
@@ -117,6 +156,23 @@ const Index = () => {
       addFavorite(newItem);
       setFavoriteAction("add");
       setShowFavoriteDialog(true);
+      
+      // Enviar notificación de producto agregado a favoritos solo si están habilitadas
+      if (canSendNotifications()) {
+        try {
+          sendImmediateNotification(
+            '❤️ Producto Agregado a Favoritos',
+            `${name} se agregó a tus favoritos`,
+            { 
+              screen: '/favorites', 
+              productId: id,
+            type: 'product_added_to_favorites'
+            }
+          );
+        } catch (error) {
+          console.error('Error al enviar notificación:', error);
+        }
+      }
     }
   };
 
