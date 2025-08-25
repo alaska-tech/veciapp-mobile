@@ -28,8 +28,8 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      let location = await Location.getCurrentPositionAsync({});
-      const { latitude, longitude } = location.coords;
+      let currentLocation = await Location.getLastKnownPositionAsync({});
+      const { latitude, longitude } = currentLocation.coords;
       console.log("Current location:", latitude, longitude);
       setLocation({
         latitude,

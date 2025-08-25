@@ -21,6 +21,13 @@ import { useLocation } from "~/components/ContextProviders/LocationProvider";
 import { Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { Stack } from "expo-router";
+import { Dimensions } from "react-native";
+import { Input } from "~/components/ui/input";
+import { KeyboardAvoidingView } from "react-native";
+
+
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 export default function App() {
   const [region, setRegion] = useState<Region | null>(null);
@@ -33,7 +40,12 @@ export default function App() {
   const [nickname, setNickname] = useState("Casa");
   const router = useRouter();
   const { user } = useAuth();
-  const { location, isLoading, error: errorMsg, tryGetCurrentLocation } = useLocation();
+  const {
+    location,
+    isLoading,
+    error: errorMsg,
+    tryGetCurrentLocation,
+  } = useLocation();
   const customerActions = useCustomerAction();
   const getCustomerDetails = customerActions.getCustomerDetails(
     user?.foreignPersonId
@@ -139,12 +151,14 @@ export default function App() {
           headerBackVisible: true,
         }}
       />
-      <ScrollView 
-        style={styles.container}
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ flexGrow: 1 }}
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
       >
-        <View>
+        <View style={{ width: "100%", height: windowHeight - 280 }}>
           <MapView
             initialRegion={region}
             style={styles.map}
@@ -156,92 +170,99 @@ export default function App() {
               });
             }}
           ></MapView>
-          <View style={styles.markerFixed}>
+          <View
+            style={{
+              left: "50%",
+              marginLeft: -24,
+              marginTop: -48,
+              position: "absolute",
+              top: "50%",
+            }}
+          >
             <Image
               source={require("../../assets/images/location-marker.png")}
               style={styles.marker}
             />
           </View>
         </View>
-        
+
         <View
           style={{
-            position: "absolute",
-            bottom: 100,
-            left: 10,
-            zIndex: 1000,
-            width: "95%",
+            width: "90%",
+            height: 250,
+            marginBottom: 30,
           }}
         >
           {/* Botón para cerrar teclado */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{
-              position: 'absolute',
+              position: "absolute",
               top: -40,
               right: 0,
-              backgroundColor: 'rgba(0,0,0,0.5)',
+              backgroundColor: "rgba(0,0,0,0.5)",
               borderRadius: 20,
               padding: 8,
               zIndex: 1001,
             }}
             onPress={() => Keyboard.dismiss()}
           >
-            <Text style={{ color: 'white', fontSize: 12 }}>Cerrar teclado</Text>
-          </TouchableOpacity>
-          
-          <View className="border border-gray-200 rounded-lg p-1 mb-2 bg-white w-full">
-            <Textarea
-              value={address}
-              onChangeText={(text) => {
-                setAdrressError(false);
-                setAddress(text);
-              }}
-              className={
-                adrressError
-                  ? "text-base w-full border border-red-500"
-                  : "text-base w-full"
-              }
-              placeholder="Dirección"
-            />
-          </View>
-          <View className="flex-row justify-between border border-gray-200 rounded-lg p-1 mb-2 bg-white w-full">
-            {["Casa", "Trabajo", "Pareja"].map((option) => (
-              <Button
-                key={option}
-                className={`flex-1 mx-1 py-4 rounded-lg ${
-                  nickname === option
-                    ? "bg-[#FFD100]"
-                    : "bg-white border border-gray-300"
-                }`}
-                onPress={() => setNickname(option)}
-                variant="ghost"
-              >
-                <Text
-                  className={`text-base text-center ${
+            <Text style={{ color: "white", fontSize: 12 }}>Cerrar teclado</Text>
+          </TouchableOpacity> */}
+          <KeyboardAvoidingView>
+            <View className="border border-gray-200 rounded-lg p-1 mb-2 bg-white w-full">
+              <Input
+                value={address}
+                onChangeText={(text) => {
+                  setAdrressError(false);
+                  setAddress(text);
+                }}
+                className={
+                  adrressError
+                    ? "text-base w-full border border-red-500"
+                    : "text-base w-full"
+                }
+                placeholder="Dirección"
+              />
+            </View>
+            <View className="flex-row justify-between border border-gray-200 rounded-lg p-1 mb-2 bg-white w-full">
+              {["Casa", "Trabajo", "Pareja"].map((option) => (
+                <Button
+                  key={option}
+                  className={`flex-1 mx-1 py-4 rounded-lg ${
                     nickname === option
-                      ? "text-black font-bold"
-                      : "text-gray-700"
+                      ? "bg-[#FFD100]"
+                      : "bg-white border border-gray-300"
                   }`}
+                  onPress={() => setNickname(option)}
+                  variant="ghost"
                 >
-                  {option}
+                  <Text
+                    className={`text-base text-center ${
+                      nickname === option
+                        ? "text-black font-bold"
+                        : "text-gray-700"
+                    }`}
+                  >
+                    {option}
+                  </Text>
+                </Button>
+              ))}
+            </View>
+            <Button
+              className="w-full bg-[#FFD100] rounded-full py-6 mb-6"
+              onPress={handleSubmit}
+            >
+              {updateCustomer.isPending ? (
+                <Loader />
+              ) : (
+                <Text className="text-black text-base font-medium">
+                  Guardar Cambios
                 </Text>
-              </Button>
-            ))}
-          </View>
-          <Button
-            className="w-full bg-[#FFD100] rounded-full py-6 mb-6"
-            onPress={handleSubmit}
-          >
-            {updateCustomer.isPending ? (
-              <Loader />
-            ) : (
-              <Text className="text-black text-base font-medium">
-                Guardar Cambios
-              </Text>
-            )}
-          </Button>
+              )}
+            </Button>
+          </KeyboardAvoidingView>
         </View>
-      </ScrollView>
+      </View>
     </>
   );
 }
