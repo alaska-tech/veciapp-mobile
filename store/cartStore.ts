@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Alert } from "react-native";
 import { create } from "zustand";
 import { persist, PersistOptions } from "zustand/middleware";
 import {
@@ -22,8 +23,7 @@ interface CartState {
   initCart: (clientId: string) => Promise<void>;
   refresh: () => void;
 
-  // Acciones para comidas
-  addCartItem: (item: ShoppingCartItem) => void;
+  addCartItem: (item: ShoppingCartItem) => Promise<void>;
   updateCartItemQuantity: (
     productServiceId: string,
     quantity: number,
@@ -71,10 +71,18 @@ export const useCartStore = create<CartState>()(
       // Acciones para comidas
       addCartItem: async (item) => {
         const { customerId } = get();
+        set(() => ({ loading: true }));
         try {
           if (!customerId) {
             throw new Error("There is not customerId");
           }
+          await addProductToCart({
+            customerId,
+            productServiceId: item.productServiceId,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice || 0,
+            branchId: item.branchId,
+          });
           set((state) => {
             const existingIndex = state.cartItems.findIndex(
               (ci) => ci.productServiceId === item.productServiceId
@@ -92,15 +100,14 @@ export const useCartStore = create<CartState>()(
               return { cartItems: [...state.cartItems, item] };
             }
           });
-          await addProductToCart({
-            customerId,
-            productServiceId: item.productServiceId,
-            quantity: item.quantity,
-            unitPrice: item.unitPrice || 0,
-            branchId: item.branchId,
-          });
         } catch (error) {
           console.error("Error adding item to cart:", error);
+          Alert.alert(
+            "Error",
+            "No se pudo agregar el producto al carrito. Por favor, inténtalo de nuevo."
+          );
+        } finally {
+          set({ loading: false });
         }
       },
 

@@ -106,7 +106,7 @@ export default function CartCard({
 
       {/* Items Section */}
       {items?.map((item, index) => (
-        <View key={index} className="p-4">
+        <View key={item.productServiceId} className="p-4">
           <View className="flex-row items-center">
             <Image
               source={

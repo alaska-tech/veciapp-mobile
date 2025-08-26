@@ -7,11 +7,16 @@ import { Stack } from "expo-router";
 import React from "react";
 import { View } from "react-native";
 import { MapPinIcon } from "lucide-react-native";
-import { useCartItemsByBranch, useCartStore } from "~/store/cartStore";
+import {
+  
+  useCartItemsByBranch,
+  useCartStore,
+} from "~/store/cartStore";
 import { useAuth } from "~/components/ContextProviders/AuthProvider";
 import useCustomerAction from "~/actions/customer.action";
 import { useProductAction } from "~/actions/product.action";
 import { useBranchAction } from "~/actions/branch.action";
+import { apiClient } from "~/services/clients";
 
 const SERVICE_FEE_PERCENTAGE = 0.1;
 const DELIVERY_CHARGE = 10000;
@@ -102,7 +107,7 @@ export default function CartScreen() {
 
             const total = cartItem.subtotal + serviceCharge + DELIVERY_CHARGE;
             return (
-              <>
+              <React.Fragment key={branchId}>
                 {/* <Text>{JSON.stringify(cartItem, null, 4)}</Text> */}
                 <CartCard
                   providerName={branch?.name || "Desconocido"}
@@ -118,7 +123,7 @@ export default function CartScreen() {
                       image: product?.logo || "",
                       quantity: item.quantity,
                       productServiceId: item.productServiceId,
-                      inventory: product?.inventory||0,
+                      inventory: product?.inventory || 0,
                     };
                   })}
                   subtotal={cartItem.subtotal}
@@ -129,7 +134,7 @@ export default function CartScreen() {
                   onDelete={handleDelete}
                   onPayPress={() => handlePayment("regular")}
                 />
-              </>
+              </React.Fragment>
             );
           })}
         {cartItemsFromQueryLenght === 0 ? (
@@ -157,6 +162,18 @@ export default function CartScreen() {
             <Text className="text-gray-700 font-normal">
               Ver historial de pedidos
             </Text>
+          </Button>
+          <Button
+            onPress={() => {
+              apiClient.delete(
+                `/shoppingcart/clear-cart/customer/${user?.foreignPersonId}`
+              );
+            }}
+            variant="outline"
+            size="lg"
+            className="w-full rounded-full border-gray-200 bg-gray-100"
+          >
+            <Text className="text-gray-700 font-normal">Vaciar carrito</Text>
           </Button>
         </View>
       </ScrollView>

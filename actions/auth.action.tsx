@@ -129,8 +129,7 @@ export default function useAuthAction() {
           }
           const response = await apiClient.post<
             Extract<Response<unknown>, { status: "Success" }>
-          >(`/customers`, body);
-          console.log(JSON.stringify(response))
+          >(`/customers`, body);          
           return response;
         } catch (error) {
           throw error;
