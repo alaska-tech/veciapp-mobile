@@ -50,12 +50,6 @@ export default function TabLayout() {
           popToTopOnBlur:true
         }}
       />
-      <Tabs.Screen
-        name="myOrdersScreen"
-        options={{
-          href: null,
-        }}
-      />
     </Tabs>
   );
 }

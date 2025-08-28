@@ -18,7 +18,7 @@ export default function PaymentResultScreen() {
 
   const handleCoordinateDelivery = () => {
     router.replace("/(client)/(tabs)/home");
-    router.push("/(client)/myOrdersScreen");
+    router.push("/(client)/(customerscreens)/myOrdersScreen");
   };
 
   return (

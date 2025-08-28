@@ -176,7 +176,11 @@ export interface Branch extends BaseAttributes {
   isActive: boolean;
 }
 
-export const productServiceState = ["available", "unavailable"] as const;
+export const productServiceState = [
+  "available",
+  "unavailable",
+  "out_of_stock",
+] as const;
 export type productServiceStateType = typeof productServiceState;
 export interface Product {
   id: string;
@@ -318,7 +322,6 @@ export interface ShoppingCartItem {
   addedAt?: string; //date
   updatedAt?: string; //date
 }
-
 
 export interface FavoriteItem {
   createdAt?: Date;

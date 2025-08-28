@@ -131,16 +131,7 @@ export default function CustomerSettingsScreen() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          headerShadowVisible: false,
-          headerTitle: "Ajustes de Usuario",
-          headerTitleAlign: "center",
-          headerShown: true,
-          headerBackTitle: "Volver",
-          headerBackVisible: true,
-        }}
-      />
+      
       
       <ScrollView className="h-full w-full bg-white p-4">
         <Card className="mb-6 rounded-3xl">

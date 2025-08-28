@@ -159,7 +159,7 @@ export default function CartScreen() {
                       .then(
                         () => {
                           router.replace(
-                            "/(customerscreens)/paymentResultScreen"
+                            "/(client)/(customerscreens)/paymentResultScreen"
                           );
                         },
                         () => {}
@@ -188,17 +188,7 @@ export default function CartScreen() {
         ) : (
           <></>
         )}
-        <View className="mt-8 mb-4 px-0">
-          <Button
-            variant="outline"
-            size="lg"
-            className="w-full rounded-full border-gray-200 bg-gray-100"
-            onPress={() => router.push("/(customerscreens)/orderHistoryScreen")}
-          >
-            <Text className="text-gray-700 font-normal">
-              Ver historial de pedidos
-            </Text>
-          </Button>
+        <View className="mt-8 mb-8 px-0">
           <Button
             onPress={() => {
               apiClient.delete(

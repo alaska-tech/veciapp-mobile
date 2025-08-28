@@ -9,31 +9,26 @@ const categories = [
     title: 'Belleza',
     description: 'Cuidado personal y cosmética.',
     color: 'bg-pink-400',
-    image: require('../../assets/images/Belleza.png'),
+    image: require('~/assets/images/Belleza.png'),
   },
   {
     title: 'Confecciones',
     description: 'Ropa y accesorios.',
     color: 'bg-orange-400',
-    image: require('../../assets/images/Confecciones.png'),
+    image: require('~/assets/images/Confecciones.png'),
   },
   {
     title: 'Gastronomía',
     description: 'Comida y bebidas.',
     color: 'bg-amber-900',
-    image: require('../../assets/images/Gastronomía.png'),
+    image: require('~/assets/images/Gastronomía.png'),
   },
 ];
 
 export default function CustomerCategories() {
   return (
     <>
-      <Stack.Screen options={{
-        title: 'Categorías',
-        headerShown: true,
-        headerTitleAlign: 'center',
-        headerBackTitle: "Volver",
-      }} />
+      
       <View className="flex-1 bg-white">
         <View className="h-px bg-gray-200 mb-3" />
         <ScrollView contentContainerStyle={{}} className="px-4 pb-8 mt-4">

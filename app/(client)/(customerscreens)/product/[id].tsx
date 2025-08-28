@@ -6,7 +6,16 @@ import { useProductAction } from "~/actions/product.action";
 import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
-import { Star, MapPin, Plus, Minus, Heart, Share2 } from "lucide-react-native";
+import {
+  Star,
+  MapPin,
+  Plus,
+  Minus,
+  Heart,
+  Share2,
+  HandPlatter,
+  Package,
+} from "lucide-react-native";
 import { useFavoriteStore } from "~/store/favoriteStore";
 import { FavoriteItem, Product } from "~/constants/models";
 import { useBranchAction } from "~/actions/branch.action";
@@ -49,7 +58,36 @@ function QuantityControl({
     </View>
   );
 }
-
+const ProductServiceTypeRender: Record<string, any> = {
+  product: <Package size={16} color="#666" />,
+  service: <HandPlatter size={16} color="#666" />,
+};
+const ProductServiceCategoryTag: Record<string, any> = {
+  Belleza: (
+    <Badge
+      variant="secondary"
+      className="rounded-full px-3 py-1 self-start bg-pink-100"
+    >
+      <Text className="text-pink-600">Belleza</Text>
+    </Badge>
+  ),
+  Confecciones: (
+    <Badge
+      variant="secondary"
+      className="rounded-full px-3 py-1 self-start bg-orange-50"
+    >
+      <Text className="text-orange-600">Confecciones</Text>
+    </Badge>
+  ),
+  Gastronomía: (
+    <Badge
+      variant="secondary"
+      className="rounded-full px-3 py-1 self-start bg-gray-100"
+    >
+      <Text className="text-gray-600">Gastronomía</Text>
+    </Badge>
+  ),
+};
 const Index = () => {
   // TODOS los hooks deben ir aquí arriba
   const { id } = useLocalSearchParams();
@@ -86,6 +124,7 @@ const Index = () => {
     categoryId = "",
     description = "",
     inventory,
+    type = "",
     id: productServiceId,
   } = productQuery.data || ({} as Product);
 
@@ -203,12 +242,10 @@ const Index = () => {
                 )}
               </View>
             </View>
-            <Badge
-              variant="secondary"
-              className="rounded-full px-3 py-1 self-start bg-pink-200"
-            >
-              <Text className="text-pink-700">{categoryId}</Text>
-            </Badge>
+            <View className="flex-row items-center gap-2 mb-2">
+              {ProductServiceTypeRender[type]}
+              {ProductServiceCategoryTag[categoryId]}
+            </View>
           </View>
 
           <View className="flex-row items-center px-4 mt-4 mb-2">

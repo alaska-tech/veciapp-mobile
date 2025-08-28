@@ -138,11 +138,7 @@ export default function AllVendorsScreen() {
 
   return (
     <View className="flex-1 bg-background">
-      <Stack.Screen options={{ title: 'Veciproveedores',
-        headerShown: true,
-        headerTitleAlign: 'center',
-        headerBackTitle: "Volver",
-       }} />
+      
 
       {/* Search Bar */}
       <View className="p-4">

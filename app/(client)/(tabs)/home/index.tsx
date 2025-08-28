@@ -80,7 +80,7 @@ export default function HomeScreen() {
       {hasActiveOrder && (
         <ActiveOrderBanner
           onPress={() => {
-            router.push("/(client)/myOrdersScreen");
+            router.push("/(client)/(customerscreens)/myOrdersScreen");
           }}
           orderCount={1}
         />
@@ -90,8 +90,7 @@ export default function HomeScreen() {
         proveedores={vendors?.data.data || []}
         onSeeAllPress={() => {
           console.log("Ver todos pressed");
-          // Navigate to all providers screen
-          router.push("/(customerscreens)/allVendorsScreen");
+          router.push("/(client)/(customerscreens)/allVendorsScreen");
         }}
       />
       <CategoriesHome />
@@ -125,11 +124,12 @@ export default function HomeScreen() {
               distance={item.distance || ""}
               rating={item.rating}
               category={item.categoryId}
+              type={item.type}
               imageUrl={item.logo || ""}
               discount={Number.parseFloat(item.discount)}
               onPress={() => {
                 router.push({
-                  pathname: "/(client)/product/[id]",
+                  pathname: "/(client)/(customerscreens)/product/[id]",
                   params: { id: item.id },
                 });
               }}

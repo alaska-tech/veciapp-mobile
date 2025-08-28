@@ -126,16 +126,7 @@ export default function App() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          headerShadowVisible: false,
-          headerTitle: "Nueva dirección",
-          headerTitleAlign: "center",
-          headerShown: true,
-          headerBackTitle: "Volver",
-          headerBackVisible: true,
-        }}
-      />
+      
       <View style={styles.container}>
         <View
           style={{
