@@ -14,10 +14,10 @@ import useCustomerAction from "~/actions/customer.action";
 import { AddressLocation, Customer } from "~/constants/models";
 import { Loader } from "~/components/ui/loader";
 import { useAuth } from "~/components/ContextProviders/AuthProvider";
-import { useLocation } from "~/components/ContextProviders/LocationProvider";
 import { Alert } from "react-native";
 import { useRouter } from "expo-router";
-import { Stack } from "expo-router";
+import { useLocationStore } from "~/store/locationStore";
+import { R } from "@tanstack/react-query-devtools/build/legacy/ReactQueryDevtools-Cn7cKi7o";
 
 export default function App() {
   const [region, setRegion] = useState<Region | null>(null);
@@ -30,7 +30,7 @@ export default function App() {
   const [nickname, setNickname] = useState("Casa");
   const router = useRouter();
   const { user } = useAuth();
-  const { location, isLoading, error: errorMsg, tryGetCurrentLocation } = useLocation();
+  const { location, loading, error, refresh, getLocation } = useLocationStore();
   const customerActions = useCustomerAction();
   const getCustomerDetails = customerActions.getCustomerDetails(
     user?.foreignPersonId
@@ -38,18 +38,23 @@ export default function App() {
   const updateCustomer = customerActions.updateCustomer();
 
   useEffect(() => {
-    if (location) {
-      setRegion({
-        latitude: location.latitude,
-        longitude: location.longitude,
-        latitudeDelta: 0.006991628812640371,
-        longitudeDelta: 0.0033819302916526794,
-      });
-      setMarkerPosition({
-        latitude: location.latitude,
-        longitude: location.longitude,
-      });
+    async function waitForLocation() {
+      await getLocation(user?.foreignPersonId!);
     }
+    if (location === null) {
+      waitForLocation();
+      return;
+    }
+    setRegion({
+      latitude: location[0],
+      longitude: location[1],
+      latitudeDelta: 0.006991628812640371,
+      longitudeDelta: 0.0033819302916526794,
+    });
+    setMarkerPosition({
+      latitude: location[0],
+      longitude: location[1],
+    });
   }, [location]);
 
   async function handleSubmit() {
@@ -85,7 +90,7 @@ export default function App() {
         })
         .then(
           () => {
-            router.dismissTo("/(customerscreens)/locationSettings");
+            router.dismissTo("/(client)/(tabs)/profile/locationSettings");
           },
           () => {}
         );
@@ -94,7 +99,7 @@ export default function App() {
     }
   }
 
-  if (isLoading) {
+  if (loading) {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color="#0000ff" />
@@ -102,11 +107,11 @@ export default function App() {
     );
   }
 
-  if (errorMsg) {
+  if (error) {
     return (
       <View style={styles.container}>
-        <Text>{errorMsg}</Text>
-        <Button onPress={tryGetCurrentLocation} className="mt-4">
+        <Text>{error}</Text>
+        <Button onPress={refresh} className="mt-4">
           <Text>Reintentar</Text>
         </Button>
       </View>
@@ -117,7 +122,7 @@ export default function App() {
     return (
       <View style={styles.container}>
         <Text>No se pudo obtener la ubicación</Text>
-        <Button onPress={tryGetCurrentLocation} className="mt-4">
+        <Button onPress={refresh} className="mt-4" variant="secondary">
           <Text>Obtener ubicación</Text>
         </Button>
       </View>
@@ -126,7 +131,6 @@ export default function App() {
 
   return (
     <>
-      
       <View style={styles.container}>
         <View
           style={{
