@@ -46,7 +46,7 @@ export default function MyOrdersScreen() {
 
   const handleCoordinateDelivery = () => {
     // Navegar a la vista de chats
-    router.push("/(customerscreens)/chats");
+    router.push("/(client)/(customerscreens)/chats");
     console.log("Navegando a chats...");
   };
 

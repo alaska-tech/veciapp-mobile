@@ -5,7 +5,7 @@ import CategoriesHome from "~/components/epic/categoriesHome";
 import ImageCarousel from "~/components/epic/imageCarousel";
 import Veciproveedores from "~/components/epic/veciproveedores";
 import ActiveOrderBanner from "~/components/epic/activeOrderBanner";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import ProductCard from "~/components/epic/productCard";
 import { Button } from "~/components/ui/button";
@@ -19,9 +19,11 @@ import useCustomerAction from "~/actions/customer.action";
 
 export default function HomeScreen() {
   const router = useRouter();
-
+  const { id } = useLocalSearchParams();
+  const branchAction = useBranchAction();
+  const branchQuery = branchAction.getBranchById(id as string);
   const actions = useProductAction();
-  const fetchProductsPage = actions.fetchProductsFunction;
+  const fetchProductsPage = actions.fetchProductsWithParametersPaginated;
   const {
     data,
     fetchNextPage,
@@ -32,7 +34,7 @@ export default function HomeScreen() {
     refetch,
   } = useInfiniteQuery({
     queryKey: ["products"],
-    queryFn: fetchProductsPage,
+    queryFn: () => fetchProductsPage({ filters: { branchId: id as string } }),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       const currentPage = lastPage.data.meta.page;
@@ -42,20 +44,6 @@ export default function HomeScreen() {
       return currentPage < totalPages ? currentPage + 1 : undefined;
     },
   });
-    const { user } = useAuth();
-    const customerActions = useCustomerAction();
-    const customer = customerActions.getCustomerDetails(user?.foreignPersonId);
-    const { address = '{"address":"Desconocido"}' } = customer.data ?? {};
-    const parsedAddress = JSON.parse(address);
-  const { getBranchesByLocation } = useBranchAction();
-  const { data: vendors } = getBranchesByLocation({
-    latitude: parsedAddress?.coordinates?.at(0) || 0,
-    longitude: parsedAddress?.coordinates?.at(1) || 0,
-    radius: 300,
-  });
-
-  // Simular que hay un pedido activo (aquí puedes conectar con tu estado real)
-  const hasActiveOrder = true; // Cambiar a false para ocultar el banner
 
   if (status === "pending") {
     return <ActivityIndicator />;
@@ -67,6 +55,7 @@ export default function HomeScreen() {
     }
   };
   const allProducts = data?.pages.flatMap((page) => page.data.data) || [];
+
   const ErrorComponent = () => (
     <View className="flex-1 justify-center items-center p-4">
       <Text className="text-red-500 mb-4 text-center">
@@ -82,28 +71,6 @@ export default function HomeScreen() {
   );
   const ListHeader = () => (
     <View className="p-4">
-      <HeaderHome />
-      {hasActiveOrder && (
-        <ActiveOrderBanner
-          onPress={() => {
-            router.push("/(client)/(customerscreens)/myOrdersScreen");
-          }}
-          orderCount={1}
-        />
-      )}
-      <ImageCarousel />
-      <Veciproveedores
-        proveedores={vendors?.data.data || []}
-        onSeeAllPress={() => {
-          console.log("Ver todos pressed");
-          router.push("/(client)/(customerscreens)/allVendorsScreen");
-        }}
-      />
-      <CategoriesHome />
-      <View className="mt-4">
-        <Text className="text-2xl font-bold">Recomendados</Text>
-        <Text className="text-2xl font-bold mb-4">Para ti</Text>
-      </View>
     </View>
   );
 

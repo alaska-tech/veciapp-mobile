@@ -91,6 +91,14 @@ export default function CustomerScreensLayout() {
           headerTitle: "Detalles del producto",
         }}
       />
+      <Stack.Screen
+        name="branch/[id]"
+        options={{
+          headerShown: true,
+          headerBackTitle: "Volver",
+          headerTitle: "Detalles del veci-proveedor",
+        }}
+      />
     </Stack>
   );
 }

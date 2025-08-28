@@ -174,6 +174,7 @@ export interface Branch extends BaseAttributes {
   availablePaymentMethods: string[]; //default []
   description?: string;
   isActive: boolean;
+  distance: string; //TODO: Consultar con el tocayo por estos atributos
 }
 
 export const productServiceState = [

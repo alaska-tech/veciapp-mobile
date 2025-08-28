@@ -135,6 +135,23 @@ export const useProductAction = () => {
     console.log("fetchProductsWithParametersPaginated", response.data);
     return response.data;
   };
+  const fetchProductsByBranchPaginated = async ({
+    page = 0,
+    limit = 10,
+    filters,
+  }: IProductQueryParams) => {
+    const response = await apiClient.get<
+      Extract<Response<PaginatedResult<Product>>, { status: "Success" }>
+    >(`/productservice/${filters?.branchId}/all-productservices`, {
+      params: {
+        page,
+        limit,
+        ...filters,
+      },
+    });
+    console.log("fetchProductsWithParametersPaginated", response.data);
+    return response.data;
+  };
   return {
     fetchProductsFunction,
     getProducts,
@@ -142,5 +159,6 @@ export const useProductAction = () => {
     getProductsById,
     getProductsWithParametersPaginated,
     fetchProductsWithParametersPaginated,
+    fetchProductsByBranchPaginated,
   };
 };
