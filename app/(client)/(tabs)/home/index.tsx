@@ -10,7 +10,6 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import ProductCard from "~/components/epic/productCard";
 import { Button } from "~/components/ui/button";
 import { useProductAction } from "~/actions/product.action";
-import { useLocation } from "~/components/ContextProviders/LocationProvider";
 import { useBranchAction } from "~/actions/branch.action";
 import HeaderHome from "~/components/epic/headerHome";
 import React from "react";
@@ -42,11 +41,11 @@ export default function HomeScreen() {
       return currentPage < totalPages ? currentPage + 1 : undefined;
     },
   });
-    const { user } = useAuth();
-    const customerActions = useCustomerAction();
-    const customer = customerActions.getCustomerDetails(user?.foreignPersonId);
-    const { address = '{"address":"Desconocido"}' } = customer.data ?? {};
-    const parsedAddress = JSON.parse(address);
+  const { user } = useAuth();
+  const customerActions = useCustomerAction();
+  const customer = customerActions.getCustomerDetails(user?.foreignPersonId);
+  const { address = '{"address":"Desconocido"}' } = customer.data ?? {};
+  const parsedAddress = JSON.parse(address);
   const { getBranchesByLocation } = useBranchAction();
   const { data: vendors } = getBranchesByLocation({
     latitude: parsedAddress?.coordinates?.at(0) || 0,
@@ -56,7 +55,6 @@ export default function HomeScreen() {
 
   // Simular que hay un pedido activo (aquí puedes conectar con tu estado real)
   const hasActiveOrder = true; // Cambiar a false para ocultar el banner
-
   if (status === "pending") {
     return <ActivityIndicator />;
   }

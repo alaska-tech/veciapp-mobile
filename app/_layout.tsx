@@ -22,7 +22,6 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { addJWTInterceptor } from "~/services/axios.interceptor";
 import { apiClient } from "~/services/clients";
 import { AuthProvider } from "~/components/ContextProviders/AuthProvider";
-import { ParametersProvider } from "~/components/ContextProviders/ParametersProvider";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
@@ -115,7 +114,6 @@ export default function RootLayout() {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <BottomSheetModalProvider>
           <AuthProvider>
-            <ParametersProvider>
               <SafeAreaProvider>
                 <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
                   <ThemeProvider value={LIGHT_THEME}>
@@ -142,7 +140,6 @@ export default function RootLayout() {
                   </ThemeProvider>
                 </View>
               </SafeAreaProvider>
-            </ParametersProvider>
           </AuthProvider>
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
