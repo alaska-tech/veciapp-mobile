@@ -25,9 +25,9 @@ import useAuthAction from "~/actions/auth.action";
 import { clearAllInfoFromLocalStorage } from "~/actions/localStorage.actions";
 import { useAuth } from "~/components/ContextProviders/AuthProvider";
 import useCustomerAction from "~/actions/customer.action";
-import { Platform } from 'react-native';
-import * as Notifications from 'expo-notifications';
-import { useNotificationSettings } from '~/hooks/useNotificationSettings';
+import { Platform } from "react-native";
+import * as Notifications from "expo-notifications";
+import { useNotificationSettings } from "~/hooks/useNotificationSettings";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -44,11 +44,8 @@ export default function ProfileScreen() {
   const parsedAddress = JSON.parse(address);
 
   // Hook para manejar configuración de notificaciones
-  const { 
-    notificationsEnabled, 
-    isLoading, 
-    updateNotificationPreference 
-  } = useNotificationSettings();
+  const { notificationsEnabled, isLoading, updateNotificationPreference } =
+    useNotificationSettings();
 
   // Función para manejar el cambio del switch de notificaciones
   const handleNotificationToggle = async (enabled: boolean) => {
@@ -56,57 +53,57 @@ export default function ProfileScreen() {
       if (enabled) {
         // Activar notificaciones
         const { status } = await Notifications.requestPermissionsAsync();
-        
-        if (status === 'granted') {
+
+        if (status === "granted") {
           await updateNotificationPreference(true);
-          
+
           // Mostrar confirmación
           Alert.alert(
-            '✅ Notificaciones Activadas',
-            'Ahora recibirás notificaciones push de la aplicación',
-            [{ text: 'Perfecto' }]
+            "✅ Notificaciones Activadas",
+            "Ahora recibirás notificaciones push de la aplicación",
+            [{ text: "Perfecto" }]
           );
         } else {
           // Si no se concedieron permisos, mostrar instrucciones
           Alert.alert(
-            '❌ Permisos Denegados',
-            'Para recibir notificaciones, debes habilitar los permisos en la configuración de tu dispositivo.',
+            "❌ Permisos Denegados",
+            "Para recibir notificaciones, debes habilitar los permisos en la configuración de tu dispositivo.",
             [
-              { text: 'Cancelar', style: 'cancel' },
-              { 
-                text: 'Ir a Configuración', 
+              { text: "Cancelar", style: "cancel" },
+              {
+                text: "Ir a Configuración",
                 onPress: () => {
                   // En iOS, abrir configuración de la app
-                  if (Platform.OS === 'ios') {
+                  if (Platform.OS === "ios") {
                     // Esto abrirá la configuración de la app en iOS
                     // Nota: En iOS no podemos abrir directamente la configuración
                     Alert.alert(
-                      'Configuración de iOS',
-                      'Ve a Configuración > Veciapp > Notificaciones y habilita las notificaciones'
+                      "Configuración de iOS",
+                      "Ve a Configuración > Veciapp > Notificaciones y habilita las notificaciones"
                     );
                   }
-                }
-              }
+                },
+              },
             ]
           );
         }
       } else {
         // Desactivar notificaciones
         await updateNotificationPreference(false);
-        
+
         // Mostrar confirmación
         Alert.alert(
-          '🔕 Notificaciones Desactivadas',
-          'Ya no recibirás notificaciones push. Puedes reactivarlas en cualquier momento.',
-          [{ text: 'Entendido' }]
+          "🔕 Notificaciones Desactivadas",
+          "Ya no recibirás notificaciones push. Puedes reactivarlas en cualquier momento.",
+          [{ text: "Entendido" }]
         );
       }
     } catch (error) {
-      console.error('Error al cambiar estado de notificaciones:', error);
+      console.error("Error al cambiar estado de notificaciones:", error);
       Alert.alert(
-        '❌ Error',
-        'Hubo un problema al cambiar la configuración de notificaciones. Inténtalo de nuevo.',
-        [{ text: 'OK' }]
+        "❌ Error",
+        "Hubo un problema al cambiar la configuración de notificaciones. Inténtalo de nuevo.",
+        [{ text: "OK" }]
       );
     }
   };
@@ -146,7 +143,15 @@ export default function ProfileScreen() {
             <View className="flex-1 items-center mx-1">
               <TouchableOpacity
                 activeOpacity={0.7}
-                onPress={() => router.push("/(client)/(customerscreens)/myOrdersScreen")}
+                onPress={() =>
+                  router.push({
+                    pathname:
+                      "/(client)/(customerscreens)/myOrdersScreen/[status]",
+                    params: {
+                      status: "active",
+                    },
+                  })
+                }
                 className="w-[90px] h-[90px] bg-green-200 rounded-2xl items-center justify-center"
               >
                 <PackageOpen size={40} color="#16a34a" />
@@ -175,7 +180,9 @@ export default function ProfileScreen() {
             <Button
               className="w-full flex-row items-center justify-between"
               variant="ghost"
-              onPress={() => router.push("/(client)/(tabs)/profile/locationSettings")}
+              onPress={() =>
+                router.push("/(client)/(tabs)/profile/locationSettings")
+              }
             >
               <View className="flex-row items-center gap-2">
                 <MapPin className="h-5 w-5 mr-3" color="#000000" />
@@ -190,7 +197,13 @@ export default function ProfileScreen() {
               className="w-full flex-row items-center justify-between"
               variant="ghost"
               onPress={() =>
-                router.push("/(client)/(tabs)/profile/orderHistoryScreen")
+                router.push({
+                  pathname:
+                    "/(client)/(customerscreens)/myOrdersScreen/[status]",
+                  params: {
+                    status: "all",
+                  },
+                })
               }
             >
               <View className="flex-row items-center gap-2">
@@ -204,9 +217,16 @@ export default function ProfileScreen() {
             {/* Notificaciones Push */}
             <View className="flex-row items-center justify-between px-4 py-3 bg-transparent">
               <View className="flex-row items-center gap-2">
-                <Bell className="h-5 w-5 mr-3" color={notificationsEnabled ? "#16a34a" : "#6b7280"} />
+                <Bell
+                  className="h-5 w-5 mr-3"
+                  color={notificationsEnabled ? "#16a34a" : "#6b7280"}
+                />
                 <View>
-                  <Text className={notificationsEnabled ? "text-green-700" : "text-gray-500"}>
+                  <Text
+                    className={
+                      notificationsEnabled ? "text-green-700" : "text-gray-500"
+                    }
+                  >
                     Notificaciones Push
                   </Text>
                   <Text className="text-xs text-gray-400">
@@ -214,8 +234,8 @@ export default function ProfileScreen() {
                   </Text>
                 </View>
               </View>
-              <Switch 
-                checked={notificationsEnabled} 
+              <Switch
+                checked={notificationsEnabled}
                 onCheckedChange={handleNotificationToggle}
                 disabled={isLoading}
               />
@@ -226,7 +246,9 @@ export default function ProfileScreen() {
             <Button
               className="w-full flex-row items-center justify-between"
               variant="ghost"
-              onPress={() => router.push("/(client)/(tabs)/profile/aboutUsScreen")}
+              onPress={() =>
+                router.push("/(client)/(tabs)/profile/aboutUsScreen")
+              }
             >
               <View className="flex-row items-center gap-2">
                 <Users className="h-5 w-5 mr-3" color="#000000" />
@@ -240,9 +262,7 @@ export default function ProfileScreen() {
             <Button
               className="w-full flex-row items-center justify-between"
               variant="ghost"
-              onPress={() =>
-                router.push("/(client)/(tabs)/profile/faqScreen")
-              }
+              onPress={() => router.push("/(client)/(tabs)/profile/faqScreen")}
             >
               <View className="flex-row items-center gap-2">
                 <MessageCircleQuestion
@@ -259,7 +279,9 @@ export default function ProfileScreen() {
             <Button
               className="w-full flex-row items-center justify-between"
               variant="ghost"
-              onPress={() => router.push("/(client)/(tabs)/profile/securitySettings")}
+              onPress={() =>
+                router.push("/(client)/(tabs)/profile/securitySettings")
+              }
             >
               <View className="flex-row items-center gap-2">
                 <UserCircle className="h-5 w-5 mr-3" color="#000000" />

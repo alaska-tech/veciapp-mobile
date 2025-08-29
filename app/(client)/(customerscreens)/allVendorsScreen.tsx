@@ -1,11 +1,8 @@
 import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
-import { Stack, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { Input } from "~/components/ui/input";
 import { Search, MapPin, Star } from "lucide-react-native";
 import { useState, useRef } from "react";
-import FilterSheet, {
-  FilterSheetRef,
-} from "~/components/epic/bottomSheetFilter";
 import SearchOrderSheet, {
   SearchOrderSheetRef,
 } from "~/components/epic/bottomSheetSearch";

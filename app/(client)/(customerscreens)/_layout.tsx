@@ -9,6 +9,7 @@ export default function CustomerScreensLayout() {
         options={{
           headerShown: true,
           headerBackTitle: "Volver",
+          headerBackVisible: true,
           headerTitle: "Todos los Veci-negocios",
         }}
       />
@@ -18,6 +19,7 @@ export default function CustomerScreensLayout() {
           headerShown: true,
           headerBackTitle: "Volver",
           headerTitle: "Chats",
+          headerBackVisible: true,
         }}
       />
       <Stack.Screen
@@ -26,6 +28,7 @@ export default function CustomerScreensLayout() {
           headerShown: true,
           headerBackTitle: "Volver",
           headerTitle: "Categorías",
+          headerBackVisible: true,
         }}
       />
       <Stack.Screen
@@ -34,23 +37,17 @@ export default function CustomerScreensLayout() {
           headerShown: true,
           headerBackTitle: "Volver",
           headerTitle: "Configuración",
+          headerBackVisible: true,
         }}
       />
       <Stack.Screen name="loadingScreen" options={{ headerShown: false }} />
-      <Stack.Screen
-        name="myOrdersScreen"
-        options={{
-          headerShown: true,
-          headerBackTitle: "Volver",
-          headerTitle: "Mis Pedidos",
-        }}
-      />
       <Stack.Screen
         name="newLocation"
         options={{
           headerShown: true,
           headerBackTitle: "Volver",
           headerTitle: "Nueva Ubicación",
+          headerBackVisible: true,
         }}
       />
       <Stack.Screen
@@ -59,6 +56,7 @@ export default function CustomerScreensLayout() {
           headerShown: true,
           headerBackTitle: "Volver",
           headerTitle: "Detalles del Pedido",
+          headerBackVisible: true,
         }}
       />
       <Stack.Screen
@@ -73,6 +71,7 @@ export default function CustomerScreensLayout() {
           headerShown: true,
           headerBackTitle: "Volver",
           headerTitle: "Resultados de Búsqueda",
+          headerBackVisible: true,
         }}
       />
       <Stack.Screen
@@ -81,6 +80,7 @@ export default function CustomerScreensLayout() {
           headerShown: true,
           headerBackTitle: "Volver",
           headerTitle: "Ubicación",
+          headerBackVisible: true,
         }}
       />
       <Stack.Screen
@@ -89,6 +89,7 @@ export default function CustomerScreensLayout() {
           headerShown: true,
           headerBackTitle: "Volver",
           headerTitle: "Detalles del producto",
+          headerBackVisible: true,
         }}
       />
       <Stack.Screen
@@ -97,6 +98,16 @@ export default function CustomerScreensLayout() {
           headerShown: true,
           headerBackTitle: "Volver",
           headerTitle: "Detalles del veci-proveedor",
+          headerBackVisible: true,
+        }}
+      />{" "}
+      <Stack.Screen
+        name="myOrdersScreen/[status]"
+        options={{
+          headerShown: true,
+          headerBackTitle: "Volver",
+          headerTitle: "Mis Pedidos",
+          headerBackVisible: true,
         }}
       />
     </Stack>
