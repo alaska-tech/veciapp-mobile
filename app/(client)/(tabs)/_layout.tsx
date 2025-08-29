@@ -2,21 +2,13 @@ import { Redirect, Stack, Tabs } from "expo-router";
 import { useContext } from "react";
 import { AuthContext } from "~/lib/authContext";
 import { Home, ShoppingCart, Heart, User } from "lucide-react-native";
+import { StackActions } from "@react-navigation/native";
 
 export const unstable_settings = {
   initialRouteName: "(tabs)", // anchor
 };
 
 export default function TabLayout() {
-/*   const authState = useContext(AuthContext);
-
-  if (!authState.isReady) {
-    return null;
-  }
-
-  if (!authState.isLoggedIn || authState.user?.role !== "customer") {
-    return <Redirect href="/" />;
-  } */
   return (
     <Tabs
       screenOptions={{
@@ -55,6 +47,7 @@ export default function TabLayout() {
         options={{
           title: "Perfil",
           tabBarIcon: ({ color }) => <User size={24} color={color} />,
+          popToTopOnBlur:true
         }}
       />
     </Tabs>

@@ -93,7 +93,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
           setUser(user);
           setIsReady(true);
           if (user.role === "customer") {
-            router.dismissTo("/(client)/home");
+            router.dismissTo("/(client)/(tabs)/home");
           } else if (user.role === "vendor") {
             router.dismissTo("/(vendor)/vendorHome");
           }
@@ -143,7 +143,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
           setUser(user);
           setIsReady(true);
           if (user.role === "customer") {
-            router.dismissTo("/(client)/home");
+            router.dismissTo("/(client)/(tabs)/home");
           } else if (user.role === "vendor") {
             router.dismissTo("/(vendor)/vendorHome");
           }

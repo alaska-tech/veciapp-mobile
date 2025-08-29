@@ -1,3 +1,4 @@
+import "react-native-gesture-handler";
 import "~/global.css";
 
 import {
@@ -15,20 +16,19 @@ import { useColorScheme } from "~/lib/useColorScheme";
 import { PortalHost } from "@rn-primitives/portal";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import * as SplashScreen from "expo-splash-screen";
-import {
-  focusManager,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import { focusManager, QueryClient } from "@tanstack/react-query";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { addJWTInterceptor } from "~/services/axios.interceptor";
 import { apiClient } from "~/services/clients";
-import { useRouter } from "expo-router";
 import { AuthProvider } from "~/components/ContextProviders/AuthProvider";
-import { ParametersProvider } from "~/components/ContextProviders/ParametersProvider";
-import { useAppState } from "~/hooks/useAppState";
-import { useOnlineManager } from "~/hooks/useOnlineManager";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Loader } from "~/components/ui/loader";
+import { useGlobalLoadingScreen } from "~/store/loadingStore";
+import { NetworkErrorDialog } from "~/components/epic/networkErrorDialog";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -59,17 +59,18 @@ function onAppStateChange(status: AppStateStatus) {
   }
 }
 
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: 2, gcTime: 1000 * 60 * 60 * 24 } },
+});
+const asyncStoragePersister = createAsyncStoragePersister({
+  storage: AsyncStorage,
+});
 export default function RootLayout() {
-  const hasMounted = React.useRef(false);
   const { colorScheme, isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
-  const queryClient = new QueryClient({
-    defaultOptions: { queries: { retry: 2 } },
-  });
-  const router = useRouter();
-  
+
   addJWTInterceptor(apiClient);
-  
+
   React.useEffect(() => {
     async function prepare() {
       try {
@@ -96,36 +97,52 @@ export default function RootLayout() {
       await SplashScreen.hideAsync();
     }
   }, [isColorSchemeLoaded]);
-  useOnlineManager();
-  useAppState(onAppStateChange);
+
+  const { isLoading } = useGlobalLoadingScreen();
+
+  //useOnlineManager();
+  //useAppState(onAppStateChange);
   if (!isColorSchemeLoaded) {
     return null;
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <BottomSheetModalProvider>
-        <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{ persister: asyncStoragePersister }}
+    >
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <BottomSheetModalProvider>
           <AuthProvider>
-            <ParametersProvider>
-              <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-                <ThemeProvider value={LIGHT_THEME}>
-                  <StatusBar style="dark" />
-                  <Stack screenOptions={{ headerShown: false }}>
-                    <Stack.Screen
-                      name="index"
-                      options={{
-                        headerShown: false,
-                      }}
-                    />
-                  </Stack>
-                  <PortalHost />
-                </ThemeProvider>
-              </View>
-            </ParametersProvider>
+              <SafeAreaProvider>
+                <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+                  <ThemeProvider value={LIGHT_THEME}>
+                    <StatusBar style="dark" />
+                    <Stack screenOptions={{ headerShown: false }}>
+                      <Stack.Screen
+                        name="index"
+                        options={{
+                          headerShown: false,
+                        }}
+                      />
+                    </Stack>
+                    {isLoading ? (
+                      <View className="absolute inset-0 bg-[#22222279] items-center justify-center z-99999999999999999999999">
+                        <View className="items-center justify-center flex-1 w-full">
+                          <Loader color="#FFD600" />
+                        </View>
+                      </View>
+                    ) : (
+                      <></>
+                    )}
+                    <NetworkErrorDialog />
+                    <PortalHost />
+                  </ThemeProvider>
+                </View>
+              </SafeAreaProvider>
           </AuthProvider>
-        </QueryClientProvider>
-      </BottomSheetModalProvider>
-    </GestureHandlerRootView>
+        </BottomSheetModalProvider>
+      </GestureHandlerRootView>
+    </PersistQueryClientProvider>
   );
 }

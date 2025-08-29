@@ -7,7 +7,8 @@ import {
 import { Card, CardContent } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { Badge } from "~/components/ui/badge";
-import { MapPin, Star } from "lucide-react-native";
+import { HandPlatter, MapPin, Package, Star } from "lucide-react-native";
+import { ReactNode } from "react";
 
 interface ProductCardProps {
   title: string;
@@ -17,9 +18,40 @@ interface ProductCardProps {
   category: string;
   imageUrl: string | ImageSourcePropType;
   discount?: number;
+  type: string;
   onPress?: () => void;
 }
 
+const ProductServiceTypeRender: Record<string, any> = {
+  product: <Package size={16} color="#666" />,
+  service: <HandPlatter size={16} color="#666" />,
+};
+const ProductServiceCategoryTag: Record<string, any> = {
+  Belleza: (
+    <Badge
+      variant="secondary"
+      className="rounded-full px-3 py-1 self-start bg-pink-100"
+    >
+      <Text className="text-pink-600">Belleza</Text>
+    </Badge>
+  ),
+  Confecciones: (
+    <Badge
+      variant="secondary"
+      className="rounded-full px-3 py-1 self-start bg-orange-50"
+    >
+      <Text className="text-orange-600">Confecciones</Text>
+    </Badge>
+  ),
+  Gastronomía: (
+    <Badge
+      variant="secondary"
+      className="rounded-full px-3 py-1 self-start bg-gray-100"
+    >
+      <Text className="text-gray-600">Gastronomía</Text>
+    </Badge>
+  ),
+};
 export default function ProductCard({
   title,
   price,
@@ -28,6 +60,7 @@ export default function ProductCard({
   category,
   imageUrl,
   discount,
+  type,
   onPress,
 }: ProductCardProps) {
   const imageSource =
@@ -45,7 +78,7 @@ export default function ProductCard({
           className="w-28 h-28 rounded-full"
           resizeMode="cover"
         />
-        <CardContent className="p-2">
+        <CardContent className="p-2 flex-1 center">
           <View className="flex-col gap-1">
             <Text
               className="text-xl font-semibold text-center"
@@ -75,14 +108,10 @@ export default function ProductCard({
             ) : (
               <View></View>
             )}
-
-            <Text
-              className="text-xs text-red-500 text-center font-medium"
-              numberOfLines={2}
-            >
-              {category}
-            </Text>
-
+            <View className="flex-row items-center gap-2 mb-2 justify-center">
+              {ProductServiceTypeRender[type]}
+              {ProductServiceCategoryTag[category]}
+            </View>
             <View className="flex-col items-center justify-between">
               <Text className="text-2xl font-bold">
                 ${price.toLocaleString()}

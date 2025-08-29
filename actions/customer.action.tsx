@@ -13,7 +13,6 @@ export default function useCustomerAction() {
     const response = await apiClient.get<
       Extract<Response<Customer>, { status: "Success" }>
     >(`/customers/get-details/${id}`);
-    console.log("Customer details fetched:", JSON.stringify(response, null, 4));
     return response.data;
   };
   const updateCustomer = mutateEntity<
@@ -26,13 +25,13 @@ export default function useCustomerAction() {
     () => {
       return async function mutationFn({ body }) {
         if (!body) {
-          console.log("Customer is required");
           throw new Error("body is required");
         }
         try {
+          const { id, ...rest } = body;
           const response = await apiClient.put<
             Extract<Response<Customer>, { status: "Success" }>
-          >(`/customers/edit/${body.id}`, body);
+          >(`/customers/edit/${id}`, rest);
           return response;
         } catch (error) {
           console.error("Error adding address:", error);
@@ -73,17 +72,13 @@ export default function useCustomerAction() {
           const response = await apiClient.get<
             Extract<Response<Customer>, { status: "Success" }>
           >(`/customers/get-details/${id}`);
-          console.log(response);
           return response.data.data;
         } catch (error) {
-          console.log(JSON.stringify(error, null, 4));
+          console.error(JSON.stringify(error, null, 4));
           throw error;
         }
       };
     },
-    {
-      staleTime: Infinity,
-    }
   );
   return { updateCustomer, fetchCustomerDetailsFunction, getCustomerDetails };
 }
