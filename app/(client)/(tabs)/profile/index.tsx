@@ -1,9 +1,9 @@
-import { SafeAreaView, ScrollView, View } from "react-native";
+import { SafeAreaView, ScrollView, View, Alert } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
 import { useRouter } from "expo-router";
 import { Stack } from "expo-router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
 import {
   Bell,
@@ -25,10 +25,12 @@ import useAuthAction from "~/actions/auth.action";
 import { clearAllInfoFromLocalStorage } from "~/actions/localStorage.actions";
 import { useAuth } from "~/components/ContextProviders/AuthProvider";
 import useCustomerAction from "~/actions/customer.action";
+import { Platform } from 'react-native';
+import * as Notifications from 'expo-notifications';
+import { useNotificationSettings } from '~/hooks/useNotificationSettings';
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const [pushEnabled, setPushEnabled] = useState(true);
   const authActions = useAuthAction();
   const logOut = authActions.logOut();
   const { user } = useAuth();
@@ -40,6 +42,74 @@ export default function ProfileScreen() {
     address = '{"address":"Desconocido"}',
   } = customer.data ?? {};
   const parsedAddress = JSON.parse(address);
+
+  // Hook para manejar configuración de notificaciones
+  const { 
+    notificationsEnabled, 
+    isLoading, 
+    updateNotificationPreference 
+  } = useNotificationSettings();
+
+  // Función para manejar el cambio del switch de notificaciones
+  const handleNotificationToggle = async (enabled: boolean) => {
+    try {
+      if (enabled) {
+        // Activar notificaciones
+        const { status } = await Notifications.requestPermissionsAsync();
+        
+        if (status === 'granted') {
+          await updateNotificationPreference(true);
+          
+          // Mostrar confirmación
+          Alert.alert(
+            '✅ Notificaciones Activadas',
+            'Ahora recibirás notificaciones push de la aplicación',
+            [{ text: 'Perfecto' }]
+          );
+        } else {
+          // Si no se concedieron permisos, mostrar instrucciones
+          Alert.alert(
+            '❌ Permisos Denegados',
+            'Para recibir notificaciones, debes habilitar los permisos en la configuración de tu dispositivo.',
+            [
+              { text: 'Cancelar', style: 'cancel' },
+              { 
+                text: 'Ir a Configuración', 
+                onPress: () => {
+                  // En iOS, abrir configuración de la app
+                  if (Platform.OS === 'ios') {
+                    // Esto abrirá la configuración de la app en iOS
+                    // Nota: En iOS no podemos abrir directamente la configuración
+                    Alert.alert(
+                      'Configuración de iOS',
+                      'Ve a Configuración > Veciapp > Notificaciones y habilita las notificaciones'
+                    );
+                  }
+                }
+              }
+            ]
+          );
+        }
+      } else {
+        // Desactivar notificaciones
+        await updateNotificationPreference(false);
+        
+        // Mostrar confirmación
+        Alert.alert(
+          '🔕 Notificaciones Desactivadas',
+          'Ya no recibirás notificaciones push. Puedes reactivarlas en cualquier momento.',
+          [{ text: 'Entendido' }]
+        );
+      }
+    } catch (error) {
+      console.error('Error al cambiar estado de notificaciones:', error);
+      Alert.alert(
+        '❌ Error',
+        'Hubo un problema al cambiar la configuración de notificaciones. Inténtalo de nuevo.',
+        [{ text: 'OK' }]
+      );
+    }
+  };
   return (
     <>
       <SafeAreaView>
@@ -134,10 +204,21 @@ export default function ProfileScreen() {
             {/* Notificaciones Push */}
             <View className="flex-row items-center justify-between px-4 py-3 bg-transparent">
               <View className="flex-row items-center gap-2">
-                <Bell className="h-5 w-5 mr-3" color="#000000" />
-                <Text>Notificaciones Push</Text>
+                <Bell className="h-5 w-5 mr-3" color={notificationsEnabled ? "#16a34a" : "#6b7280"} />
+                <View>
+                  <Text className={notificationsEnabled ? "text-green-700" : "text-gray-500"}>
+                    Notificaciones Push
+                  </Text>
+                  <Text className="text-xs text-gray-400">
+                    {notificationsEnabled ? "Activadas" : "Desactivadas"}
+                  </Text>
+                </View>
               </View>
-              <Switch checked={pushEnabled} onCheckedChange={setPushEnabled} />
+              <Switch 
+                checked={notificationsEnabled} 
+                onCheckedChange={handleNotificationToggle}
+                disabled={isLoading}
+              />
             </View>
             <Separator />
 
