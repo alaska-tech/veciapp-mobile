@@ -20,16 +20,6 @@ export default function FavoritesScreen() {
     refresh();
   }
   return (
-    <>
-      <Stack.Screen
-        options={{
-          headerShadowVisible: false,
-          headerTitle: "Mis favoritos",
-          headerTitleAlign: "center",
-          headerShown: true,
-          headerBackVisible: true,
-        }}
-      />
       <ScrollView
         className="h-full w-full p-4"
         refreshControl={
@@ -70,6 +60,5 @@ export default function FavoritesScreen() {
           ))
         )}
       </ScrollView>
-    </>
   );
 }

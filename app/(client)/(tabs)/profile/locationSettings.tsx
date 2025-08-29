@@ -35,17 +35,6 @@ export default function CustomerSettingsScreen() {
   };
   return (
     <>
-      <Stack.Screen
-        options={{
-          headerShadowVisible: false,
-          headerTitle: "Direcciones",
-          headerTitleAlign: "center",
-          headerShown: true,
-          headerBackTitle: "Volver",
-          headerBackVisible: true,
-        }}
-      />
-
       <ScrollView className="h-full w-full bg-white p-4 mb-16">
         <View className="mb-4">
           <ScrollView className="gap-4 mb-24">
@@ -69,7 +58,7 @@ export default function CustomerSettingsScreen() {
                       className="border border-gray-200 rounded-lg p-2 mb-2 flex-1"
                       onPress={() => {
                         router.push(
-                          `/(customerscreens)/showLocation?location=${JSON.stringify(
+                          `/(client)/(customerscreens)/showLocation?location=${JSON.stringify(
                             { ...item, index, isFavorite: isThisFavorite }
                           )}`
                         );

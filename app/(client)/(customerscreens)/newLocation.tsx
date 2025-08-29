@@ -46,7 +46,7 @@ export default function App() {
     async function waitForLocation() {
       await getLocation(user?.foreignPersonId!);
     }
-    if (location === null) {
+    if (!location) {
       waitForLocation();
       return;
     }

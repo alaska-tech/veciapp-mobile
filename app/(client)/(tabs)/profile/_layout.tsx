@@ -4,73 +4,36 @@ export const unstable_settings = {
   initialRouteName: "index",
 };
 
+const routes: Record<string, string> = {
+  index: "Mi Cuenta",
+  aboutUsScreen: "Acerca de Nosotros",
+  faqScreen: "Preguntas Frecuentes",
+  locationSettings: "Configuración de Ubicación",
+  newLocation: "Nueva dirección",
+  orderHistoryScreen: "Historial de Pedidos",
+  securitySettings: "Configuración de Seguridad",
+};
+
 export default function ProfileLayout() {
   return (
     <Stack>
-      <Stack.Screen
-        name="index"
-        options={{
-          headerShadowVisible: false,
-          headerTitle: "Mi Cuenta",
-          headerTitleAlign: "center",
-          headerShown: true,
-          headerBackVisible: true,
-        }}
-      />
-      <Stack.Screen
-        name="aboutUsScreen"
-        options={{
-          title: "Acerca de Nosotros",
-          headerShown: true,
-          headerTitleAlign: "center",
-          headerBackTitle: "Volver",
-        }}
-      />
-      <Stack.Screen
-        name="faqScreen"
-        options={{
-          title: "Preguntas Frecuentes",
-          headerShown: true,
-          headerTitleAlign: "center",
-          headerBackTitle: "Volver",
-        }}
-      />
-      <Stack.Screen
-        name="locationSettings"
-        options={{
-          title: "Configuración de Ubicación",
-          headerShown: true,
-          headerTitleAlign: "center",
-          headerBackTitle: "Volver",
-        }}
-      />
-      <Stack.Screen
-        name="newLocation"
-        options={{
-          title: "Nueva dirección",
-          headerShown: true,
-          headerTitleAlign: "center",
-          headerBackTitle: "Volver",
-        }}
-      />
-      <Stack.Screen
-        name="orderHistoryScreen"
-        options={{
-          title: "Historial de Pedidos",
-          headerShown: true,
-          headerTitleAlign: "center",
-          headerBackTitle: "Volver",
-        }}
-      />
-      <Stack.Screen
-        name="securitySettings"
-        options={{
-          title: "Configuración de Seguridad",
-          headerShown: true,
-          headerTitleAlign: "center",
-          headerBackTitle: "Volver",
-        }}
-      />
+      {Object.entries(routes).map(([key, value]) => {
+        return (
+          <Stack.Screen
+            key={key}
+            name={key}
+            options={{
+              title: value,
+              headerShown: true,
+              headerTitleAlign: "center",
+              headerBackTitle: "Volver",
+              headerTitle: value,
+              headerBackVisible: true,
+              headerShadowVisible: false,
+            }}
+          />
+        );
+      })}
     </Stack>
   );
 }

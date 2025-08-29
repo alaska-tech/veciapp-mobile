@@ -84,7 +84,12 @@ export default function HomeScreen() {
       {hasActiveOrder && (
         <ActiveOrderBanner
           onPress={() => {
-            router.push("/(client)/(customerscreens)/myOrdersScreen");
+            router.push({
+              pathname: "/(client)/(customerscreens)/myOrdersScreen/[status]",
+              params: {
+                status: "active",
+              },
+            });
           }}
           orderCount={1}
         />

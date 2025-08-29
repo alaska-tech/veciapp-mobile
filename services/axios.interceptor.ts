@@ -40,7 +40,7 @@ const onResponseError = async (error: AxiosError): Promise<AxiosError> => {
   if (error.response?.status === 403) {
     //TODO: Comprobar que el error es 403 para cuando el usuario no tenga permisos
     await clearAllInfoFromLocalStorage();
-    router.replace("/");
+    router.push("/");
   }
   return Promise.reject(error);
 };
