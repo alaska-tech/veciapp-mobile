@@ -1,6 +1,7 @@
 import "react-native-gesture-handler";
 import "~/global.css";
-
+import dayjs from "dayjs";
+import "dayjs/locale/es";
 import {
   DarkTheme,
   DefaultTheme,
@@ -31,6 +32,7 @@ import { useGlobalLoadingScreen } from "~/store/loadingStore";
 import { NetworkErrorDialog } from "~/components/epic/networkErrorDialog";
 
 SplashScreen.preventAutoHideAsync();
+dayjs.locale("es");
 
 // Set the animation options. This is optional.
 //SplashScreen.setOptions({
