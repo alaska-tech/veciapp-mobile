@@ -174,9 +174,14 @@ export interface Branch extends BaseAttributes {
   availablePaymentMethods: string[]; //default []
   description?: string;
   isActive: boolean;
+  distance: string; //TODO: Consultar con el tocayo por estos atributos
 }
 
-export const productServiceState = ["available", "unavailable"] as const;
+export const productServiceState = [
+  "available",
+  "unavailable",
+  "out_of_stock",
+] as const;
 export type productServiceStateType = typeof productServiceState;
 export interface Product {
   id: string;
@@ -284,19 +289,22 @@ export const ServiceOrderPaymentStatus = [
 export type ServiceOrderPaymentStatusType = typeof ServiceOrderPaymentStatus;
 export interface ServiceOrder extends BaseAttributes {
   id: string;
-  orderNumber: string;
   customerId: string;
   vendorId: string;
   branchId: string;
-  items: Array<{
+  products: Array<{
     productServiceId: string;
     quantity: number;
     price: number;
   }>;
-  deliveryAddress?: string;
-  deliveryType: ServiceOrderDeliveryTypeType[number];
-  paymentMethod: ServiceOrderPaymentMethodType[number];
   totalAmount: number;
+  paymentMethod: ServiceOrderPaymentMethodType[number];
+  deliveryType: ServiceOrderDeliveryTypeType[number];
+  deliveryAddress?: string;
+  orderNumber: string;
+  status: string;
+  timeline: Array<string>;
+  discount?: number;
   notes?: string;
   orderStatus: ServiceOrderOrderStatusType[number];
   paymentStatus: ServiceOrderPaymentStatusType[number];
@@ -315,7 +323,6 @@ export interface ShoppingCartItem {
   addedAt?: string; //date
   updatedAt?: string; //date
 }
-
 
 export interface FavoriteItem {
   createdAt?: Date;

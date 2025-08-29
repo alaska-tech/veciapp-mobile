@@ -29,7 +29,7 @@ export default function HeaderHome() {
         <View className="flex-1 mr-3">
           <TouchableOpacity
             onPress={() =>
-              router.push("/(customerscreens)/searchResultsScreen")
+              router.push("/(client)/(customerscreens)/searchResultsScreen")
             }
             activeOpacity={0.8}
           >
@@ -68,7 +68,7 @@ export default function HeaderHome() {
 
       {/* Location Section */}
       <TouchableOpacity
-        onPress={() => router.push("/(customerscreens)/locationSettings")}
+        onPress={() => router.push("/(client)/(tabs)/profile/locationSettings")}
         className="flex-row items-center"
       >
         <MapPinIcon size={20} color="#ffffff" fill="#666" />

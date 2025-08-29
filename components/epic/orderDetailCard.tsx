@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { View, TouchableOpacity, Image } from "react-native";
 import { Card } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
-import { Calendar, ChevronDown, ChevronUp, MessageCircleMore } from "lucide-react-native";
+import {
+  Calendar,
+  ChevronDown,
+  ChevronUp,
+  MessageCircleMore,
+} from "lucide-react-native";
 import { Separator } from "~/components/ui/separator";
 
 interface TimelineItem {
@@ -12,10 +17,12 @@ interface TimelineItem {
 
 interface OrderDetailCardProps {
   date: string;
-  productName: string;
-  productImage: string;
-  price: number;
-  discount?: number;
+  products: {
+    productName: string;
+    productImage: string;
+    price: number;
+    discount?: number;
+  }[];
   status: string;
   timeline: TimelineItem[];
   onCoordinateDelivery?: () => void;
@@ -24,10 +31,7 @@ interface OrderDetailCardProps {
 
 export default function OrderDetailCard({
   date,
-  productName,
-  productImage,
-  price,
-  discount,
+  products,
   status,
   timeline,
   onCoordinateDelivery,
@@ -35,7 +39,7 @@ export default function OrderDetailCard({
 }: OrderDetailCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [imageError, setImageError] = useState(false);
-  
+
   const cardShadow = {
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -75,10 +79,7 @@ export default function OrderDetailCard({
   };
 
   return (
-    <Card 
-      className="rounded-3xl overflow-hidden mb-4" 
-      style={cardShadow}
-    >
+    <Card className="rounded-3xl overflow-hidden mb-4" style={cardShadow}>
       <View className="p-6">
         {/* Date and Status Row */}
         <View className="flex-row items-center justify-between mb-6">
@@ -86,39 +87,53 @@ export default function OrderDetailCard({
             <Calendar size={20} color="#666666" />
             <Text className="ml-2 text-base text-muted-foreground">{date}</Text>
           </View>
-          <View className={`px-4 py-1.5 rounded-full ${getStatusColor(status)}`}>
-            <Text className={`font-medium ${getStatusTextColor(status)}`}>{status}</Text>
+          <View
+            className={`px-4 py-1.5 rounded-full ${getStatusColor(status)}`}
+          >
+            <Text className={`font-medium ${getStatusTextColor(status)}`}>
+              {status}
+            </Text>
           </View>
         </View>
 
         {/* Product Info */}
-        <View className="mb-6">
-          <View className="flex-row items-center mb-4">
-            <Image 
-              source={imageError ? require("~/assets/images/food.png") : { uri: productImage }}
-              className="w-20 h-20 rounded-full"
-              style={{ width: 80, height: 80, borderRadius: 40 }}
-              resizeMode="cover"
-              onError={() => setImageError(true)}
-            />
-            <View className="ml-4 flex-1">
-              <Text className="text-xl font-semibold mb-1">{productName}</Text>
-              <Text className="text-2xl font-bold">
-                ${price.toLocaleString()}
-              </Text>
-              {discount && (
-                <View className="bg-pink-100 px-2 py-1 rounded-full mt-1 self-start">
-                  <Text className="text-red-600 text-sm font-medium">
-                    Descuento {discount}%
+        {products.map(({ productName, productImage, price, discount }) => {
+          return (
+            <View className="mb-6">
+              <View className="flex-row items-center mb-4">
+                <Image
+                  source={
+                    imageError
+                      ? require("~/assets/images/food.png")
+                      : { uri: productImage }
+                  }
+                  className="w-20 h-20 rounded-full"
+                  style={{ width: 80, height: 80, borderRadius: 40 }}
+                  resizeMode="cover"
+                  onError={() => setImageError(true)}
+                />
+                <View className="ml-4 flex-1">
+                  <Text className="text-xl font-semibold mb-1">
+                    {productName}
                   </Text>
+                  <Text className="text-2xl font-bold">
+                    ${price.toLocaleString()}
+                  </Text>
+                  {discount && (
+                    <View className="bg-pink-100 px-2 py-1 rounded-full mt-1 self-start">
+                      <Text className="text-red-600 text-sm font-medium">
+                        Descuento {discount}%
+                      </Text>
+                    </View>
+                  )}
                 </View>
-              )}
+              </View>
             </View>
-          </View>
-        </View>
+          );
+        })}
 
         {/* Coordinate Delivery Button */}
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={onCoordinateDelivery}
           className="bg-yellow-400 rounded-full py-4 mb-6 flex-row items-center justify-center"
         >
@@ -131,7 +146,7 @@ export default function OrderDetailCard({
         <Separator className="mb-6" />
 
         {/* Timeline Dropdown */}
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => setIsExpanded(!isExpanded)}
           className="flex-row items-center justify-between"
         >
@@ -159,9 +174,9 @@ export default function OrderDetailCard({
                 </View>
               </View>
             ))}
-            
+
             {/* Cancel Order Button */}
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={onCancelOrder}
               className="border border-red-500 rounded-full py-3 mt-4"
             >
@@ -174,4 +189,4 @@ export default function OrderDetailCard({
       </View>
     </Card>
   );
-} 
+}

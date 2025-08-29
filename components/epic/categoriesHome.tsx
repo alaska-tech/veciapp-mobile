@@ -41,7 +41,7 @@ export default function CategoriesHome() {
         {categories.map((category, index) => (
           <TouchableOpacity
             key={category.id}
-            onPress={() => router.push({ pathname: '/(customerscreens)/searchResultsScreen', params: { category: category.title } })}
+            onPress={() => router.push({ pathname: '/(client)/(customerscreens)/searchResultsScreen', params: { category: category.title } })}
             className={`${category.bgColor} rounded-3xl p-3 w-36 h-36 shadow relative mt-8 ${
               index !== categories.length - 1 ? 'mr-4' : ''
             }`}

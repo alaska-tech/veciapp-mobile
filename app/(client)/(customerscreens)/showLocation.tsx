@@ -74,7 +74,7 @@ export default function App() {
         })
         .then(
           () => {
-            router.dismissTo("/(customerscreens)/locationSettings");
+            router.dismissTo("/(client)/(tabs)/profile/locationSettings");
           },
           () => {}
         );
@@ -105,16 +105,7 @@ export default function App() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          headerShadowVisible: false,
-          headerTitle: "Dirección",
-          headerTitleAlign: "center",
-          headerShown: true,
-          headerBackTitle: "Volver",
-          headerBackVisible: true,
-        }}
-      />
+      
       <View style={styles.container}>
         <View
           style={{

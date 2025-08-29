@@ -7,16 +7,15 @@ import { Stack } from "expo-router";
 import React from "react";
 import { View } from "react-native";
 import { MapPinIcon } from "lucide-react-native";
-import {
-  
-  useCartItemsByBranch,
-  useCartStore,
-} from "~/store/cartStore";
+import { useCartItemsByBranch, useCartStore } from "~/store/cartStore";
 import { useAuth } from "~/components/ContextProviders/AuthProvider";
 import useCustomerAction from "~/actions/customer.action";
 import { useProductAction } from "~/actions/product.action";
 import { useBranchAction } from "~/actions/branch.action";
 import { apiClient } from "~/services/clients";
+import { useOrderActions } from "~/actions/order.action";
+import { ServiceOrderPaymentMethodType } from "~/constants/models";
+import { useGlobalLoadingScreen } from "~/store/loadingStore";
 
 const SERVICE_FEE_PERCENTAGE = 0.1;
 const DELIVERY_CHARGE = 10000;
@@ -66,6 +65,10 @@ export default function CartScreen() {
   const branchesQuery = branchActions.getBranchesById(
     Object.keys(cartItemsByBranch)
   );
+
+  const orderActions = useOrderActions();
+  const createOrderMutation = orderActions.createServiceOrder();
+  const { setIsLoading } = useGlobalLoadingScreen();
   return (
     <>
       <Stack.Screen
@@ -132,7 +135,40 @@ export default function CartScreen() {
                   total={total}
                   onQuantityChange={handleQuantityChange}
                   onDelete={handleDelete}
-                  onPayPress={() => handlePayment("regular")}
+                  onPayPress={async (closeModal, paymentMethod) => {
+                    setIsLoading(true);
+                    await createOrderMutation
+                      .mutateAsync({
+                        body: {
+                          customerId: user?.foreignPersonId,
+                          vendorId: branch?.vendorId,
+                          branchId: branchId,
+                          products: cartItem.ShoppingCartItem.map((item) => {
+                            return {
+                              productServiceId: item.productServiceId,
+                              quantity: item.quantity,
+                              price: item.unitPrice,
+                            };
+                          }),
+                          totalAmount: total,
+                          paymentMethod: paymentMethod,
+                          deliveryType: "delivery",
+                          deliveryAddress: address,
+                        },
+                      })
+                      .then(
+                        () => {
+                          router.replace(
+                            "/(client)/(customerscreens)/paymentResultScreen"
+                          );
+                        },
+                        () => {}
+                      )
+                      .finally(() => {
+                        closeModal();
+                        setIsLoading(false);
+                      });
+                  }}
                 />
               </React.Fragment>
             );
@@ -152,17 +188,7 @@ export default function CartScreen() {
         ) : (
           <></>
         )}
-        <View className="mt-8 mb-4 px-0">
-          <Button
-            variant="outline"
-            size="lg"
-            className="w-full rounded-full border-gray-200 bg-gray-100"
-            onPress={() => router.push("/(customerscreens)/orderHistoryScreen")}
-          >
-            <Text className="text-gray-700 font-normal">
-              Ver historial de pedidos
-            </Text>
-          </Button>
+        <View className="mt-8 mb-8 px-0">
           <Button
             onPress={() => {
               apiClient.delete(

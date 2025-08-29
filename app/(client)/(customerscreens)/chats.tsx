@@ -165,17 +165,10 @@ export default function ChatsScreen() {
 
   return (
     <View className="flex-1 bg-background">
-      <Stack.Screen
-        options={{
-          headerShadowVisible: false,
-          headerTitle: "Chat",
-          headerTitleAlign: "center",
-          headerShown: true,
-          headerBackTitle: "Volver",
-          headerBackVisible: true,
-        }}
-      />
-      <Card className="mx-4 mt-4 mb-2 shadow">
+      
+      
+      {/* Order Info Card */}
+      <Card className="mx-4 mt-4 mb-2 bg-card shadow">
         <View className="p-4 flex-row">
           <Image
             source={{ uri: "https://picsum.photos/id/292/200" }}

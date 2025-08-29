@@ -1,6 +1,7 @@
 import { AxiosError, AxiosResponse } from "axios";
 import {
   mutateEntity,
+  queryEntityById,
   queryEntityWithParameters,
 } from "./action";
 import { QueryKey } from "@tanstack/react-query";
@@ -11,27 +12,20 @@ import {
   ServiceOrder,
 } from "~/constants/models";
 import { apiClient } from "~/services/clients";
+import { showNetworkErrorDialog } from "~/components/epic/networkErrorDialog";
 
 export const QUERY_KEY_SERVICE_ORDER = "serviceOrder" as const;
 
-export const useBranchAction = () => {
+export const useOrderActions = () => {
   const createServiceOrder = mutateEntity<
     AxiosResponse<Extract<Response<ServiceOrder>, { status: "Success" }>>,
     AxiosError<Extract<Response<null>, { status: "Error" }>>,
     {
-      body: Omit<
-        ServiceOrder,
-        keyof BaseAttributes &
-          "id" &
-          "orderNumber" &
-          "orderStatus" &
-          "paymentStatus"
-      >;
-      vendorId: string;
+      body: any;
     }
   >(
     () => {
-      return async function mutationFn({ body, vendorId }) {
+      return async function mutationFn({ body }) {
         try {
           if (!body) {
             throw new Error("No body provided");
@@ -49,6 +43,7 @@ export const useBranchAction = () => {
       onMutate: (res) => res,
       onError: (error, variables, context) => {
         //visual notification
+        showNetworkErrorDialog(error.response?.data?.error?.message || "");
       },
       onSuccess: async (data, variables, context) => {
         //visual notification
@@ -74,5 +69,28 @@ export const useBranchAction = () => {
       }
     };
   });
-  return { createServiceOrder, getServiceOrderDetails };
+  const getOrdersByCustomerId = queryEntityById<
+    PaginatedResult<ServiceOrder>,
+    AxiosError<Extract<Response<null>, { status: "Error" }>>
+  >([QUERY_KEY_SERVICE_ORDER] as QueryKey, (id) => {
+    return async function queryFn() {
+      try {
+        const response = await apiClient.get<
+          Extract<
+            Response<PaginatedResult<ServiceOrder>>,
+            { status: "Success" }
+          >
+        >(`/branches/${id}/all-branches`, {
+          params: {
+            limit: 100,
+            page: 0,
+          },
+        });
+        return response.data.data;
+      } catch (error) {
+        throw error;
+      }
+    };
+  });
+  return { createServiceOrder, getServiceOrderDetails, getOrdersByCustomerId };
 };

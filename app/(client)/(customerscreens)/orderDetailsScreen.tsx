@@ -65,16 +65,7 @@ export default function OrderDetailsScreen() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          headerShadowVisible: false,
-          headerTitle: "Detalles de la orden",
-          headerTitleAlign: "center",
-          headerShown: true,
-          headerBackVisible: true,
-          headerBackTitle: "Volver",
-        }}
-      />
+      
       
       <SafeAreaView className="flex-1 bg-white">
         <ScrollView 

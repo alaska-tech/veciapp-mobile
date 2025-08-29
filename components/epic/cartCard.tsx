@@ -40,13 +40,14 @@ interface CartCardProps {
     price: number
   ) => void;
   onDelete?: (productServiceId: string) => void;
-  onPayPress?: () => void;
+  onPayPress: (closeModal: () => void, paymentMethod: ServiceOrderPaymentMethodType[number]) => void;
 }
 
 // Add to imports
 import PaymentMethodSheet, {
   PaymentMethodSheetRef,
 } from "./bottomSheetPaymentMethods";
+import { ServiceOrderPaymentMethodType } from "~/constants/models";
 
 export default function CartCard({
   providerName,
@@ -72,9 +73,9 @@ export default function CartCard({
   const paymentSheetRef = useRef<PaymentMethodSheetRef>(null);
 
   // Add this handler
-  const handlePaymentMethodSelect = (method: "online" | "cash") => {
-    console.log("Selected payment method:", method);
-    onPayPress?.();
+  const handlePaymentMethodSelect = async (closeModal: () => void, paymentMethod: ServiceOrderPaymentMethodType[number]) : Promise<void>=> {
+    console.log("Selected payment method:", paymentMethod);
+    onPayPress(closeModal, paymentMethod)
   };
 
   return (

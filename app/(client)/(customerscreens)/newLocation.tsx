@@ -6,21 +6,16 @@ import {
   Text,
   ActivityIndicator,
   Image,
-  TextInput,
-  ScrollView,
-  TouchableOpacity,
-  Keyboard,
 } from "react-native";
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
 import useCustomerAction from "~/actions/customer.action";
-import { AddressLocation, Customer } from "~/constants/models";
+import { AddressLocation } from "~/constants/models";
 import { Loader } from "~/components/ui/loader";
 import { useAuth } from "~/components/ContextProviders/AuthProvider";
-import { useLocation } from "~/components/ContextProviders/LocationProvider";
 import { Alert } from "react-native";
 import { useRouter } from "expo-router";
-import { Stack } from "expo-router";
+import { useLocationStore } from "~/store/locationStore";
 import { Dimensions } from "react-native";
 import { Input } from "~/components/ui/input";
 import { KeyboardAvoidingView } from "react-native";
@@ -40,12 +35,7 @@ export default function App() {
   const [nickname, setNickname] = useState("Casa");
   const router = useRouter();
   const { user } = useAuth();
-  const {
-    location,
-    isLoading,
-    error: errorMsg,
-    tryGetCurrentLocation,
-  } = useLocation();
+  const { location, loading, error, refresh, getLocation } = useLocationStore();
   const customerActions = useCustomerAction();
   const getCustomerDetails = customerActions.getCustomerDetails(
     user?.foreignPersonId
@@ -53,18 +43,23 @@ export default function App() {
   const updateCustomer = customerActions.updateCustomer();
 
   useEffect(() => {
-    if (location) {
-      setRegion({
-        latitude: location.latitude,
-        longitude: location.longitude,
-        latitudeDelta: 0.006991628812640371,
-        longitudeDelta: 0.0033819302916526794,
-      });
-      setMarkerPosition({
-        latitude: location.latitude,
-        longitude: location.longitude,
-      });
+    async function waitForLocation() {
+      await getLocation(user?.foreignPersonId!);
     }
+    if (location === null) {
+      waitForLocation();
+      return;
+    }
+    setRegion({
+      latitude: location[0],
+      longitude: location[1],
+      latitudeDelta: 0.006991628812640371,
+      longitudeDelta: 0.0033819302916526794,
+    });
+    setMarkerPosition({
+      latitude: location[0],
+      longitude: location[1],
+    });
   }, [location]);
 
   async function handleSubmit() {
@@ -100,7 +95,7 @@ export default function App() {
         })
         .then(
           () => {
-            router.dismissTo("/(customerscreens)/locationSettings");
+            router.dismissTo("/(client)/(tabs)/profile/locationSettings");
           },
           () => {}
         );
@@ -109,7 +104,7 @@ export default function App() {
     }
   }
 
-  if (isLoading) {
+  if (loading) {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color="#0000ff" />
@@ -117,11 +112,11 @@ export default function App() {
     );
   }
 
-  if (errorMsg) {
+  if (error) {
     return (
       <View style={styles.container}>
-        <Text>{errorMsg}</Text>
-        <Button onPress={tryGetCurrentLocation} className="mt-4">
+        <Text>{error}</Text>
+        <Button onPress={refresh} className="mt-4">
           <Text>Reintentar</Text>
         </Button>
       </View>
@@ -132,7 +127,7 @@ export default function App() {
     return (
       <View style={styles.container}>
         <Text>No se pudo obtener la ubicación</Text>
-        <Button onPress={tryGetCurrentLocation} className="mt-4">
+        <Button onPress={refresh} className="mt-4" variant="secondary">
           <Text>Obtener ubicación</Text>
         </Button>
       </View>
@@ -141,24 +136,69 @@ export default function App() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          headerShadowVisible: false,
-          headerTitle: "Nueva dirección",
-          headerTitleAlign: "center",
-          headerShown: true,
-          headerBackTitle: "Volver",
-          headerBackVisible: true,
-        }}
-      />
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <View style={{ width: "100%", height: windowHeight - 280 }}>
+      <View style={styles.container}>
+        <View
+          style={{
+            position: "absolute",
+            bottom: 100,
+            left: 10,
+            zIndex: 1000,
+            width: "95%",
+          }}
+        >
+          <View className="border border-gray-200 rounded-lg p-1 mb-2 bg-white w-full">
+            <Textarea
+              value={address}
+              onChangeText={(text) => {
+                setAdrressError(false);
+                setAddress(text);
+              }}
+              className={
+                adrressError
+                  ? "text-base w-full border border-red-500"
+                  : "text-base w-full"
+              }
+              placeholder="Dirección"
+            />
+          </View>
+          <View className="flex-row justify-between border border-gray-200 rounded-lg p-1 mb-2 bg-white w-full">
+            {["Casa", "Trabajo", "Pareja"].map((option) => (
+              <Button
+                key={option}
+                className={`flex-1 mx-1 py-4 rounded-lg ${
+                  nickname === option
+                    ? "bg-[#FFD100]"
+                    : "bg-white border border-gray-300"
+                }`}
+                onPress={() => setNickname(option)}
+                variant="ghost"
+              >
+                <Text
+                  className={`text-base text-center ${
+                    nickname === option
+                      ? "text-black font-bold"
+                      : "text-gray-700"
+                  }`}
+                >
+                  {option}
+                </Text>
+              </Button>
+            ))}
+          </View>
+          <Button
+            className="w-full bg-[#FFD100] rounded-full py-6 mb-6"
+            onPress={handleSubmit}
+          >
+            {updateCustomer.isPending ? (
+              <Loader />
+            ) : (
+              <Text className="text-black text-base font-medium">
+                Guardar Cambios
+              </Text>
+            )}
+          </Button>
+        </View>
+        <View>
           <MapView
             initialRegion={region}
             style={styles.map}
@@ -180,7 +220,7 @@ export default function App() {
             }}
           >
             <Image
-              source={require("../../assets/images/location-marker.png")}
+              source={require("~/assets/images/location-marker.png")}
               style={styles.marker}
             />
           </View>

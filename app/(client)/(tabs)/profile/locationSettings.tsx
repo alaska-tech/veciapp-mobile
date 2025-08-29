@@ -18,7 +18,7 @@ export default function CustomerSettingsScreen() {
   const { locations = [], address = "{}", id } = customer.data ?? {};
   const parsedAddress = JSON.parse(address);
   const agregarNuevaDireccion = () => {
-    router.push("/newLocation");
+    router.push("/(client)/(customerscreens)/newLocation");
   };
   const updateCustomer = customerActions.updateCustomer();
   const handleFavoritePress = async ({

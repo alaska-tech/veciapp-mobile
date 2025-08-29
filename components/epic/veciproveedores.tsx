@@ -24,7 +24,7 @@ export default function Veciproveedores({
   return (
     <View className="mt-4">
       <TouchableOpacity
-        onPress={() => router.push("/(customerscreens)/allVendorsScreen")}
+        onPress={() => router.push("/(client)/(customerscreens)/allVendorsScreen")}
         className="flex-row items-center"
       >
         <Text className="text-2xl font-bold mb-2">Nuestros Veciproveedores</Text>

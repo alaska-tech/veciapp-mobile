@@ -113,15 +113,6 @@ export default function ProfileScreen() {
   return (
     <>
       <SafeAreaView>
-        <Stack.Screen
-          options={{
-            headerShadowVisible: false,
-            headerTitle: "Mi Cuenta",
-            headerTitleAlign: "center",
-            headerShown: true,
-            headerBackVisible: true,
-          }}
-        />
         <ScrollView
           className="h-full w-full p-4 bg-white"
           contentContainerStyle={{ paddingBottom: 30 }}
@@ -155,7 +146,7 @@ export default function ProfileScreen() {
             <View className="flex-1 items-center mx-1">
               <TouchableOpacity
                 activeOpacity={0.7}
-                onPress={() => router.push("/cart")}
+                onPress={() => router.push("/(client)/(customerscreens)/myOrdersScreen")}
                 className="w-[90px] h-[90px] bg-green-200 rounded-2xl items-center justify-center"
               >
                 <PackageOpen size={40} color="#16a34a" />
@@ -184,7 +175,7 @@ export default function ProfileScreen() {
             <Button
               className="w-full flex-row items-center justify-between"
               variant="ghost"
-              onPress={() => router.push("/(customerscreens)/locationSettings")}
+              onPress={() => router.push("/(client)/(tabs)/profile/locationSettings")}
             >
               <View className="flex-row items-center gap-2">
                 <MapPin className="h-5 w-5 mr-3" color="#000000" />
@@ -199,7 +190,7 @@ export default function ProfileScreen() {
               className="w-full flex-row items-center justify-between"
               variant="ghost"
               onPress={() =>
-                router.push("/(customerscreens)/orderHistoryScreen")
+                router.push("/(client)/(tabs)/profile/orderHistoryScreen")
               }
             >
               <View className="flex-row items-center gap-2">
@@ -235,7 +226,7 @@ export default function ProfileScreen() {
             <Button
               className="w-full flex-row items-center justify-between"
               variant="ghost"
-              onPress={() => router.push("/aboutUsScreen")}
+              onPress={() => router.push("/(client)/(tabs)/profile/aboutUsScreen")}
             >
               <View className="flex-row items-center gap-2">
                 <Users className="h-5 w-5 mr-3" color="#000000" />
@@ -250,7 +241,7 @@ export default function ProfileScreen() {
               className="w-full flex-row items-center justify-between"
               variant="ghost"
               onPress={() =>
-                router.push("/(vendorscreens)/(vendorsettings)/faqScreen")
+                router.push("/(client)/(tabs)/profile/faqScreen")
               }
             >
               <View className="flex-row items-center gap-2">
@@ -268,7 +259,7 @@ export default function ProfileScreen() {
             <Button
               className="w-full flex-row items-center justify-between"
               variant="ghost"
-              onPress={() => router.push("/(customerscreens)/securitySettings")}
+              onPress={() => router.push("/(client)/(tabs)/profile/securitySettings")}
             >
               <View className="flex-row items-center gap-2">
                 <UserCircle className="h-5 w-5 mr-3" color="#000000" />
